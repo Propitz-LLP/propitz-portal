@@ -1,0 +1,70 @@
+import { createServerClient } from "@supabase/ssr";
+import { NextResponse, type NextRequest } from "next/server";
+import {
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY,
+  isSupabaseConfigured,
+} from "@/lib/supabase/config";
+
+/**
+ * Next.js 16 renamed `middleware` to `proxy`. This runs on every matched
+ * request to keep the Supabase auth session (stored in cookies) fresh, and
+ * to guard the /account area.
+ */
+export async function proxy(request: NextRequest) {
+  // If Supabase isn't configured yet, don't touch the request at all.
+  if (!isSupabaseConfigured) return NextResponse.next({ request });
+
+  let response = NextResponse.next({ request });
+
+  const supabase = createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value }) =>
+          request.cookies.set(name, value)
+        );
+        response = NextResponse.next({ request });
+        cookiesToSet.forEach(({ name, value, options }) =>
+          response.cookies.set(name, value, options)
+        );
+      },
+    },
+  });
+
+  // IMPORTANT: getUser() revalidates the token with Supabase (getSession does not).
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Gate the protected area.
+  const { pathname } = request.nextUrl;
+  if (!user && pathname.startsWith("/account")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    url.searchParams.set("redirect", pathname);
+    return NextResponse.redirect(url);
+  }
+
+  // Keep signed-in users out of the auth screens.
+  if (user && (pathname === "/login" || pathname === "/register")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/account";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
+
+  return response;
+}
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except static assets and media so the
+     * session cookie is refreshed on normal page/navigation requests.
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|mp4)$).*)",
+  ],
+};

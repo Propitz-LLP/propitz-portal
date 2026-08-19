@@ -1,0 +1,133 @@
+import type { Metadata } from "next";
+import PageHero from "@/components/PageHero";
+import SectionHeading from "@/components/SectionHeading";
+import Reveal from "@/components/Reveal";
+import CTASection from "@/components/CTASection";
+import { IMG, site } from "@/data/site";
+
+export const metadata: Metadata = {
+  title: "Property Marketplace",
+  description:
+    "An assisted, verification-led property listing platform for registered and enrolled clients who want structured support for buying or selling properties.",
+};
+
+const workflow = [
+  { t: "Seller enrolment", d: "Sellers enrol and share property details for structured onboarding." },
+  { t: "Verification", d: "Independent professionals verify documents, ownership and compliance." },
+  { t: "Listing", d: "Verified properties are listed for enrolled buyers to explore." },
+  { t: "Buyer coordination", d: "Interested buyers are connected with structured coordination support." },
+  { t: "Transaction", d: "The transaction is handled directly between the parties involved." },
+];
+
+const feeModel = [
+  { t: "Enrolment", d: "A structured onboarding fee for verified listing support." },
+  { t: "Verification coordination", d: "Facilitation of third-party verification services." },
+  { t: "Advisory & guidance", d: "Directional guidance across the buy/sell journey." },
+  { t: "Professional access", d: "Introductions to relevant independent professionals." },
+];
+
+export default function MarketplacePage() {
+  return (
+    <>
+      <PageHero
+        title="Property Marketplace"
+        subtitle="An assisted, verification-led property listing platform designed for registered and enrolled clients who want structured support for buying or selling properties."
+        image={`${IMG}/2026/02/Property-Marketplace.jpg`}
+      />
+
+      <section className="section">
+        <div className="container-px">
+          <SectionHeading
+            align="left"
+            eyebrow="Overview"
+            title="What is the Propitz Property Marketplace?"
+            subtitle="Unlike an open classifieds board, the Propitz Marketplace is assisted and verification-led. Listings are supported by structured coordination, and verification is performed by independent third-party professionals — Propitz facilitates the process."
+          />
+        </div>
+      </section>
+
+      {/* Verified & enrolled */}
+      <section className="pb-16 sm:pb-20">
+        <div className="container-px">
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              { t: "Document completeness", d: "Coordination to confirm the required documents are in order before listing." },
+              { t: "Ownership verification", d: "Independent professionals verify ownership and title history." },
+              { t: "Compliance validation", d: "Checks that the property meets applicable regulatory requirements." },
+            ].map((c, i) => (
+              <Reveal key={c.t} delay={i * 120}>
+                <div className="card h-full p-7">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand">
+                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </span>
+                  <h3 className="mt-5 text-lg text-ink">{c.t}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-body">{c.d}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <p className="mt-6 text-sm italic text-body">
+            Verification is performed by third-party professionals. Propitz facilitates the process.
+          </p>
+        </div>
+      </section>
+
+      {/* Workflow */}
+      <section className="section bg-surface">
+        <div className="container-px">
+          <SectionHeading
+            eyebrow="How It Works"
+            title="Buy / Sell workflow"
+            subtitle="A structured, five-step flow from enrolment to transaction."
+          />
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+            {workflow.map((s, i) => (
+              <Reveal key={s.t} delay={i * 90}>
+                <div className="card relative h-full p-6">
+                  <span className="font-display text-3xl font-extrabold text-brand/20">
+                    0{i + 1}
+                  </span>
+                  <h3 className="mt-2 text-base text-ink">{s.t}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-body">{s.d}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Fee model */}
+      <section className="section">
+        <div className="container-px">
+          <SectionHeading
+            eyebrow="Transparent Pricing"
+            title="Service fee model"
+            subtitle="Propitz operates on clear service categories — with no transaction-based commissions unless separately stated."
+          />
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {feeModel.map((f, i) => (
+              <Reveal key={f.t} delay={i * 90}>
+                <div className="rounded-2xl bg-surface p-6 ring-1 ring-line">
+                  <h3 className="text-base text-ink">{f.t}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-body">{f.d}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <div className="mt-10 flex flex-wrap gap-3">
+            <a href={site.queryForm} target="_blank" rel="noopener noreferrer" className="btn-primary">
+              Enrol / Submit your Query
+            </a>
+            <a href={`tel:${site.phoneDigits}`} className="btn-ghost">
+              Talk to our team
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <CTASection />
+    </>
+  );
+}

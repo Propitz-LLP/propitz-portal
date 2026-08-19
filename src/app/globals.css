@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/*  Propitz design tokens — matched to the live propitz.com site       */
+/* ------------------------------------------------------------------ */
+@theme {
+  --color-brand: #3860aa; /* primary blue – pill buttons, links */
+  --color-brand-dark: #2d4e8c;
+  --color-brand-light: #5b82c9;
+  --color-brand-50: #eef2fb;
+  --color-brand-100: #dbe4f5;
+  --color-accent: #51c1c7; /* teal – arrows, dots, stars, icons */
+  --color-accent-dark: #3aa9af;
+  --color-ink: #040618; /* headings, dark sections, footer */
+  --color-body: #585960; /* body copy */
+  --color-line: #e5e5e8;
+  --color-surface: #ffffff;
+  --color-bg: #f3f3f3;
+
+  --font-display: "General Sans", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  --font-sans: "General Sans", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+
+  --shadow-card: 0 18px 40px -24px rgba(4, 6, 24, 0.18);
+  --shadow-soft: 0 10px 30px -14px rgba(4, 6, 24, 0.16);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Base                                                              */
+/* ------------------------------------------------------------------ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-bg);
+    color: var(--color-body);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "ss01";
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: var(--font-display);
+    color: var(--color-ink);
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background: var(--color-brand);
+    color: #fff;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Reusable component classes                                        */
+/* ------------------------------------------------------------------ */
+@layer components {
+  .container-px {
+    @apply mx-auto w-full max-w-[1240px] px-5 sm:px-8;
+  }
+
+  .section {
+    @apply py-16 sm:py-24;
+  }
+
+  /* White rounded label chip with a teal dot on the left */
+  .chip {
+    @apply relative inline-flex items-center rounded-full bg-white py-2 pl-8 pr-4 text-sm font-medium text-ink shadow-[var(--shadow-soft)];
+  }
+  .chip::before {
+    content: "";
+    @apply absolute left-3.5 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-brand;
+  }
+  .chip-plain {
+    @apply relative inline-flex items-center rounded-full bg-black/5 py-2 pl-8 pr-4 text-sm font-medium text-ink;
+  }
+  .chip-plain::before {
+    content: "";
+    @apply absolute left-3.5 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-brand;
+  }
+
+  /* Pill buttons */
+  .btn-primary {
+    @apply inline-flex items-center gap-6 rounded-full bg-brand px-6 py-4 text-base font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-dark focus:outline-none;
+  }
+  .btn-light {
+    @apply inline-flex items-center gap-6 rounded-full bg-white px-6 py-4 text-base font-semibold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90 focus:outline-none;
+  }
+  .btn-dark {
+    @apply inline-flex items-center gap-6 rounded-full bg-ink px-6 py-4 text-base font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 focus:outline-none;
+  }
+  /* the round arrow badge that sits at the right of a pill button */
+  .btn-arrow {
+    @apply inline-flex h-8 w-8 items-center justify-center rounded-full;
+  }
+
+  /* teal circular arrow used on cards ("View Details") */
+  .arrow-circle {
+    @apply inline-flex h-8 w-8 items-center justify-center rounded-full bg-accent text-ink transition-transform duration-200;
+  }
+
+  .link-muted {
+    @apply text-body/90 transition-colors hover:text-brand;
+  }
+
+  /* dark section with a faint grid overlay (Resources / Footer) */
+  .dark-grid {
+    background-color: var(--color-ink);
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 46px 46px;
+  }
+
+  .prose-content p {
+    @apply mb-4 leading-relaxed text-body;
+  }
+  .prose-content h2 {
+    @apply mt-10 mb-3 text-2xl;
+  }
+  .prose-content h3 {
+    @apply mt-8 mb-2 text-xl;
+  }
+  .prose-content ul {
+    @apply mb-5 space-y-2 pl-1;
+  }
+  .prose-content li {
+    @apply relative pl-6 text-body;
+  }
+  .prose-content li::before {
+    content: "";
+    @apply absolute left-0 top-2 h-2.5 w-2.5 rounded-full bg-accent;
+  }
+}
+
+/* Subtle entrance animation */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-up {
+  animation: fade-up 0.6s ease-out both;
+}
