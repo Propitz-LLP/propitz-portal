@@ -29,9 +29,9 @@ export default function Header() {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <header className="absolute inset-x-0 top-0 z-50 pt-4 sm:pt-6">
-      <div className="container-px">
-        <div className="flex h-16 items-center justify-between gap-4 rounded-full bg-white px-5 shadow-[0_14px_40px_-18px_rgba(4,6,24,0.28)] sm:h-[74px] sm:px-7">
+    <header className="absolute inset-x-0 top-0 z-50 pt-4 sm:pt-6 lg:pt-[60px]">
+      <div className="mx-auto w-full px-5 sm:px-8 lg:px-[35px]">
+        <div className="flex h-16 items-center justify-between gap-4 rounded-full bg-white px-5 shadow-[0_14px_40px_-18px_rgba(4,6,24,0.28)] sm:h-[74px] sm:px-7 lg:h-[100px] lg:px-9">
           {/* Logo */}
           <Link href="/" className="flex shrink-0 items-center">
             <Image
@@ -39,7 +39,7 @@ export default function Header() {
               alt="Propitz"
               width={150}
               height={44}
-              className="h-9 w-auto sm:h-10"
+              className="h-9 w-auto sm:h-10 lg:h-11"
               priority
               unoptimized
             />
@@ -61,9 +61,9 @@ export default function Header() {
                       <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
                     </svg>
                   </Link>
-                  <div className="invisible absolute left-1/2 top-full w-72 -translate-x-1/2 translate-y-3 rounded-2xl bg-white p-2 opacity-0 shadow-[var(--shadow-card)] ring-1 ring-line transition-all duration-200 group-hover:visible group-hover:translate-y-2 group-hover:opacity-100">
+                  <div className="invisible absolute left-0 top-full w-[24rem] translate-y-3 rounded-2xl bg-brand p-2 opacity-0 shadow-[var(--shadow-card)] ring-1 ring-brand-dark/40 transition-all duration-200 group-hover:visible group-hover:translate-y-2 group-hover:opacity-100">
                     {item.children.map((c) => (
-                      <Link key={c.href} href={c.href} className="block rounded-xl px-4 py-2.5 text-sm text-body transition-colors hover:bg-black/5 hover:text-brand">
+                      <Link key={c.href} href={c.href} className="block rounded-xl px-4 py-2.5 text-sm font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white">
                         {c.label}
                       </Link>
                     ))}

@@ -3,8 +3,6 @@
 /*  Content matched to the live Propitz site (propitz.com).           */
 /* ------------------------------------------------------------------ */
 
-import { designs } from "./designs";
-
 export const IMG = "https://propitz.com/wp-content/uploads";
 export const THEME_IMG = "https://propitz.com/wp-content/themes/shadez/images";
 
@@ -50,17 +48,6 @@ export const nav: NavItem[] = [
   },
   { label: "Property Marketplace", href: "/property-marketplace" },
   { label: "Contact Us", href: "/contact-us" },
-  {
-    label: "Designs",
-    href: "/designs",
-    children: [
-      { label: "All Designs — Gallery", href: "/designs" },
-      ...designs.map((d) => ({
-        label: `${d.name} — ${d.tagline}`,
-        href: `/designs/${d.slug}`,
-      })),
-    ],
-  },
 ];
 
 /* Hero */

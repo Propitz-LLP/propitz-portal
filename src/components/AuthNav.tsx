@@ -6,10 +6,9 @@ import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 /**
- * Compact auth control for the header. Shows "My Account" when signed in.
- * The signed-out "Register / Log in" links are intentionally hidden — the
- * /register and /login pages still exist and work, they're just not linked
- * from the nav.
+ * Compact auth control for the header. Shows a single "Login" link when
+ * signed out (the login page itself offers "Create an account" → /register),
+ * and "My Account" when signed in.
  */
 export default function AuthNav({ variant = "desktop" }: { variant?: "desktop" | "mobile" }) {
   const [signedIn, setSignedIn] = useState(false);
@@ -26,23 +25,23 @@ export default function AuthNav({ variant = "desktop" }: { variant?: "desktop" |
     return () => subscription.unsubscribe();
   }, []);
 
-  // Register / Log in are hidden everywhere. Only signed-in users see a link.
-  if (!signedIn) return null;
+  const href = signedIn ? "/account" : "/login";
+  const label = signedIn ? "My Account" : "Login";
 
   if (variant === "mobile") {
     return (
-      <Link href="/account" className="block rounded-xl px-4 py-3 text-sm font-semibold text-brand">
-        My Account
+      <Link href={href} className="block rounded-xl px-4 py-3 text-sm font-semibold text-ink">
+        {label}
       </Link>
     );
   }
 
   return (
     <Link
-      href="/account"
+      href={href}
       className="text-[15px] font-medium text-ink transition-colors hover:text-brand"
     >
-      My Account
+      {label}
     </Link>
   );
 }

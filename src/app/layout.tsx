@@ -3,7 +3,6 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingButtons from "@/components/FloatingButtons";
-import SiteChrome from "@/components/SiteChrome";
 import { site } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -48,15 +47,10 @@ export default function RootLayout({
         />
       </head>
       <body className="flex min-h-full flex-col bg-[var(--color-bg)] antialiased">
-        <SiteChrome
-          header={<Header />}
-          footer={<Footer />}
-          floating={
-            <FloatingButtons phone={site.phoneDigits} whatsapp={site.whatsapp} />
-          }
-        >
-          {children}
-        </SiteChrome>
+        <Header />
+        <main className="flex-1">{children}</main>
+        <Footer />
+        <FloatingButtons phone={site.phoneDigits} whatsapp={site.whatsapp} />
       </body>
     </html>
   );

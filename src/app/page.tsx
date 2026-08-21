@@ -63,7 +63,7 @@ export default function Home() {
     <>
       {/* ============================== HERO ============================== */}
       {/* Inset, rounded "frame" over the light page background — matches propitz.com */}
-      <section className="relative mx-5 mt-5 min-h-[760px] overflow-hidden rounded-[20px] bg-ink">
+      <section className="relative mx-5 mt-5 min-h-[760px] overflow-hidden rounded-[20px] bg-ink lg:mx-[30px] lg:mt-[30px] lg:min-h-[880px]">
         {/* Background media: looping video with the still image as poster/fallback */}
         <video
           className="absolute inset-0 h-full w-full object-cover"
@@ -76,7 +76,7 @@ export default function Home() {
           <source src={heroVideo} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-ink/30 via-ink/25 to-ink/70" aria-hidden />
-        <div className="container-px relative flex min-h-[760px] flex-col justify-end pb-16 pt-40">
+        <div className="container-px relative flex min-h-[760px] flex-col justify-end pb-16 pt-40 lg:min-h-[880px]">
           <div className="grid items-end gap-10 lg:grid-cols-[1.1fr_1fr]">
             {/* Left: tagline + heading */}
             <div>
