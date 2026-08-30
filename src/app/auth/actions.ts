@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { isValidMobile, toE164, mobileError, DEFAULT_COUNTRY } from "@/lib/phone";
 
 export type AuthState = { error?: string; message?: string };
 
@@ -17,6 +18,8 @@ function readCredentials(formData: FormData) {
     password: String(formData.get("password") ?? ""),
     confirmPassword: String(formData.get("confirmPassword") ?? ""),
     fullName: String(formData.get("fullName") ?? "").trim(),
+    mobile: String(formData.get("mobile") ?? "").trim(),
+    country: String(formData.get("country") ?? "") || DEFAULT_COUNTRY,
   };
 }
 
@@ -27,11 +30,13 @@ export async function signUp(
 ): Promise<AuthState> {
   if (!isSupabaseConfigured) return { error: NOT_CONFIGURED };
 
-  const { email, password, confirmPassword, fullName } =
+  const { email, password, confirmPassword, fullName, mobile, country } =
     readCredentials(formData);
 
   if (!fullName) return { error: "Please enter your name." };
   if (!email) return { error: "Please enter your email address." };
+  if (!mobile) return { error: "Please enter your mobile number." };
+  if (!isValidMobile(mobile, country)) return { error: mobileError(country) };
   if (password.length < 8)
     return { error: "Password must be at least 8 characters." };
   if (password !== confirmPassword)
@@ -44,7 +49,11 @@ export async function signUp(
     email,
     password,
     options: {
-      data: { full_name: fullName },
+      data: {
+        full_name: fullName,
+        mobile: toE164(mobile, country),
+        mobile_country: country,
+      },
       emailRedirectTo: origin ? `${origin}/auth/confirm` : undefined,
     },
   });
@@ -82,6 +91,99 @@ export async function signIn(
   revalidatePath("/", "layout");
   const redirectTo = String(formData.get("redirect") ?? "/account");
   redirect(redirectTo.startsWith("/") ? redirectTo : "/account");
+}
+
+/* ------------------------------ Google OAuth ----------------------------- */
+export async function signInWithGoogle(
+  _prev: AuthState,
+  formData: FormData
+): Promise<AuthState> {
+  if (!isSupabaseConfigured) return { error: NOT_CONFIGURED };
+
+  const supabase = await createClient();
+  const origin = (await headers()).get("origin") ?? "";
+
+  // Carry the post-login destination through the round-trip to Google.
+  const requested = String(formData.get("redirect") ?? "/account");
+  const next = requested.startsWith("/") ? requested : "/account";
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
+    },
+  });
+
+  if (error) return { error: error.message };
+  if (!data.url) return { error: "Could not start Google sign-in." };
+
+  // Hand the browser off to Google's consent screen.
+  redirect(data.url);
+}
+
+/* ----------------------------- Update profile ---------------------------- */
+export async function updateProfile(
+  _prev: AuthState,
+  formData: FormData
+): Promise<AuthState> {
+  if (!isSupabaseConfigured) return { error: NOT_CONFIGURED };
+
+  const { fullName, mobile, country } = readCredentials(formData);
+
+  if (!fullName) return { error: "Please enter your name." };
+  if (!mobile) return { error: "Please enter your mobile number." };
+  if (!isValidMobile(mobile, country)) return { error: mobileError(country) };
+
+  const supabase = await createClient();
+
+  // updateUser acts on the signed-in session, so there's nothing to check
+  // against a user id from the form — the session is the authority.
+  const { error } = await supabase.auth.updateUser({
+    data: {
+      full_name: fullName,
+      mobile: toE164(mobile, country),
+      mobile_country: country,
+    },
+  });
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/account");
+  return { message: "Profile updated." };
+}
+
+/* --------------------------- Complete profile ---------------------------- */
+/**
+ * Captures the one detail an OAuth sign-in can't give us. Google returns a
+ * name and email but never a phone number, so users arriving that way are
+ * held here (see the proxy) until they provide one.
+ */
+export async function completeProfile(
+  _prev: AuthState,
+  formData: FormData
+): Promise<AuthState> {
+  if (!isSupabaseConfigured) return { error: NOT_CONFIGURED };
+
+  const { mobile, country } = readCredentials(formData);
+
+  if (!mobile) return { error: "Please enter your mobile number." };
+  if (!isValidMobile(mobile, country)) return { error: mobileError(country) };
+
+  const supabase = await createClient();
+
+  // Only the mobile keys are sent; Supabase merges into the existing
+  // metadata, so the name Google gave us is left intact.
+  const { error } = await supabase.auth.updateUser({
+    data: {
+      mobile: toE164(mobile, country),
+      mobile_country: country,
+    },
+  });
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/", "layout");
+  redirect("/account");
 }
 
 /* --------------------------------- Logout -------------------------------- */

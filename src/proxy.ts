@@ -41,11 +41,35 @@ export async function proxy(request: NextRequest) {
 
   // Gate the protected area.
   const { pathname } = request.nextUrl;
+  const COMPLETE_PROFILE = "/account/complete-profile";
+
   if (!user && pathname.startsWith("/account")) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("redirect", pathname);
     return NextResponse.redirect(url);
+  }
+
+  // OAuth sign-ins arrive without a phone number, which we require. Hold
+  // them on the completion step until they provide one — enforced here so
+  // it can't be stepped around by typing a URL.
+  if (user && pathname.startsWith("/account")) {
+    const hasMobile = Boolean(user.user_metadata?.mobile);
+
+    if (!hasMobile && pathname !== COMPLETE_PROFILE) {
+      const url = request.nextUrl.clone();
+      url.pathname = COMPLETE_PROFILE;
+      url.search = "";
+      return NextResponse.redirect(url);
+    }
+
+    // Nothing to complete — don't leave the step reachable.
+    if (hasMobile && pathname === COMPLETE_PROFILE) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/account";
+      url.search = "";
+      return NextResponse.redirect(url);
+    }
   }
 
   // Keep signed-in users out of the auth screens.

@@ -6,7 +6,15 @@
 /* ------------------------------------------------------------------ */
 
 export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-export const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
+
+/**
+ * Newer Supabase projects issue a `sb_publishable_…` key; older ones a JWT
+ * anon key. Either works as the client-side key, so accept both.
+ */
+export const SUPABASE_ANON_KEY =
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
+  "";
 
 /** True only when real-looking credentials are present. */
 export const isSupabaseConfigured =
