@@ -3,8 +3,15 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { signIn, type AuthState } from "@/app/auth/actions";
-import GoogleButton from "./GoogleButton";
 import { field } from "./fieldClass";
+
+// --- Google login (disabled) -------------------------------------------
+// Kept commented rather than deleted so it can be switched back on. To
+// re-enable: restore this import and the <GoogleButton /> below, plus
+// `signInWithGoogle` in src/app/auth/actions.ts and the callback route at
+// src/app/auth/callback/route.disabled.ts (rename it back to route.ts).
+// import GoogleButton from "./GoogleButton";
+// -----------------------------------------------------------------------
 
 const initial: AuthState = {};
 
@@ -25,8 +32,11 @@ export default function LoginForm({
         </p>
       )}
 
-      {/* Its own <form>, so it sits outside the one below — forms can't nest. */}
-      <GoogleButton redirectTo={redirectTo} label="Log in with Google" />
+      {/*
+        Google login (disabled). Its own <form>, so it sits outside the one
+        below — forms can't nest. Restore the import above to re-enable.
+        <GoogleButton redirectTo={redirectTo} label="Log in with Google" />
+      */}
 
       <form action={action}>
         <input type="hidden" name="redirect" value={redirectTo} />

@@ -94,32 +94,42 @@ export async function signIn(
 }
 
 /* ------------------------------ Google OAuth ----------------------------- */
-export async function signInWithGoogle(
-  _prev: AuthState,
-  formData: FormData
-): Promise<AuthState> {
-  if (!isSupabaseConfigured) return { error: NOT_CONFIGURED };
-
-  const supabase = await createClient();
-  const origin = (await headers()).get("origin") ?? "";
-
-  // Carry the post-login destination through the round-trip to Google.
-  const requested = String(formData.get("redirect") ?? "/account");
-  const next = requested.startsWith("/") ? requested : "/account";
-
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: {
-      redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
-    },
-  });
-
-  if (error) return { error: error.message };
-  if (!data.url) return { error: "Could not start Google sign-in." };
-
-  // Hand the browser off to Google's consent screen.
-  redirect(data.url);
-}
+/*
+ * DISABLED. Commented out rather than deleted so Google login can be
+ * switched back on without rewriting it. To re-enable, uncomment this
+ * action, restore the <GoogleButton /> in LoginForm/RegisterForm, and
+ * restore src/app/auth/callback/route.disabled.ts as route.ts. The
+ * provider also has to be
+ * enabled in the Supabase dashboard (Authentication -> Providers -> Google)
+ * with a Client ID/Secret from Google Cloud Console.
+ *
+ * export async function signInWithGoogle(
+ *   _prev: AuthState,
+ *   formData: FormData
+ * ): Promise<AuthState> {
+ *   if (!isSupabaseConfigured) return { error: NOT_CONFIGURED };
+ *
+ *   const supabase = await createClient();
+ *   const origin = (await headers()).get("origin") ?? "";
+ *
+ *   // Carry the post-login destination through the round-trip to Google.
+ *   const requested = String(formData.get("redirect") ?? "/account");
+ *   const next = requested.startsWith("/") ? requested : "/account";
+ *
+ *   const { data, error } = await supabase.auth.signInWithOAuth({
+ *     provider: "google",
+ *     options: {
+ *       redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
+ *     },
+ *   });
+ *
+ *   if (error) return { error: error.message };
+ *   if (!data.url) return { error: "Could not start Google sign-in." };
+ *
+ *   // Hand the browser off to Google's consent screen.
+ *   redirect(data.url);
+ * }
+ */
 
 /* ----------------------------- Update profile ---------------------------- */
 export async function updateProfile(

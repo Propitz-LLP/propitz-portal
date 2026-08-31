@@ -4,8 +4,15 @@ import Link from "next/link";
 import { useActionState, useRef, useState } from "react";
 import { signUp, type AuthState } from "@/app/auth/actions";
 import MobileField from "./MobileField";
-import GoogleButton from "./GoogleButton";
 import { field, fieldError } from "./fieldClass";
+
+// --- Google login (disabled) -------------------------------------------
+// Kept commented rather than deleted so it can be switched back on. To
+// re-enable: restore this import and the <GoogleButton /> below, plus
+// `signInWithGoogle` in src/app/auth/actions.ts and the callback route at
+// src/app/auth/callback/route.disabled.ts (rename it back to route.ts).
+// import GoogleButton from "./GoogleButton";
+// -----------------------------------------------------------------------
 
 const initial: AuthState = {};
 
@@ -31,8 +38,11 @@ export default function RegisterForm() {
 
   return (
     <div className="rounded-3xl bg-white p-6 shadow-[var(--shadow-card)] ring-1 ring-line sm:p-8">
-      {/* Its own <form>, so it sits outside the one below — forms can't nest. */}
-      <GoogleButton label="Sign up with Google" />
+      {/*
+        Google signup (disabled). Its own <form>, so it sits outside the one
+        below — forms can't nest. Restore the import above to re-enable.
+        <GoogleButton label="Sign up with Google" />
+      */}
 
       <form action={action}>
         <div className="space-y-4">
