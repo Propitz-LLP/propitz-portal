@@ -3,175 +3,329 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { nav, site } from "@/data/site";
+import { useState } from "react";
+import { site } from "@/data/site";
+import { freeTools, servicesDetail } from "@/data/home";
+import { propertyTypes } from "@/data/marketplace";
 import AuthNav from "@/components/AuthNav";
+import RegionSelector from "@/components/RegionSelector";
+import RegionBadge from "@/components/RegionBadge";
+import {
+  IconArrow,
+  IconCheck,
+  IconChevron,
+  IconClose,
+  IconMenu,
+  IconPerson,
+  IconPhone,
+  IconScreen,
+} from "@/components/Icon";
 
-function ArrowUpRight({ className = "" }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M8 7h9v9" />
-    </svg>
-  );
-}
+const simpleNav = [
+  { label: "Marketplace", href: "/property-marketplace" },
+  { label: "Our centres", href: "/contact-us" },
+  { label: "About", href: "/about-us" },
+];
 
+/**
+ * In-flow header with a mega-menu.
+ *
+ * The menu is what keeps every service within two clicks of any page:
+ * open Services, pick one. It carries all eight services, the marketplace
+ * entry points and the free tools in a single panel.
+ */
 export default function Header() {
   const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [servicesOpen, setServicesOpen] = useState(false);
 
-  useEffect(() => {
-    setMobileOpen(false);
-    setServicesOpen(false);
-  }, [pathname]);
+  // Menus are tied to the path they were opened on, so a route change
+  // closes them without a state-setting effect.
+  const [drawerFor, setDrawerFor] = useState<string | null>(null);
+  const [megaFor, setMegaFor] = useState<string | null>(null);
+  const drawerOpen = drawerFor === pathname;
+  const megaOpen = megaFor === pathname;
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <header className="absolute inset-x-0 top-0 z-50 pt-4 sm:pt-6 lg:pt-[60px]">
-      <div className="mx-auto w-full px-5 sm:px-8 lg:px-[35px]">
-        <div className="flex h-16 items-center justify-between gap-4 rounded-full bg-white px-5 shadow-[0_14px_40px_-18px_rgba(4,6,24,0.28)] sm:h-[74px] sm:px-7 lg:h-[100px] lg:px-9">
-          {/* Logo */}
-          <Link href="/" className="flex shrink-0 items-center">
-            <Image
-              src={site.logo}
-              alt="Propitz"
-              width={150}
-              height={44}
-              className="h-9 w-auto sm:h-10 lg:h-11"
-              priority
-              unoptimized
-            />
+    <header className="relative z-50">
+      {/* main bar */}
+      <div className="border-b border-line bg-bg">
+        <div className="container-px flex h-[78px] items-center gap-6">
+          <Link href="/" aria-label="Propitz home" className="shrink-0">
+            <Image src={site.logo} alt="Propitz" width={478} height={141} className="h-[31px] w-auto" priority />
           </Link>
 
-          {/* Desktop nav */}
-          <nav className="hidden items-center gap-7 lg:flex">
-            {nav.map((item) =>
-              item.children ? (
-                <div key={item.href} className="group relative">
-                  <Link
-                    href={item.href}
-                    className={`flex items-center gap-1 text-[15px] font-medium transition-colors ${
-                      isActive(item.href) ? "text-brand" : "text-ink hover:text-brand"
-                    }`}
-                  >
-                    {item.label}
-                    <svg className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-                    </svg>
-                  </Link>
-                  <div className="invisible absolute left-0 top-full w-[24rem] translate-y-3 rounded-2xl bg-brand p-2 opacity-0 shadow-[var(--shadow-card)] ring-1 ring-brand-dark/40 transition-all duration-200 group-hover:visible group-hover:translate-y-2 group-hover:opacity-100">
-                    {item.children.map((c) => (
-                      <Link key={c.href} href={c.href} className="block rounded-xl px-4 py-2.5 text-sm font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white">
-                        {c.label}
+          <nav className="hidden items-center gap-1 lg:flex">
+            <button
+              type="button"
+              aria-expanded={megaOpen}
+              onClick={() => setMegaFor(megaOpen ? null : pathname)}
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                megaOpen || isActive("/services")
+                  ? "bg-brand-50 font-semibold text-brand"
+                  : "text-body hover:bg-bg-alt hover:text-ink"
+              }`}
+            >
+              Services
+              <IconChevron size={11} className={megaOpen ? "rotate-180" : ""} />
+            </button>
+            {simpleNav.map((n) => (
+              <Link
+                key={n.href}
+                href={n.href}
+                className={`rounded-lg px-3 py-2.5 text-sm transition-colors ${
+                  isActive(n.href)
+                    ? "bg-brand-50 font-semibold text-brand"
+                    : "font-medium text-body hover:bg-bg-alt hover:text-ink"
+                }`}
+              >
+                {n.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="ml-auto flex items-center gap-2.5">
+            <RegionBadge className="hidden sm:block" />
+            <div className="hidden lg:block">
+              <AuthNav />
+            </div>
+            <Link
+              href="/contact-us"
+              className="hidden items-center gap-2 rounded-full bg-brand px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-dark sm:inline-flex"
+            >
+              <IconPhone size={15} />
+              Talk to us
+            </Link>
+            <button
+              type="button"
+              aria-label={drawerOpen ? "Close menu" : "Open menu"}
+              aria-expanded={drawerOpen}
+              onClick={() => setDrawerFor(drawerOpen ? null : pathname)}
+              className="grid h-[46px] w-[46px] place-items-center rounded-xl border border-line-strong text-ink lg:hidden"
+            >
+              {drawerOpen ? <IconClose size={20} /> : <IconMenu size={20} />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* desktop mega-menu */}
+      {megaOpen && (
+        <div className="absolute inset-x-0 top-full hidden lg:block">
+          <div className="container-px">
+            <div className="mt-3 rounded-3xl border border-line bg-surface p-7 shadow-[var(--shadow-pop)]">
+              <div className="grid grid-cols-[2.15fr_1fr_1fr] gap-8">
+                <div>
+                  <p className="mb-3.5 text-[10.5px] font-bold uppercase tracking-[0.09em] text-faint">
+                    Property services
+                  </p>
+                  <div className="grid grid-cols-2 gap-1">
+                    {servicesDetail.map((s) => (
+                      <Link
+                        key={s.n}
+                        href={s.href}
+                        onClick={() => setMegaFor(null)}
+                        className="flex gap-3 rounded-[10px] px-2.5 py-2 transition-colors hover:bg-bg-alt"
+                      >
+                        <span className="pt-0.5 font-mono text-[11.5px] text-faint">{s.n}</span>
+                        <span>
+                          <span className="block text-[13.5px] font-semibold leading-[1.35] text-ink">
+                            {s.title}
+                          </span>
+                          <span className="ta block text-xs text-muted">{s.ta}</span>
+                        </span>
                       </Link>
                     ))}
                   </div>
                 </div>
-              ) : (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`text-[15px] font-medium transition-colors ${
-                    isActive(item.href) ? "text-brand" : "text-ink hover:text-brand"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              )
-            )}
-          </nav>
 
-          {/* Right action */}
-          <div className="hidden items-center gap-5 lg:flex">
-            <AuthNav />
-            <a
-              href={site.queryForm}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 rounded-full bg-brand py-2.5 pl-6 pr-2.5 text-[15px] font-semibold text-white transition-colors hover:bg-brand-dark"
-            >
-              Submit Your Query
-              <span className="btn-arrow bg-white/15">
-                <ArrowUpRight className="h-4 w-4" />
-              </span>
-            </a>
-          </div>
-
-          {/* Mobile toggle */}
-          <button
-            type="button"
-            aria-label="Toggle menu"
-            onClick={() => setMobileOpen((v) => !v)}
-            className="flex h-11 w-11 items-center justify-center rounded-full ring-1 ring-line lg:hidden"
-          >
-            {mobileOpen ? (
-              <svg className="h-6 w-6 text-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg className="h-6 w-6 text-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div className="container-px lg:hidden">
-          <div className="mt-3 space-y-1 rounded-2xl bg-white p-4 shadow-[var(--shadow-card)]">
-            {nav.map((item) =>
-              item.children ? (
-                <div key={item.href}>
-                  <button
-                    type="button"
-                    onClick={() => setServicesOpen((v) => !v)}
-                    className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-semibold text-ink"
-                  >
-                    {item.label}
-                    <svg className={`h-4 w-4 transition-transform ${servicesOpen ? "rotate-180" : ""}`} viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-                    </svg>
-                  </button>
-                  {servicesOpen && (
-                    <div className="ml-3 space-y-1 border-l border-line pl-3">
-                      <Link href={item.href} className="block rounded-lg px-3 py-2 text-sm font-medium text-brand">
-                        All Services
-                      </Link>
-                      {item.children.map((c) => (
-                        <Link key={c.href} href={c.href} className="block rounded-lg px-3 py-2 text-sm text-body">
-                          {c.label}
+                <div className="border-l border-line pl-8">
+                  <p className="mb-3.5 text-[10.5px] font-bold uppercase tracking-[0.09em] text-faint">
+                    Marketplace
+                  </p>
+                  <div className="flex flex-col gap-0.5">
+                    <Link
+                      href="/property-marketplace"
+                      onClick={() => setMegaFor(null)}
+                      className="rounded-[10px] bg-accent-50 px-2.5 py-2 text-[13.5px] font-semibold text-ink"
+                    >
+                      Browse all listings
+                    </Link>
+                    {propertyTypes
+                      .filter((t) => t.key !== "all")
+                      .map((t) => (
+                        <Link
+                          key={t.key}
+                          href="/property-marketplace"
+                          onClick={() => setMegaFor(null)}
+                          className="rounded-[10px] px-2.5 py-2 text-[13.5px] text-body transition-colors hover:bg-bg-alt hover:text-brand"
+                        >
+                          {t.label}
                         </Link>
                       ))}
-                    </div>
-                  )}
+                    <Link
+                      href="/property-marketplace"
+                      onClick={() => setMegaFor(null)}
+                      className="flex items-center gap-1.5 rounded-[10px] px-2.5 py-2 text-[13.5px] font-semibold text-ok"
+                    >
+                      <IconCheck size={14} />
+                      Verified only
+                    </Link>
+                  </div>
                 </div>
-              ) : (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`block rounded-xl px-4 py-3 text-sm font-semibold ${
-                    isActive(item.href) ? "text-brand" : "text-ink"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              )
-            )}
-            <div className="mt-2 border-t border-line pt-2">
-              <AuthNav variant="mobile" />
+
+                <div className="border-l border-line pl-8">
+                  <p className="mb-3.5 text-[10.5px] font-bold uppercase tracking-[0.09em] text-faint">
+                    Free tools
+                  </p>
+                  <div className="flex flex-col gap-0.5">
+                    {freeTools.map((t) => (
+                      <Link
+                        key={t.href}
+                        href={t.href}
+                        onClick={() => setMegaFor(null)}
+                        className="rounded-[10px] px-2.5 py-2 text-[13.5px] text-body transition-colors hover:bg-bg-alt hover:text-brand"
+                      >
+                        {t.label}
+                      </Link>
+                    ))}
+                  </div>
+                  <div className="mt-4 border-t border-line pt-4">
+                    <p className="mb-2.5 text-[13px] text-muted">Not sure where to start?</p>
+                    <Link
+                      href="/contact-us"
+                      onClick={() => setMegaFor(null)}
+                      className="btn-dark w-full justify-center gap-2 py-3 text-[13.5px]"
+                    >
+                      Tell us what you need
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 flex flex-wrap items-center gap-3.5 border-t border-line pt-5">
+                <span className="flex items-center gap-2 rounded-full bg-brand-50 px-3.5 py-2 text-[13px] font-semibold text-brand">
+                  <IconScreen size={16} />
+                  Every service can be started online
+                </span>
+                <span className="flex items-center gap-2 rounded-full bg-accent-50 px-3.5 py-2 text-[13px] font-semibold text-accent-deep">
+                  <IconPerson size={16} />
+                  and finished with a coordinator beside you
+                </span>
+              </div>
             </div>
-            <a
-              href={site.queryForm}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary mt-3 w-full justify-center"
+          </div>
+        </div>
+      )}
+
+      {/* mobile drawer */}
+      {drawerOpen && (
+        <div className="border-b border-line bg-bg lg:hidden">
+          <div className="container-px py-5">
+            <p className="mb-3 text-[11.5px] font-bold uppercase tracking-[0.09em] text-faint">
+              Property services
+            </p>
+            <div className="mb-6 flex flex-col gap-0.5">
+              {servicesDetail.map((s) => (
+                <Link
+                  key={s.n}
+                  href={s.href}
+                  onClick={() => setDrawerFor(null)}
+                  className="flex min-h-[52px] items-center gap-3 rounded-xl px-3 py-1.5 transition-colors hover:bg-bg-alt"
+                >
+                  <span className="font-mono text-xs text-faint">{s.n}</span>
+                  <span>
+                    <span className="block text-sm font-semibold leading-[1.3] text-ink">
+                      {s.title}
+                    </span>
+                    <span className="ta block text-xs text-muted">{s.ta}</span>
+                  </span>
+                </Link>
+              ))}
+            </div>
+
+            <p className="mb-3 text-[11.5px] font-bold uppercase tracking-[0.09em] text-faint">
+              Marketplace
+            </p>
+            <div className="mb-6 flex flex-wrap gap-2">
+              <Link
+                href="/property-marketplace"
+                onClick={() => setDrawerFor(null)}
+                className="inline-flex min-h-[44px] items-center rounded-full border border-accent bg-accent-50 px-4 text-[13px] font-semibold text-accent-deep"
+              >
+                Browse all
+              </Link>
+              {propertyTypes
+                .filter((t) => t.key !== "all")
+                .map((t) => (
+                  <Link
+                    key={t.key}
+                    href="/property-marketplace"
+                    onClick={() => setDrawerFor(null)}
+                    className="chip-filter"
+                  >
+                    {t.label}
+                  </Link>
+                ))}
+            </div>
+
+            <p className="mb-3 text-[11.5px] font-bold uppercase tracking-[0.09em] text-faint">
+              Free tools
+            </p>
+            <div className="mb-6 flex flex-col gap-0.5">
+              {freeTools.map((t) => (
+                <Link
+                  key={t.href}
+                  href={t.href}
+                  onClick={() => setDrawerFor(null)}
+                  className="flex min-h-[48px] items-center rounded-xl px-3 text-sm text-body transition-colors hover:bg-bg-alt"
+                >
+                  {t.label}
+                </Link>
+              ))}
+            </div>
+
+            <div className="mb-6 flex flex-col gap-0.5 border-t border-line pt-4">
+              {simpleNav.map((n) => (
+                <Link
+                  key={n.href}
+                  href={n.href}
+                  onClick={() => setDrawerFor(null)}
+                  className="flex min-h-[48px] items-center rounded-xl px-3 text-[15px] font-semibold text-ink transition-colors hover:bg-bg-alt"
+                >
+                  {n.label}
+                </Link>
+              ))}
+              <div className="px-3 py-2">
+                <AuthNav variant="mobile" />
+              </div>
+            </div>
+
+            <div className="mb-5 rounded-2xl border border-line bg-surface p-4">
+              <RegionSelector />
+            </div>
+
+            <div className="mb-5 rounded-2xl border border-line bg-surface p-4">
+              <div className="mb-2 flex items-center gap-2.5">
+                <IconScreen size={17} className="text-brand" />
+                <IconPerson size={17} className="text-accent-dark" />
+                <p className="text-[13.5px] font-bold text-ink">Online, then in person</p>
+              </div>
+              <p className="text-[13px] leading-[1.5] text-body">
+                Start any service here. Finish it with a coordinator beside you at the
+                Chennai, Chengalpattu or Tiruvallur centre.
+              </p>
+            </div>
+
+            <Link
+              href="/contact-us"
+              onClick={() => setDrawerFor(null)}
+              className="btn-primary w-full justify-center gap-3 py-3.5 text-[15px]"
             >
-              Submit Your Query
-            </a>
+              Talk to us
+              <IconArrow size={16} />
+            </Link>
           </div>
         </div>
       )}

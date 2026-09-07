@@ -9,21 +9,43 @@
   --color-brand-light: #5b82c9;
   --color-brand-50: #eef2fb;
   --color-brand-100: #dbe4f5;
-  --color-accent: #51c1c7; /* teal – arrows, dots, stars, icons */
+  --color-accent: #51c1c7; /* teal – marketplace, arrows, dots */
   --color-accent-dark: #3aa9af;
-  --color-ink: #040618; /* headings, dark sections, footer */
-  --color-body: #585960; /* body copy */
-  --color-line: #e5e5e8;
+  --color-accent-deep: #2c8288;
+  --color-accent-50: #e8f7f8;
+
+  /* warm paper ground, blue-leaning ink */
+  --color-ink: #141c27; /* headings + dark sections */
+  --color-navy: #132038; /* utility bar, CTA band */
+  --color-navy-deep: #0e1727; /* footer */
+  --color-body: #44505f; /* body copy */
+  --color-muted: #77828f; /* secondary copy, Tamil subtitles */
+  --color-faint: #a2abb5; /* eyebrow labels, step numbers */
+  --color-line: #e5e0d8;
+  --color-line-strong: #d3ccc1;
   --color-surface: #ffffff;
-  --color-bg: #f3f3f3;
+  --color-bg: #faf8f4;
+  --color-bg-alt: #f2eee7;
+  --color-placeholder: #e9e3d8;
 
-  --font-display: "General Sans", ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", Roboto, sans-serif;
-  --font-sans: "General Sans", ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", Roboto, sans-serif;
+  /* verification semantics — green means checked, amber means still reading */
+  --color-ok: #2e7d5b;
+  --color-ok-50: #e4f2ea;
+  --color-ok-ink: #1f5c42;
+  --color-warn: #b5892f;
+  --color-warn-50: #faf1dc;
+  --color-warn-ink: #8f6c22;
+  --color-whatsapp: #1fa855;
 
-  --shadow-card: 0 18px 40px -24px rgba(4, 6, 24, 0.18);
-  --shadow-soft: 0 10px 30px -14px rgba(4, 6, 24, 0.16);
+  --font-display: var(--font-serif), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-sans-pj), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  --font-tamil: var(--font-tamil-anek), var(--font-sans-pj), sans-serif;
+  --font-mono: var(--font-mono-plex), ui-monospace, monospace;
+
+  --shadow-card: 0 18px 40px -24px rgba(20, 28, 39, 0.18);
+  --shadow-soft: 0 10px 30px -14px rgba(20, 28, 39, 0.16);
+  --shadow-pop: 0 24px 60px -28px rgba(20, 28, 39, 0.34);
 }
 
 /* ------------------------------------------------------------------ */
@@ -39,7 +61,6 @@
     color: var(--color-body);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
-    font-feature-settings: "ss01";
   }
 
   h1,
@@ -49,9 +70,9 @@
   h5 {
     font-family: var(--font-display);
     color: var(--color-ink);
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.12;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.025em;
   }
 
   ::selection {
@@ -106,6 +127,40 @@
   /* teal circular arrow used on cards ("View Details") */
   .arrow-circle {
     @apply inline-flex h-8 w-8 items-center justify-center rounded-full bg-accent text-ink transition-transform duration-200;
+  }
+
+  /* bilingual label — Tamil sits under or beside its English counterpart */
+  .ta {
+    font-family: var(--font-tamil);
+    font-weight: 500;
+  }
+
+  /* small caps eyebrow above a section heading */
+  .kicker {
+    @apply inline-flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-[0.1em] text-accent-dark;
+  }
+  .kicker::before {
+    content: "";
+    @apply block h-px w-[22px] bg-accent;
+  }
+
+  /* verification badge, green = read, amber = still being read */
+  .badge-ok {
+    @apply rounded-md bg-ok-50 px-2.5 py-1 text-[11.5px] font-semibold text-ok;
+  }
+  .badge-warn {
+    @apply rounded-md bg-warn-50 px-2.5 py-1 text-[11.5px] font-semibold text-warn-ink;
+  }
+  .badge-none {
+    @apply rounded-md bg-bg-alt px-2.5 py-1 text-[11.5px] font-semibold text-muted;
+  }
+
+  /* filter pill used across the marketplace */
+  .chip-filter {
+    @apply inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-line-strong bg-surface px-4 text-[13px] font-semibold text-body transition-colors hover:border-brand hover:text-brand;
+  }
+  .chip-filter-on {
+    @apply inline-flex min-h-[44px] items-center gap-1.5 rounded-full bg-brand px-4 text-[13px] font-semibold text-white;
   }
 
   .link-muted {

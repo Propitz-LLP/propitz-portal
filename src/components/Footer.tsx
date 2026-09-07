@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { site, nav } from "@/data/site";
 import { services } from "@/data/services";
+import { IconPhone, IconWhatsApp } from "@/components/Icon";
 
 export default function Footer() {
   return (
@@ -15,6 +16,33 @@ export default function Footer() {
           <p className="mt-6 max-w-sm text-[15px] leading-relaxed text-slate-400">
             {site.description}
           </p>
+
+          {/* Contact details — the header no longer carries the phone. */}
+          <div className="mt-7 flex flex-col gap-2.5 text-[15px]">
+            <a
+              href={`tel:${site.phoneDigits}`}
+              className="inline-flex items-center gap-2.5 text-white transition-colors hover:text-accent"
+            >
+              <IconPhone size={16} />
+              {site.phone}
+            </a>
+            <a
+              href={`https://wa.me/${site.whatsapp}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2.5 text-slate-300 transition-colors hover:text-accent"
+            >
+              <IconWhatsApp size={16} />
+              Chat on WhatsApp
+            </a>
+            <a
+              href={`mailto:${site.email}`}
+              className="text-slate-300 transition-colors hover:text-accent"
+            >
+              {site.email}
+            </a>
+            <p className="max-w-xs leading-relaxed text-slate-400">{site.address}</p>
+          </div>
         </div>
 
         {/* Quick links */}

@@ -2,11 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   site,
-  heroHeading,
-  heroTagline,
-  heroImage,
-  heroVideo,
-  stats,
   aboutStats,
   aboutIntro,
   mission,
@@ -15,15 +10,18 @@ import {
   commitments,
   resourceCards,
   reviewRating,
-  reviewLabel,
   clientAvatars,
   IMG,
 } from "@/data/site";
 import { posts } from "@/data/blog";
-import Reveal from "@/components/Reveal";
 import WhoWeAre from "@/components/WhoWeAre";
 import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
+import IntentHero from "@/components/home/IntentHero";
+import TrustStrip from "@/components/home/TrustStrip";
+import Phygital from "@/components/home/Phygital";
+import ServicesGrid from "@/components/home/ServicesGrid";
+import MarketplaceTeaser from "@/components/home/MarketplaceTeaser";
 
 /* ---------- small helpers ---------- */
 function ArrowUpRight({ className = "" }: { className?: string }) {
@@ -61,63 +59,18 @@ function AvatarRow() {
 export default function Home() {
   return (
     <>
-      {/* ============================== HERO ============================== */}
-      {/* Inset, rounded "frame" over the light page background — matches propitz.com */}
-      <section className="relative mx-5 mt-5 min-h-[760px] overflow-hidden rounded-[20px] bg-ink lg:mx-[30px] lg:mt-[30px] lg:min-h-[880px]">
-        {/* Background media: looping video with the still image as poster/fallback */}
-        <video
-          className="absolute inset-0 h-full w-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster={heroImage}
-        >
-          <source src={heroVideo} type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-ink/30 via-ink/25 to-ink/70" aria-hidden />
-        <div className="container-px relative flex min-h-[760px] flex-col justify-end pb-16 pt-40 lg:min-h-[880px]">
-          <div className="grid items-end gap-10 lg:grid-cols-[1.1fr_1fr]">
-            {/* Left: tagline + heading */}
-            <div>
-              <span className="inline-flex items-center rounded-full bg-white/15 py-2 pl-8 pr-4 text-sm font-medium text-white backdrop-blur relative">
-                <span className="absolute left-3.5 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-accent" />
-                {heroTagline}
-              </span>
-              <h1 className="mt-6 max-w-2xl text-4xl font-medium leading-[1.1] text-white sm:text-5xl lg:text-[52px]">
-                {heroHeading}
-              </h1>
-            </div>
+      {/* ===================== HERO · INTENT-LED ===================== */}
+      <IntentHero />
+      <TrustStrip />
 
-            {/* Right: stats + CTA + rating */}
-            <div className="lg:pl-6">
-              <div className="grid grid-cols-3 gap-6 border-b border-white/20 pb-8 text-white">
-                {stats.map((s) => (
-                  <div key={s.label}>
-                    <div className="text-4xl font-semibold sm:text-5xl">{s.value}</div>
-                    <div className="mt-2 text-sm text-white/80">{s.label}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-8 flex flex-wrap items-center gap-8">
-                <Link href="/contact-us" className="btn-light pr-3">
-                  Schedule Call Back
-                  <span className="btn-arrow bg-ink text-white">
-                    <ArrowUpRight className="h-4 w-4" />
-                  </span>
-                </Link>
-                <div>
-                  <div className="flex items-center gap-2 text-white">
-                    <span className="text-lg font-semibold">{reviewRating}</span>
-                    <Stars />
-                  </div>
-                  <p className="mt-1 text-sm text-white/80">{reviewLabel}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* ===================== PHYGITAL MODEL ===================== */}
+      <Phygital />
+
+      {/* ===================== ALL EIGHT SERVICES ===================== */}
+      <ServicesGrid />
+
+      {/* ===================== MARKETPLACE ===================== */}
+      <MarketplaceTeaser />
 
       {/* ============================== ABOUT ============================== */}
       <section className="section">

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import PageHero from "@/components/PageHero";
+import ListingBrowser from "@/components/marketplace/ListingBrowser";
 import SectionHeading from "@/components/SectionHeading";
 import Reveal from "@/components/Reveal";
 import CTASection from "@/components/CTASection";
-import { IMG, site } from "@/data/site";
+import { site } from "@/data/site";
 
 export const metadata: Metadata = {
   title: "Property Marketplace",
@@ -29,22 +29,7 @@ const feeModel = [
 export default function MarketplacePage() {
   return (
     <>
-      <PageHero
-        title="Property Marketplace"
-        subtitle="An assisted, verification-led property listing platform designed for registered and enrolled clients who want structured support for buying or selling properties."
-        image={`${IMG}/2026/02/Property-Marketplace.jpg`}
-      />
-
-      <section className="section">
-        <div className="container-px">
-          <SectionHeading
-            align="left"
-            eyebrow="Overview"
-            title="What is the Propitz Property Marketplace?"
-            subtitle="Unlike an open classifieds board, the Propitz Marketplace is assisted and verification-led. Listings are supported by structured coordination, and verification is performed by independent third-party professionals — Propitz facilitates the process."
-          />
-        </div>
-      </section>
+      <ListingBrowser />
 
       {/* Verified & enrolled */}
       <section className="pb-16 sm:pb-20">
