@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import RegisterForm from "@/components/RegisterForm";
+import { safeRedirect } from "@/lib/redirectTo";
 import { THEME_IMG } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -9,7 +10,14 @@ export const metadata: Metadata = {
     "Register for a Propitz account to track your property enquiries and access structured facilitation support.",
 };
 
-export default function RegisterPage() {
+export default async function RegisterPage({
+  searchParams,
+}: {
+  // `searchParams` is a promise in this Next.js version.
+  searchParams: Promise<{ redirect?: string }>;
+}) {
+  const { redirect } = await searchParams;
+
   return (
     <>
       <PageHero
@@ -21,7 +29,7 @@ export default function RegisterPage() {
       <section className="section">
         <div className="container-px">
           <div className="mx-auto max-w-md">
-            <RegisterForm />
+            <RegisterForm redirectTo={safeRedirect(redirect)} />
           </div>
         </div>
       </section>

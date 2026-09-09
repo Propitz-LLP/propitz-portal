@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { signIn, type AuthState } from "@/app/auth/actions";
+import { HOME } from "@/lib/redirectTo";
 import { field } from "./fieldClass";
 
 // --- Google login (disabled) -------------------------------------------
@@ -16,7 +17,7 @@ import { field } from "./fieldClass";
 const initial: AuthState = {};
 
 export default function LoginForm({
-  redirectTo = "/account",
+  redirectTo = HOME,
   notice,
 }: {
   redirectTo?: string;
@@ -87,7 +88,10 @@ export default function LoginForm({
 
       <p className="mt-5 text-center text-sm text-body">
         New to Propitz?{" "}
-        <Link href="/register" className="font-semibold text-brand hover:text-brand-dark">
+        <Link
+          href={`/register?redirect=${encodeURIComponent(redirectTo)}`}
+          className="font-semibold text-brand hover:text-brand-dark"
+        >
           Create an account
         </Link>
       </p>

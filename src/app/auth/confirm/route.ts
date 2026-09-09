@@ -1,6 +1,7 @@
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { safeRedirect, HOME } from "@/lib/redirectTo";
 
 /**
  * Handles the link Supabase emails to a new user, in either shape it can
@@ -23,8 +24,7 @@ export async function GET(request: NextRequest) {
 
   // Only allow relative redirects, so a crafted link can't bounce a
   // freshly-confirmed session off to another origin.
-  const requested = searchParams.get("next") ?? "/account";
-  const next = requested.startsWith("/") ? requested : "/account";
+  const next = safeRedirect(searchParams.get("next"), HOME);
 
   if (code || (token_hash && type)) {
     const supabase = await createClient();

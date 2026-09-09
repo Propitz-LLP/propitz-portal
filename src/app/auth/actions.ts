@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { isValidMobile, toE164, mobileError, DEFAULT_COUNTRY } from "@/lib/phone";
+import { safeRedirect, HOME } from "@/lib/redirectTo";
 
 export type AuthState = { error?: string; message?: string };
 
@@ -21,6 +22,17 @@ function readCredentials(formData: FormData) {
     mobile: String(formData.get("mobile") ?? "").trim(),
     country: String(formData.get("country") ?? "") || DEFAULT_COUNTRY,
   };
+}
+
+/**
+ * Where to land after signing in or up: the screen the user came from, or
+ * the home page. The one exception is a missing mobile number — that has to
+ * be collected, so those users are sent into /account, where the proxy holds
+ * them on the completion step.
+ */
+function destination(formData: FormData, hasMobile: boolean) {
+  if (!hasMobile) return "/account";
+  return safeRedirect(formData.get("redirect"), HOME);
 }
 
 /* -------------------------------- Register ------------------------------- */
@@ -45,6 +57,10 @@ export async function signUp(
   const supabase = await createClient();
   const origin = (await headers()).get("origin") ?? "";
 
+  // Carry the destination through the confirmation email, so users who have
+  // to click a link still come back to the page they started from.
+  const next = encodeURIComponent(safeRedirect(formData.get("redirect"), HOME));
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -54,7 +70,9 @@ export async function signUp(
         mobile: toE164(mobile, country),
         mobile_country: country,
       },
-      emailRedirectTo: origin ? `${origin}/auth/confirm` : undefined,
+      emailRedirectTo: origin
+        ? `${origin}/auth/confirm?next=${next}`
+        : undefined,
     },
   });
 
@@ -63,7 +81,7 @@ export async function signUp(
   // If email confirmation is disabled, a session is returned immediately.
   if (data.session) {
     revalidatePath("/", "layout");
-    redirect("/account");
+    redirect(destination(formData, Boolean(data.user?.user_metadata?.mobile)));
   }
 
   return {
@@ -84,13 +102,15 @@ export async function signIn(
     return { error: "Please enter your email and password." };
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
   if (error) return { error: error.message };
 
   revalidatePath("/", "layout");
-  const redirectTo = String(formData.get("redirect") ?? "/account");
-  redirect(redirectTo.startsWith("/") ? redirectTo : "/account");
+  redirect(destination(formData, Boolean(data.user?.user_metadata?.mobile)));
 }
 
 /* ------------------------------ Google OAuth ----------------------------- */
@@ -193,7 +213,8 @@ export async function completeProfile(
   if (error) return { error: error.message };
 
   revalidatePath("/", "layout");
-  redirect("/account");
+  // The number is in place now, so honour wherever they were headed.
+  redirect(safeRedirect(formData.get("redirect"), "/account"));
 }
 
 /* --------------------------------- Logout -------------------------------- */

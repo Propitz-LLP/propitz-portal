@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import LoginForm from "@/components/LoginForm";
+import { safeRedirect } from "@/lib/redirectTo";
 import { THEME_IMG } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -27,7 +28,7 @@ export default async function LoginPage({
       <section className="section">
         <div className="container-px">
           <div className="mx-auto max-w-md">
-            <LoginForm redirectTo={redirect ?? "/account"} notice={error} />
+            <LoginForm redirectTo={safeRedirect(redirect)} notice={error} />
           </div>
         </div>
       </section>

@@ -5,6 +5,7 @@ import {
   SUPABASE_ANON_KEY,
   isSupabaseConfigured,
 } from "@/lib/supabase/config";
+import { safeRedirect } from "@/lib/redirectTo";
 
 /**
  * Next.js 16 renamed `middleware` to `proxy`. This runs on every matched
@@ -72,12 +73,11 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // Keep signed-in users out of the auth screens.
+  // Keep signed-in users out of the auth screens. They go wherever they were
+  // headed, or home — never the account page, which they didn't ask for.
   if (user && (pathname === "/login" || pathname === "/register")) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/account";
-    url.search = "";
-    return NextResponse.redirect(url);
+    const next = safeRedirect(request.nextUrl.searchParams.get("redirect"));
+    return NextResponse.redirect(new URL(next, request.url));
   }
 
   return response;

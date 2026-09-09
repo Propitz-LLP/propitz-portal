@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState, useRef, useState } from "react";
 import { signUp, type AuthState } from "@/app/auth/actions";
+import { HOME } from "@/lib/redirectTo";
 import MobileField from "./MobileField";
 import { field, fieldError } from "./fieldClass";
 
@@ -16,7 +17,11 @@ import { field, fieldError } from "./fieldClass";
 
 const initial: AuthState = {};
 
-export default function RegisterForm() {
+export default function RegisterForm({
+  redirectTo = HOME,
+}: {
+  redirectTo?: string;
+}) {
   const [state, action, pending] = useActionState(signUp, initial);
 
   // Client-side password matching (instant feedback + blocks submit).
@@ -45,6 +50,8 @@ export default function RegisterForm() {
       */}
 
       <form action={action}>
+        <input type="hidden" name="redirect" value={redirectTo} />
+
         <div className="space-y-4">
           <div>
             <label className="mb-1.5 block text-sm font-medium text-ink">
@@ -139,7 +146,10 @@ export default function RegisterForm() {
 
       <p className="mt-5 text-center text-sm text-body">
         Already have an account?{" "}
-        <Link href="/login" className="font-semibold text-brand hover:text-brand-dark">
+        <Link
+          href={`/login?redirect=${encodeURIComponent(redirectTo)}`}
+          className="font-semibold text-brand hover:text-brand-dark"
+        >
           Log in
         </Link>
       </p>
