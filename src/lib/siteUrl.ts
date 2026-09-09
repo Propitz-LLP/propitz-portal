@@ -29,3 +29,5 @@ export async function siteOrigin(): Promise<string> {
   if (SITE_URL.startsWith("http")) return SITE_URL;
   return trim((await headers()).get("origin") ?? "");
 }
+// for test commit
+
