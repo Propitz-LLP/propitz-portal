@@ -2,11 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { isValidMobile, toE164, mobileError, DEFAULT_COUNTRY } from "@/lib/phone";
 import { safeRedirect, HOME } from "@/lib/redirectTo";
+import { siteOrigin } from "@/lib/siteUrl";
 
 export type AuthState = { error?: string; message?: string };
 
@@ -55,7 +55,7 @@ export async function signUp(
     return { error: "Passwords do not match." };
 
   const supabase = await createClient();
-  const origin = (await headers()).get("origin") ?? "";
+  const origin = await siteOrigin();
 
   // Carry the destination through the confirmation email, so users who have
   // to click a link still come back to the page they started from.
@@ -130,7 +130,7 @@ export async function signIn(
  *   if (!isSupabaseConfigured) return { error: NOT_CONFIGURED };
  *
  *   const supabase = await createClient();
- *   const origin = (await headers()).get("origin") ?? "";
+ *   const origin = await siteOrigin();
  *
  *   // Carry the post-login destination through the round-trip to Google.
  *   const requested = String(formData.get("redirect") ?? "/account");
