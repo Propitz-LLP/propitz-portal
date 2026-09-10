@@ -20,7 +20,6 @@ export const site = {
     "https://docs.google.com/forms/d/e/1FAIpQLSfF8HT1tWgo5Gqjm5PIZ85bimrTBv6cMwj55XA_q2lC4_vPyA/viewform",
   description:
     "Propitz is a one-point facilitation platform that simplifies property processes in India by connecting users with structured guidance, verified support, and relevant professional services.",
-  developerCredit: { label: "theshadez.in", url: "https://theshadez.in/" },
 };
 
 export type NavItem = {

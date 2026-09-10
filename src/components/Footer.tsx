@@ -103,10 +103,7 @@ export default function Footer() {
 
       <div className="border-t border-white/10">
         <div className="container-px py-6 text-center text-sm text-slate-400">
-          © 2026 Propitz.com All Right Reserved. Designed &amp; Developed by{" "}
-          <a href={site.developerCredit.url} target="_blank" rel="noopener noreferrer" className="text-brand hover:text-accent">
-            {site.developerCredit.label}
-          </a>
+          © 2026 Propitz.com All Right Reserved.
         </div>
       </div>
     </footer>

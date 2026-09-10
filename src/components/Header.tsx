@@ -8,8 +8,16 @@ import { site } from "@/data/site";
 import { freeTools, servicesDetail } from "@/data/home";
 import { propertyTypes } from "@/data/marketplace";
 import AuthNav from "@/components/AuthNav";
-import RegionSelector from "@/components/RegionSelector";
-import RegionBadge from "@/components/RegionBadge";
+// --- Location picker (disabled) ----------------------------------------
+// The location pill and its picker are commented out of the header rather
+// than deleted, so they can be switched back on. To re-enable: restore
+// these imports and the two blocks marked below (the desktop pill in the
+// main bar, and the picker in the mobile drawer). The components
+// themselves are untouched in src/components/, and RegionProvider still
+// powers the read-only <RegionLine /> on the home hero.
+// import RegionSelector from "@/components/RegionSelector";
+// import RegionBadge from "@/components/RegionBadge";
+// -----------------------------------------------------------------------
 import {
   IconArrow,
   IconCheck,
@@ -86,7 +94,10 @@ export default function Header() {
           </nav>
 
           <div className="ml-auto flex items-center gap-2.5">
-            <RegionBadge className="hidden sm:block" />
+            {/*
+              Location pill (disabled). Restore the import above to re-enable.
+              <RegionBadge className="hidden sm:block" />
+            */}
             <div className="hidden lg:block">
               <AuthNav />
             </div>
@@ -302,9 +313,12 @@ export default function Header() {
               </div>
             </div>
 
-            <div className="mb-5 rounded-2xl border border-line bg-surface p-4">
-              <RegionSelector />
-            </div>
+            {/*
+              Location picker (disabled). Restore the import above to re-enable.
+              <div className="mb-5 rounded-2xl border border-line bg-surface p-4">
+                <RegionSelector />
+              </div>
+            */}
 
             <div className="mb-5 rounded-2xl border border-line bg-surface p-4">
               <div className="mb-2 flex items-center gap-2.5">

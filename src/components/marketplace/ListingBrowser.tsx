@@ -9,10 +9,21 @@ import {
 } from "@/data/marketplace";
 import ListingCard from "@/components/ListingCard";
 import BuySellSwitch from "@/components/BuySellSwitch";
-import { IconChevron, IconMap, IconPerson, IconSearch } from "@/components/Icon";
+import MarketplaceTabs from "@/components/marketplace/MarketplaceTabs";
+import { IconChevron, IconPerson, IconSearch } from "@/components/Icon";
+// --- Map view (disabled) -----------------------------------------------
+// Commented out of the header row below rather than deleted, so it can be
+// switched back on. To re-enable: put IconMap back in the import above and
+// restore the block marked below.
+// import { IconMap } from "@/components/Icon";
+// -----------------------------------------------------------------------
 
 /**
- * The listing browser: Buy/Sell, search, a filter rail and the results.
+ * The listing browser: the Property half of the marketplace — Buy/Sell,
+ * search, a filter rail and the results.
+ *
+ * Buy and Sell stay two separate actions; the tabs above them only group
+ * them against Specialist Services, which is the marketplace's other half.
  *
  * Verification is a filter in its own right — if an advocate reading the
  * document chain is what we sell, a buyer should be able to search on it.
@@ -41,11 +52,16 @@ export default function ListingBrowser() {
             advocate has read the chain.
           </p>
         </div>
-        <span className="btn-dark shrink-0 gap-2.5 py-3.5 text-sm">
-          <IconMap size={16} />
-          Map view
-        </span>
+        {/*
+          Map view (disabled). Restore the IconMap import above to re-enable.
+          <span className="btn-dark shrink-0 gap-2.5 py-3.5 text-sm">
+            <IconMap size={16} />
+            Map view
+          </span>
+        */}
       </div>
+
+      <MarketplaceTabs active="property" className="mb-6" />
 
       <BuySellSwitch className="mb-5" />
 

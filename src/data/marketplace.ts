@@ -142,3 +142,96 @@ export const listings: Listing[] = [
     ],
   },
 ];
+
+/* ------------------------------------------------------------------ */
+/*  Specialist services.                                               */
+/*                                                                     */
+/*  The second half of the marketplace: the Propitz Professional        */
+/*  Network, browsable by trade. Every professional is independent —    */
+/*  Propitz facilitates the introduction and nothing more, so the copy  */
+/*  here never speaks for them on price, timeline or outcome.           */
+/*                                                                     */
+/*  REVIEW THE TAMIL LABELS with a native speaker before launch; they   */
+/*  follow the pattern used on the service cards elsewhere.             */
+/* ------------------------------------------------------------------ */
+
+export type Specialist = {
+  key: string;
+  label: string;
+  /** Tamil label, matching the bilingual pattern used across the site. */
+  ta: string;
+  /** What this professional actually does on a property file. */
+  blurb: string;
+  /** The moment in a property journey when this is the person you need. */
+  when: string;
+};
+
+/**
+ * Ordered by the sequence a buyer actually meets them in, not alphabetically
+ * — the "typically needed" line on each card then reads as a journey.
+ *
+ * On the three-column grid this lands as two meaningful rows: getting the
+ * property (advocate, engineer, tax), then what follows once it is yours
+ * (records, design, build). Add new trades at the point in the journey
+ * where they belong rather than at the end.
+ */
+export const specialists: Specialist[] = [
+  {
+    key: "advocates",
+    label: "Advocates",
+    ta: "வழக்கறிஞர்",
+    blurb:
+      "Title opinions, sale deed drafting and reading the chain of ownership.",
+    when: "Before you sign a sale agreement or pay an advance.",
+  },
+  {
+    key: "engineers",
+    label: "Engineers",
+    ta: "பொறியாளர்",
+    blurb:
+      "Structural assessment, soil suitability and construction supervision.",
+    when: "Before buying a built property, or before construction starts.",
+  },
+  {
+    key: "tax",
+    label: "Tax Consultants",
+    ta: "வரி ஆலோசகர்",
+    blurb:
+      "Capital gains, TDS on property, and the filings that follow a sale.",
+    when: "Once a sale is agreed, and again at the end of the financial year.",
+  },
+  {
+    key: "documentation",
+    label: "Documentation Specialists",
+    ta: "ஆவண நிபுணர்",
+    blurb:
+      "Patta transfer, EC applications and sub-registrar paperwork, end to end.",
+    when: "After registration, or when a record needs correcting.",
+  },
+  {
+    key: "architects",
+    label: "Architects",
+    ta: "கட்டிடக் கலைஞர்",
+    blurb:
+      "Site plans, building layouts and approval drawings for CMDA or DTCP.",
+    when: "Before you build, or when a layout needs sanction.",
+  },
+  {
+    key: "contractors",
+    label: "Civil Contractors",
+    ta: "கட்டுமான ஒப்பந்தக்காரர்",
+    blurb:
+      "Compound walls, construction and site work against a costed scope.",
+    when: "Once a plot is yours and work is ready to begin.",
+  },
+];
+
+/** Filter rail for the specialist tab. Presentational, like the property filters. */
+export const specialistStages = [
+  "Before you buy",
+  "After registration",
+  "Before you build",
+];
+
+export const specialistCaveat =
+  "Specialist professionals operate independently. Propitz facilitates the introduction and coordinates the handover — fees and engagement terms are agreed directly with the professional.";

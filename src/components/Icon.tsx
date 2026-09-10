@@ -196,3 +196,59 @@ export const IconWhatsApp = (p: Props) =>
     />,
     p
   );
+
+/* --- Specialist services ------------------------------------------- */
+
+/** Drafting compass — architects. */
+export const IconCompass = (p: Props) =>
+  svg(
+    <>
+      <circle cx="12" cy="4.5" r="1.7" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M11 6.1 6 20M13 6.1 18 20" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M9.2 14h5.6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </>,
+    p
+  );
+
+/** Scales of justice — advocates. */
+export const IconScale = (p: Props) =>
+  svg(
+    <>
+      <path d="M12 4.5V20M7.5 20h9M4.5 8h15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M4.5 8 2 14h5L4.5 8ZM19.5 8 17 14h5l-2.5-6Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+    </>,
+    p
+  );
+
+/** Calculator — tax consultants. */
+export const IconCalc = (p: Props) =>
+  svg(
+    <>
+      <rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M8.5 7h7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M9 12h.01M12 12h.01M15 12h.01M9 16h.01M12 16h.01M15 16h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </>,
+    p
+  );
+
+/** Hard hat — engineers. */
+export const IconHelmet = (p: Props) =>
+  svg(
+    <>
+      <path d="M3.5 17.5h17" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M6 17.5v-3a6 6 0 0 1 12 0v3" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M10 9.6V5.5h4v4.1" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+    </>,
+    p
+  );
+
+/** Brick wall — civil contractors. */
+export const IconBricks = (p: Props) =>
+  svg(
+    <>
+      <rect x="3" y="5" width="18" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M3 9.7h18M3 14.3h18" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M9 5v4.7M15 5v4.7M12 9.7v4.6M6 14.3V19M18 14.3V19" stroke="currentColor" strokeWidth="1.5" />
+    </>,
+    p
+  );

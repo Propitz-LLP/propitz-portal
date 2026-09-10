@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import ListingBrowser from "@/components/marketplace/ListingBrowser";
+import SpecialistBrowser from "@/components/marketplace/SpecialistBrowser";
 import SectionHeading from "@/components/SectionHeading";
 import Reveal from "@/components/Reveal";
 import CTASection from "@/components/CTASection";
 import { site } from "@/data/site";
+import { specialistCaveat } from "@/data/marketplace";
 
 export const metadata: Metadata = {
   title: "Property Marketplace",
   description:
-    "An assisted, verification-led property listing platform for registered and enrolled clients who want structured support for buying or selling properties.",
+    "An assisted, verification-led property listing platform for registered and enrolled clients who want structured support for buying or selling properties, plus introductions to independent specialist professionals.",
 };
 
 const workflow = [
@@ -19,6 +21,22 @@ const workflow = [
   { t: "Transaction", d: "The transaction is handled directly between the parties involved." },
 ];
 
+/** The specialist tab's equivalent of the buy/sell workflow. */
+const introduction = [
+  {
+    t: "Tell us what you need",
+    d: "Share the property and the problem. A coordinator reads it before anyone is contacted.",
+  },
+  {
+    t: "We match a professional",
+    d: "You are introduced to an independent professional suited to the work, with your file already summarised.",
+  },
+  {
+    t: "You engage them directly",
+    d: "The engagement and the fee are agreed between you and the professional. Propitz follows the file through.",
+  },
+];
+
 const feeModel = [
   { t: "Enrolment", d: "A structured onboarding fee for verified listing support." },
   { t: "Verification coordination", d: "Facilitation of third-party verification services." },
@@ -26,7 +44,66 @@ const feeModel = [
   { t: "Professional access", d: "Introductions to relevant independent professionals." },
 ];
 
-export default function MarketplacePage() {
+export default async function MarketplacePage({
+  searchParams,
+}: {
+  // `searchParams` is a promise in this Next.js version.
+  searchParams: Promise<{ view?: string }>;
+}) {
+  const { view } = await searchParams;
+  const specialists = view === "specialists";
+
+  // The sections below the browser are specific to the half being shown —
+  // the buy/sell workflow and fee model say nothing about an introduction.
+  if (specialists) {
+    return (
+      <>
+        <SpecialistBrowser />
+
+        <section className="section bg-surface">
+          <div className="container-px">
+            <SectionHeading
+              eyebrow="How It Works"
+              title="How an introduction works"
+              subtitle="Three steps from a question to the right professional."
+            />
+            <div className="mt-14 grid gap-6 sm:grid-cols-3">
+              {introduction.map((s, i) => (
+                <Reveal key={s.t} delay={i * 90}>
+                  <div className="card relative h-full p-6">
+                    <span className="font-display text-3xl font-extrabold text-brand/20">
+                      0{i + 1}
+                    </span>
+                    <h3 className="mt-2 text-base text-ink">{s.t}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-body">{s.d}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+            <p className="mt-8 max-w-[80ch] text-sm italic leading-relaxed text-body">
+              {specialistCaveat}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href={site.queryForm}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary"
+              >
+                Request an introduction
+              </a>
+              <a href={`tel:${site.phoneDigits}`} className="btn-dark">
+                Talk to our team
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <CTASection />
+      </>
+    );
+  }
+
   return (
     <>
       <ListingBrowser />
