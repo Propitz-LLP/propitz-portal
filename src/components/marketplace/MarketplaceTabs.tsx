@@ -4,9 +4,11 @@ import { IconBuy, IconPerson } from "@/components/Icon";
 /**
  * The two halves of the marketplace.
  *
- * Property carries its own Buy / Sell choice underneath, so this sits a
- * level above it and is drawn as tabs rather than pills — two stacked pill
- * groups would read as one long row of equal choices.
+ * Each tab names what you are browsing; the Buy / Sell pills under the
+ * first one name what you are doing, so the tab does not repeat them.
+ *
+ * Drawn as tabs rather than pills because two stacked pill groups would
+ * read as one long row of equal choices.
  *
  * The active tab lives in the URL (?view=specialists) rather than in state,
  * so either half can be linked to directly and the page stays server-rendered.
@@ -14,7 +16,7 @@ import { IconBuy, IconPerson } from "@/components/Icon";
 export const MARKETPLACE_TABS = [
   {
     key: "property",
-    label: "Property Buy / Sell",
+    label: "Property Listings",
     href: "/property-marketplace",
     Icon: IconBuy,
   },
