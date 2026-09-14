@@ -3,9 +3,9 @@ import {
   badgeCaveat,
   badgeMeanings,
   corridors,
-  listings,
   propertyTypes,
   verificationFilters,
+  type Listing,
 } from "@/data/marketplace";
 import ListingCard from "@/components/ListingCard";
 import BuySellSwitch from "@/components/BuySellSwitch";
@@ -28,10 +28,10 @@ import { IconChevron, IconPerson, IconSearch } from "@/components/Icon";
  * Verification is a filter in its own right — if an advocate reading the
  * document chain is what we sell, a buyer should be able to search on it.
  *
- * Filters are presented but not yet wired to state; the listings in
- * data/marketplace.ts are sample inventory.
+ * Filters are presented but not yet wired to state. Listings come from the
+ * database, passed in by the page so this stays a plain render.
  */
-export default function ListingBrowser() {
+export default function ListingBrowser({ listings }: { listings: Listing[] }) {
   return (
     <section className="container-px pt-10">
       <p className="mb-4 text-[13px] text-muted">
@@ -193,11 +193,23 @@ export default function ListingBrowser() {
             </span>
           </div>
 
-          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-            {listings.map((l) => (
-              <ListingCard key={l.id} listing={l} />
-            ))}
-          </div>
+          {listings.length === 0 ? (
+            <div className="rounded-[22px] border border-line bg-surface p-8 text-center">
+              <p className="text-[17px] font-bold text-ink">
+                No listings match right now.
+              </p>
+              <p className="mx-auto mt-2 max-w-[52ch] text-[14.5px] leading-[1.55] text-body">
+                Tell us what you are looking for and a coordinator will let you
+                know as soon as something verified comes in.
+              </p>
+            </div>
+          ) : (
+            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              {listings.map((l) => (
+                <ListingCard key={l.id} listing={l} />
+              ))}
+            </div>
+          )}
 
           {/* the phygital model doing work on a transactional page */}
           <div className="mt-8 flex flex-wrap items-center gap-5 rounded-[22px] border border-line bg-surface p-6">

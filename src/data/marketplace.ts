@@ -53,6 +53,9 @@ export const badgeMeanings = [
   { label: "Approved", text: "Layout approval confirmed with CMDA or DTCP." },
 ];
 
+/** How many badge rows the listing form offers. */
+export const BADGE_SLOTS = 4;
+
 export const badgeCaveat =
   "An amber badge means a document is still being read. It is never a claim that the paperwork is fine.";
 

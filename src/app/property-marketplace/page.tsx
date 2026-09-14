@@ -6,6 +6,7 @@ import Reveal from "@/components/Reveal";
 import CTASection from "@/components/CTASection";
 import { site } from "@/data/site";
 import { specialistCaveat } from "@/data/marketplace";
+import { fetchPublicListings } from "@/lib/listings";
 
 export const metadata: Metadata = {
   title: "Property Marketplace",
@@ -52,6 +53,7 @@ export default async function MarketplacePage({
 }) {
   const { view } = await searchParams;
   const specialists = view === "specialists";
+  const listings = specialists ? [] : await fetchPublicListings();
 
   // The sections below the browser are specific to the half being shown —
   // the buy/sell workflow and fee model say nothing about an introduction.
@@ -106,7 +108,7 @@ export default async function MarketplacePage({
 
   return (
     <>
-      <ListingBrowser />
+      <ListingBrowser listings={listings} />
 
       {/* Verified & enrolled */}
       <section className="pb-16 sm:pb-20">
