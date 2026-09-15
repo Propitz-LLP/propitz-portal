@@ -7,9 +7,9 @@ import { services } from "@/data/services";
 import { IMG } from "@/data/site";
 
 export const metadata: Metadata = {
-  title: "Our Services",
+  title: "Property Services in Chennai & Tamil Nadu",
   description:
-    "Simplifying property processes through structured guidance and coordination — registration, documentation, verification, SRO, advisory and more.",
+    "Eight property services in Tamil Nadu: registration, document checklists, verification, SRO help, advice, professional introductions, transaction structuring and negotiation.",
 };
 
 export default function ServicesPage() {
@@ -17,7 +17,7 @@ export default function ServicesPage() {
     <>
       <PageHero
         title="Our Services"
-        subtitle="Simplifying property processes through structured guidance and coordination."
+        subtitle="Eight services for registering, verifying and documenting property in Tamil Nadu. Pick the job you need done."
         image={`${IMG}/2026/03/7.jpg`}
       />
       <section className="section">

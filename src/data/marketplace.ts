@@ -146,9 +146,9 @@ export const listings: Listing[] = [
 /* ------------------------------------------------------------------ */
 /*  Specialist services.                                               */
 /*                                                                     */
-/*  The second half of the marketplace: the Propitz Professional        */
+/*  The second half of the marketplace: the PropITZ Professional        */
 /*  Network, browsable by trade. Every professional is independent —    */
-/*  Propitz facilitates the introduction and nothing more, so the copy  */
+/*  PropITZ facilitates the introduction and nothing more, so the copy  */
 /*  here never speaks for them on price, timeline or outcome.           */
 /*                                                                     */
 /*  REVIEW THE TAMIL LABELS with a native speaker before launch; they   */
@@ -234,4 +234,4 @@ export const specialistStages = [
 ];
 
 export const specialistCaveat =
-  "Specialist professionals operate independently. Propitz facilitates the introduction and coordinates the handover — fees and engagement terms are agreed directly with the professional.";
+  "Specialist professionals operate independently. PropITZ facilitates the introduction and coordinates the handover — fees and engagement terms are agreed directly with the professional.";

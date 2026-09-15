@@ -4,7 +4,7 @@ import { phygital } from "@/data/home";
 import { IconPerson, IconScreen } from "@/components/Icon";
 
 /**
- * Propitz's own "phygital" positioning: the platform and the people are
+ * PropITZ's own "phygital" positioning: the platform and the people are
  * one offer, not two. Built on the photograph that shows both halves.
  */
 export default function Phygital() {
@@ -26,7 +26,7 @@ export default function Phygital() {
           <div className="overflow-hidden rounded-3xl border border-line shadow-[var(--shadow-card)]">
             <Image
               src={`${IMG}/2026/04/A2.jpeg`}
-              alt="Propitz staff working with customers in the office and at a site"
+              alt="PropITZ staff working with customers in the office and at a site"
               width={1024}
               height={687}
               className="h-[260px] w-full object-cover sm:h-[400px]"

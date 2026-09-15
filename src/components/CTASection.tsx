@@ -3,7 +3,7 @@ import { THEME_IMG } from "@/data/site";
 import Reveal from "./Reveal";
 
 export default function CTASection({
-  heading = "Simplify Your Property Journey with Verified Guidance",
+  heading = "Tell us what you are trying to do",
 }: {
   heading?: string;
 }) {
@@ -20,13 +20,14 @@ export default function CTASection({
           <div className="max-w-2xl">
             <h2 className="text-2xl text-white sm:text-3xl">{heading}</h2>
             <p className="mt-3 text-slate-100">
-              Talk to Propitz for structured guidance, verified support and access
-              to a trusted professional network.
+              We explain the steps, organise what is required and coordinate the
+              right professionals, online where it is faster and in person where
+              it matters.
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <a href={`tel:${site.phoneDigits}`} className="btn-accent">
-              Schedule a Call Back
+              Call us
             </a>
             <a
               href={site.queryForm}
@@ -34,7 +35,7 @@ export default function CTASection({
               rel="noopener noreferrer"
               className="btn-outline"
             >
-              Get Free Quote
+              Start a request
             </a>
           </div>
         </Reveal>

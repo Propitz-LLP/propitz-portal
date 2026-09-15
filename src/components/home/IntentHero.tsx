@@ -12,19 +12,23 @@ import {
   IconPlay,
   IconSell,
   IconVerify,
+  IconWhatsApp,
 } from "@/components/Icon";
 
 const intentIcon: Record<string, (p: { size?: number; className?: string }) => React.ReactElement> = {
-  register: IconDeed,
+  buy: IconBuy,
+  sell: IconSell,
   verify: IconVerify,
-  patta: IconDoc,
-  advisory: IconAdvisory,
+  register: IconDeed,
+  documents: IconDoc,
+  services: IconAdvisory,
 };
 
 /**
- * The hero asks one question — what process do you need help with — and
- * answers it with a worked example. Buying and selling sit below the
- * answer, styled as marketplace actions rather than services.
+ * The hero asks one question — what do you need help with — and answers
+ * the most common one with a worked example. The primary action is a
+ * structured request so intake arrives classified; WhatsApp sits beside it
+ * as the channel many customers prefer.
  */
 export default function IntentHero() {
   return (
@@ -38,20 +42,29 @@ export default function IntentHero() {
             <em className="italic text-brand">without the guesswork.</em>
           </h1>
           <p className="mt-5 max-w-[56ch] text-[17px] leading-[1.62] text-body">
-            Tell us what you are trying to do. We explain the steps, prepare your
-            documents, and send a coordinator with you to the office that handles it.
+            Tell us what you are trying to do. We explain the steps, organise what
+            is required, coordinate the right professionals and stay with the
+            process until completion.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <Link href="/contact-us" className="btn-primary gap-3 py-3.5 text-[15.5px]">
-              Talk to us
-              <IconArrow size={16} />
-            </Link>
-            <Link
-              href="/property-marketplace"
-              className="inline-flex items-center rounded-full border-[1.5px] border-line-strong px-6 py-3.5 text-[15.5px] font-semibold text-body transition-colors hover:border-brand hover:text-brand"
+            <a
+              href={site.queryForm}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary gap-3 py-3.5 text-[15.5px]"
             >
-              Browse the marketplace
-            </Link>
+              Start a request
+              <IconArrow size={16} />
+            </a>
+            <a
+              href={`https://wa.me/${site.whatsapp}?text=${encodeURIComponent("Hi PropITZ, I need help with a property.")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-ghost gap-2.5 py-3.5 text-[15.5px]"
+            >
+              <IconWhatsApp size={18} className="text-whatsapp" />
+              Chat on WhatsApp
+            </a>
           </div>
         </div>
 
@@ -78,11 +91,11 @@ export default function IntentHero() {
         </div>
       </div>
 
-      {/* the four process intents */}
+      {/* the six problem-led intents */}
       <p className="mt-11 mb-3.5 text-[13px] font-bold uppercase tracking-[0.06em] text-faint">
         What do you need help with?
       </p>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {intents.map((i) => {
           const Icon = intentIcon[i.key];
           const active = i.key === "register";
@@ -168,47 +181,6 @@ export default function IntentHero() {
         </div>
       </div>
 
-      {/* transactions, deliberately after the process answer */}
-      <p className="mt-9 mb-3.5 text-[13px] font-bold uppercase tracking-[0.06em] text-faint">
-        Buy or sell — marketplace
-      </p>
-      <div className="grid gap-3.5 sm:grid-cols-2">
-        <Link
-          href="/property-marketplace"
-          className="flex items-center gap-4 rounded-[20px] border-[1.5px] border-accent bg-surface p-5 transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-soft)]"
-        >
-          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[13px] bg-accent-50 text-accent-dark">
-            <IconBuy size={22} />
-          </span>
-          <span className="min-w-0 grow">
-            <span className="block text-[17.5px] font-bold text-ink">
-              Buy <span className="ta text-[13px] font-medium text-muted">வாங்க</span>
-            </span>
-            <span className="block text-[13.5px] leading-[1.4] text-body">
-              Listings with the documents already read
-            </span>
-          </span>
-          <IconArrow size={18} className="shrink-0 text-accent-dark" />
-        </Link>
-
-        <Link
-          href={site.queryForm}
-          className="flex items-center gap-4 rounded-[20px] border border-line bg-surface p-5 transition-all hover:-translate-y-0.5 hover:border-brand hover:shadow-[var(--shadow-soft)]"
-        >
-          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[13px] bg-brand-50 text-brand">
-            <IconSell size={22} />
-          </span>
-          <span className="min-w-0 grow">
-            <span className="block text-[17.5px] font-bold text-ink">
-              Sell <span className="ta text-[13px] font-medium text-muted">விற்க</span>
-            </span>
-            <span className="block text-[13.5px] leading-[1.4] text-body">
-              List a property with verification done first
-            </span>
-          </span>
-          <IconArrow size={18} className="shrink-0 text-brand" />
-        </Link>
-      </div>
     </section>
   );
 }

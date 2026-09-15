@@ -127,7 +127,7 @@ export default function RegionSelector({ showLabel = true }: { showLabel?: boole
           )
         ) : (
           <p className="flex flex-wrap items-center gap-1.5">
-            No Propitz centre here yet — nearest is {centre.name}
+            No PropITZ centre here yet — nearest is {centre.name}
             {typeof location.km === "number" ? `, about ${location.km} km away` : ""}.
             <a
               href={`tel:${site.phoneDigits}`}

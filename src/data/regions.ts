@@ -1,7 +1,7 @@
 /* ------------------------------------------------------------------ */
 /*  Service regions.                                                   */
 /*                                                                     */
-/*  These route a visitor to the NEAREST PROPITZ CENTRE. They are not   */
+/*  These route a visitor to the NEAREST PropITZ CENTRE. They are not   */
 /*  a statement about revenue-district boundaries — the 600xxx series   */
 /*  spans all three districts after the 2019 reorganisation, so a       */
 /*  strict district map would misroute people. Everything below answers */

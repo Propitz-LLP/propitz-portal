@@ -7,11 +7,26 @@ import CTASection from "@/components/CTASection";
 import { site } from "@/data/site";
 import { specialistCaveat } from "@/data/marketplace";
 
-export const metadata: Metadata = {
-  title: "Property Marketplace",
-  description:
-    "An assisted, verification-led property listing platform for registered and enrolled clients who want structured support for buying or selling properties, plus introductions to independent specialist professionals.",
-};
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ view?: string }>;
+}): Promise<Metadata> {
+  const { view } = await searchParams;
+
+  // Both tabs share one route, so each gets its own search listing.
+  return view === "specialists"
+    ? {
+        title: "Property Professionals: Advocates, Engineers, Architects & More",
+        description:
+          "Get introduced to independent advocates, engineers, architects, tax consultants, documentation specialists and civil contractors for your property in Tamil Nadu.",
+      }
+    : {
+        title: "Property Listings in Chennai with Documents Reviewed",
+        description:
+          "Buy or sell property in Chennai, Chengalpattu and Tiruvallur. Every listing shows which documents have been reviewed before it goes live.",
+      };
+}
 
 const workflow = [
   { t: "Seller enrolment", d: "Sellers enrol and share property details for structured onboarding." },
@@ -33,7 +48,7 @@ const introduction = [
   },
   {
     t: "You engage them directly",
-    d: "The engagement and the fee are agreed between you and the professional. Propitz follows the file through.",
+    d: "The engagement and the fee are agreed between you and the professional. PropITZ follows the file through.",
   },
 ];
 
@@ -93,7 +108,7 @@ export default async function MarketplacePage({
                 Request an introduction
               </a>
               <a href={`tel:${site.phoneDigits}`} className="btn-dark">
-                Talk to our team
+                Call us
               </a>
             </div>
           </div>
@@ -131,7 +146,7 @@ export default async function MarketplacePage({
             ))}
           </div>
           <p className="mt-6 text-sm italic text-body">
-            Verification is performed by third-party professionals. Propitz facilitates the process.
+            Verification is performed by third-party professionals. PropITZ facilitates the process.
           </p>
         </div>
       </section>
@@ -166,7 +181,7 @@ export default async function MarketplacePage({
           <SectionHeading
             eyebrow="Transparent Pricing"
             title="Service fee model"
-            subtitle="Propitz operates on clear service categories — with no transaction-based commissions unless separately stated."
+            subtitle="PropITZ operates on clear service categories — with no transaction-based commissions unless separately stated."
           />
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {feeModel.map((f, i) => (
@@ -180,10 +195,10 @@ export default async function MarketplacePage({
           </div>
           <div className="mt-10 flex flex-wrap gap-3">
             <a href={site.queryForm} target="_blank" rel="noopener noreferrer" className="btn-primary">
-              Enrol / Submit your Query
+              Start a request
             </a>
             <a href={`tel:${site.phoneDigits}`} className="btn-ghost">
-              Talk to our team
+              Call us
             </a>
           </div>
         </div>

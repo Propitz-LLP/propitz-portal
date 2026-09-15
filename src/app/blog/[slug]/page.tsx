@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import Reveal from "@/components/Reveal";
+import ArticleCTA from "@/components/ArticleCTA";
 import CTASection from "@/components/CTASection";
 import { posts, getPost } from "@/data/blog";
 
@@ -75,9 +76,11 @@ export default async function BlogPostPage({
             ))}
           </div>
 
-          <p className="mt-10 rounded-2xl bg-surface p-5 text-xs leading-relaxed text-body ring-1 ring-line">
+          <ArticleCTA slug={post.slug} />
+
+          <p className="mt-6 rounded-2xl bg-surface p-5 text-xs leading-relaxed text-body ring-1 ring-line">
             This article is informational and does not constitute legal, tax or
-            financial advice. Propitz facilitates guidance and coordination and
+            financial advice. PropITZ facilitates guidance and coordination and
             connects users with independent professionals.
           </p>
         </div>

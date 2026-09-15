@@ -8,9 +8,9 @@ import CTASection from "@/components/CTASection";
 import { IMG } from "@/data/site";
 
 export const metadata: Metadata = {
-  title: "About Us",
+  title: "About Us: Property Facilitation in Tamil Nadu",
   description:
-    "Propitz is India's premier one-point facilitation platform, simplifying property ownership by bridging professional service needs with structured guidance.",
+    "PropITZ helps you register, verify and document property in Tamil Nadu, coordinating independent advocates, surveyors and consultants from one place.",
 };
 
 const pillars = [
@@ -35,8 +35,8 @@ export default function AboutPage() {
   return (
     <>
       <PageHero
-        title="About Propitz"
-        subtitle="Property processes can be confusing. Propitz helps you understand the steps, organise your documents, and coordinate with the right professionals."
+        title="About PropITZ"
+        subtitle="Property processes can be confusing. PropITZ helps you understand the steps, organise your documents, and coordinate with the right professionals."
         image={`${IMG}/2026/04/Land-Measurement-Conversion-1.jpeg`}
       />
 
@@ -45,15 +45,15 @@ export default function AboutPage() {
         <div className="container-px grid gap-12 lg:grid-cols-2 lg:items-center">
           <Reveal className="relative">
             <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-brand-50">
-              <Image src={`${IMG}/2026/04/about1.png`} alt="About Propitz" fill className="object-cover" sizes="(max-width:1024px) 100vw, 50vw" />
+              <Image src={`${IMG}/2026/04/about1.png`} alt="About PropITZ" fill className="object-cover" sizes="(max-width:1024px) 100vw, 50vw" />
             </div>
           </Reveal>
           <div>
             <SectionHeading
               align="left"
               eyebrow="Who We Are"
-              title="India's premier one-point facilitation platform"
-              subtitle="Propitz is designed to simplify property ownership by bridging the gap between users and the professional services they need. From documentation to registration and verification, we bring structure and transparency to every step."
+              title="One point for property processes in Tamil Nadu"
+              subtitle="PropITZ is designed to simplify property ownership by bridging the gap between users and the professional services they need. From documentation to registration and verification, we bring structure and transparency to every step."
             />
             <p className="mt-6 leading-relaxed text-body">
               We are not a broker or an agent. We are a facilitation platform —
@@ -101,7 +101,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <CTASection heading="Simplify Your Property Journey with Verified Guidance" />
+      <CTASection />
     </>
   );
 }

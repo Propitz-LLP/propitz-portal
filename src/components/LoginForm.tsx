@@ -87,7 +87,7 @@ export default function LoginForm({
       </form>
 
       <p className="mt-5 text-center text-sm text-body">
-        New to Propitz?{" "}
+        New to PropITZ?{" "}
         <Link
           href={`/register?redirect=${encodeURIComponent(redirectTo)}`}
           className="font-semibold text-brand hover:text-brand-dark"

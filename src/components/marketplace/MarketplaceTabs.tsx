@@ -4,8 +4,10 @@ import { IconBuy, IconPerson } from "@/components/Icon";
 /**
  * The two halves of the marketplace.
  *
- * Each tab names what you are browsing; the Buy / Sell pills under the
- * first one name what you are doing, so the tab does not repeat them.
+ * Tab names follow the pre-launch corrections: "Properties" and "Property
+ * Professionals". Each names what you are browsing; the Buy / Sell pills
+ * under the first one name what you are doing, so the tab does not repeat
+ * them. A third "Services" tab is only worth adding if it improves discovery.
  *
  * Drawn as tabs rather than pills because two stacked pill groups would
  * read as one long row of equal choices.
@@ -16,13 +18,13 @@ import { IconBuy, IconPerson } from "@/components/Icon";
 export const MARKETPLACE_TABS = [
   {
     key: "property",
-    label: "Property Listings",
+    label: "Properties",
     href: "/property-marketplace",
     Icon: IconBuy,
   },
   {
     key: "specialists",
-    label: "Specialist Services",
+    label: "Property Professionals",
     href: "/property-marketplace?view=specialists",
     Icon: IconPerson,
   },

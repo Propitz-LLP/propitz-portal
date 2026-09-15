@@ -2,7 +2,7 @@ import Link from "next/link";
 import { listings, propertyTypes } from "@/data/marketplace";
 import ListingCard from "@/components/ListingCard";
 import BuySellSwitch from "@/components/BuySellSwitch";
-import { IconCheck, IconMap, IconSearch } from "@/components/Icon";
+import { IconCheck, IconSearch } from "@/components/Icon";
 
 /** Homepage slice of the marketplace: the switch, the filters and three listings. */
 export default function MarketplaceTeaser() {
@@ -36,13 +36,11 @@ export default function MarketplaceTeaser() {
           <IconCheck size={14} />
           Verified only
         </span>
-        <Link
-          href="/property-marketplace"
-          className="ml-auto inline-flex min-h-[44px] items-center gap-2 rounded-full border-[1.5px] border-line-strong px-4 text-[13.5px] font-semibold text-body transition-colors hover:border-brand hover:text-brand"
-        >
-          <IconMap size={14} />
-          Map view
-        </Link>
+        {/*
+          Map view (disabled), matching the marketplace page. There is no map
+          yet, so the button only reloaded the listings.
+          <Link href="/property-marketplace" ...><IconMap size={14} /> Map view</Link>
+        */}
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

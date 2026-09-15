@@ -10,7 +10,7 @@ export type BlogPost = {
   /**
    * NOTE: The original article bodies were not exposed by the site crawler.
    * The content below is a faithful reconstruction based on each post's topic
-   * and Propitz's positioning. Replace with the exact article text when available.
+   * and PropITZ's positioning. Replace with the exact article text when available.
    */
   body: { heading?: string; paragraphs: string[]; list?: string[] }[];
 };
@@ -21,7 +21,7 @@ export const posts: BlogPost[] = [
     title:
       "What is Property Verification? Why It Matters Before Any Property Purchase",
     date: "24 Mar, 2026",
-    author: "Propitz Team",
+    author: "PropITZ Team",
     image: `${IMG}/2026/02/post-1.jpg`,
     excerpt:
       "Property verification is the essential first step that protects you from legal, financial and ownership risks before you buy.",
@@ -47,7 +47,7 @@ export const posts: BlogPost[] = [
         heading: "Why it matters",
         paragraphs: [
           "Skipping verification can expose you to disputed titles, unpaid dues or non-compliant construction — problems that are expensive and stressful to resolve later. Verification gives you clarity and negotiating confidence.",
-          "Propitz coordinates verification with independent, vetted professionals so the process is structured and transparent from the start.",
+          "PropITZ coordinates verification with independent, vetted professionals so the process is structured and transparent from the start.",
         ],
       },
     ],
@@ -56,7 +56,7 @@ export const posts: BlogPost[] = [
     slug: "documents-you-must-check-before-buying-a-property-in-chennai",
     title: "Documents You Must Check Before Buying a Property in Chennai",
     date: "24 Mar, 2026",
-    author: "Propitz Team",
+    author: "PropITZ Team",
     image: `${IMG}/2026/02/post-2-1.jpg`,
     excerpt:
       "A practical checklist of the key documents every buyer should review before purchasing property in Chennai.",
@@ -81,9 +81,9 @@ export const posts: BlogPost[] = [
         ],
       },
       {
-        heading: "How Propitz supports you",
+        heading: "How PropITZ supports you",
         paragraphs: [
-          "Propitz provides a tailored document checklist and coordinates with independent professionals for verification — so you approach registration fully prepared.",
+          "PropITZ provides a tailored document checklist and coordinates with independent professionals for verification — so you approach registration fully prepared.",
         ],
       },
     ],
@@ -93,7 +93,7 @@ export const posts: BlogPost[] = [
     title:
       "Property Registration in Tamil Nadu: A Step-by-Step Guide for First-Time Buyers",
     date: "24 Mar, 2026",
-    author: "Propitz Team",
+    author: "PropITZ Team",
     image: `${IMG}/2026/02/post-3.jpg`,
     excerpt:
       "A clear, first-timer-friendly walkthrough of the property registration process at the Sub-Registrar Office in Tamil Nadu.",
@@ -116,9 +116,9 @@ export const posts: BlogPost[] = [
         ],
       },
       {
-        heading: "Prepare with Propitz",
+        heading: "Prepare with PropITZ",
         paragraphs: [
-          "Propitz offers step-by-step SRO guidance, document readiness support and professional coordination so first-time buyers can register with confidence. Note: Propitz does not represent buyers before government offices.",
+          "PropITZ confirms the right Sub-Registrar Office, checks your documents before the slot is booked and supports you on the day, so first-time buyers can register with confidence. Note: PropITZ does not represent buyers before government offices.",
         ],
       },
     ],

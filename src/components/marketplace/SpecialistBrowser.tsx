@@ -32,7 +32,7 @@ export default function SpecialistBrowser() {
           Marketplace
         </Link>{" "}
         &nbsp;/&nbsp;{" "}
-        <span className="font-semibold text-ink">Specialist Services</span>
+        <span className="font-semibold text-ink">Property Professionals</span>
       </p>
 
       <div className="mb-6 flex flex-wrap items-end gap-8">
@@ -159,7 +159,7 @@ export default function SpecialistBrowser() {
               href={`tel:${site.phoneDigits}`}
               className="btn-primary shrink-0 gap-3 py-3.5 text-sm"
             >
-              Talk to a coordinator
+              Call us
             </a>
           </div>
         </div>

@@ -1,88 +1,131 @@
 import { IMG } from "./site";
 
+/* ------------------------------------------------------------------ */
+/*  The eight services.                                                */
+/*                                                                     */
+/*  Each page follows one template: outcome, what PropITZ handles, the  */
+/*  journey, documents, and who is responsible for what. The copy says  */
+/*  what the customer gets, not what "facilitation" means, and never     */
+/*  says the same thing twice down the page.                            */
+/*                                                                     */
+/*  NOT YET HERE, pending confirmed figures: pricing or pricing basis,  */
+/*  typical timelines, and per-service FAQs. Add them as fields when     */
+/*  they are commercially reliable rather than inventing placeholders.  */
+/* ------------------------------------------------------------------ */
+
 export type Service = {
   slug: string;
+  /** Formal service name: navigation, breadcrumbs, footer. */
   title: string;
-  short: string; // used on cards / home
-  hero: string; // hero subtitle
-  image: string; // card + hero image
+  /** Customer-facing name, phrased as the job the customer wants done. */
+  label: string;
+  /** One line for cards and the services index. */
+  short: string;
+  /** The top-fold promise: the problem solved and what the customer receives. */
+  outcome: string;
+  image: string;
   icon?: string;
-  about: string;
-  helps: string;
+  /** What PropITZ itself takes on. */
+  handles: string[];
+  /** The customer's journey, in order. */
   process: string[];
+  /** Indicative documents. Empty when the service is not document-led. */
   documents: string[];
-  disclaimer: string;
+  /** Where PropITZ's responsibility ends and the professional's begins. */
+  responsibility: string;
+  seoTitle: string;
+  seoDescription: string;
 };
 
 export const services: Service[] = [
   {
     slug: "property-registration-assistance",
     title: "Property Registration Assistance",
+    label: "Register your property",
     short:
-      "Guidance and coordination to help you understand registration procedures, documents and the SRO flow.",
-    hero:
-      "Guidance and coordination support to help you understand property registration procedures, required documents, and the registration flow, including Sub-Registrar Office processes.",
+      "The right Sub-Registrar Office, documents checked first, and a coordinator supporting you on the day.",
+    outcome:
+      "Get your property registered at the right Sub-Registrar Office, with your documents checked beforehand and a coordinator supporting you on the day of execution.",
     image: `${IMG}/2026/04/EC-Patta-Chitta-Guideline-Value-GV.jpeg`,
     icon: `${IMG}/2026/02/icon-service-item-1.svg`,
-    about:
-      "This service offers guidance and coordination for property registration-related processes, helping you understand what is required and in what order.",
-    helps:
-      "Propitz assists you in understanding procedures and required documents, and connects you with relevant professionals where needed.",
+    handles: [
+      "Identifying the Sub-Registrar Office that holds your survey number",
+      "Checking your documents before anything is booked, with an advocate where the chain needs reading",
+      "Booking the TNREGINET slot and telling you who must attend and what is paid",
+      "Coordinator support at the office on the day of execution",
+    ],
     process: [
-      "Submit property details",
-      "Receive checklist & process guidance",
-      "Professional coordination if required",
-      "You complete registration independently",
+      "Share your property and transaction details",
+      "We confirm the office and check your documents",
+      "We book the registration slot",
+      "Execution at the SRO, with a coordinator supporting you",
     ],
     documents: [
-      "Sale deed / agreement",
-      "ID & address proof",
+      "Sale deed or agreement",
+      "ID and address proof of every signatory",
       "Property tax receipts",
       "Encumbrance certificate",
     ],
-    disclaimer:
-      "Propitz does not provide legal advice or registration execution services.",
+    responsibility:
+      "PropITZ coordinates the registration process; statutory execution remains with the parties, authorised professionals and the relevant authority. PropITZ does not provide legal advice.",
+    seoTitle: "Property Registration Assistance in Chennai & Tamil Nadu",
+    seoDescription:
+      "Register your property at the right Sub-Registrar Office in Tamil Nadu. PropITZ checks your documents, books the TNREGINET slot and supports you on the day.",
   },
   {
     slug: "document-checklist-guidance",
     title: "Document & Checklist Guidance",
+    label: "Get your property documents in order",
     short:
-      "Structured help to identify, organise and prepare the right documents for any property activity.",
-    hero:
-      "Structured assistance to help you identify, organise, and prepare the right documents needed for various property-related activities.",
+      "The exact documents your property task needs, in the order the office asks for them.",
+    outcome:
+      "Know exactly which documents your property task needs, in the order the office asks for them, before you approach an authority or a professional.",
     image: `${IMG}/2026/02/service2.jpg`,
     icon: `${IMG}/2026/02/icon-service-item-2.svg`,
-    about:
-      "Helps you understand which documents are required for different property activities like buying, selling, registration or verification.",
-    helps:
-      "We provide structured document checklists and guidance so your paperwork is organised correctly before approaching authorities or professionals.",
-    process: [
-      "You submit your requirement",
-      "Propitz identifies the applicable document set",
-      "Checklist and clarification support provided",
-      "Referral to professionals if required",
+    handles: [
+      "Identifying the document set for buying, selling, registration or verification",
+      "A checklist written for your case, not a generic list",
+      "Answering questions on missing or unclear documents",
+      "Referring you to a professional when a document needs one",
     ],
-    documents: ["Title deeds", "Identity proof", "Prior agreements", "Government receipts"],
-    disclaimer: "Propitz does not verify, certify, or authenticate documents.",
+    process: [
+      "Tell us what you are trying to do",
+      "We identify the documents that apply",
+      "You receive your checklist and answers to your questions",
+      "Referral to a professional if one is needed",
+    ],
+    documents: [
+      "Title deeds",
+      "Identity proof",
+      "Prior agreements",
+      "Government receipts",
+    ],
+    responsibility:
+      "PropITZ organises your document requirements. It does not verify, certify or authenticate documents; that remains with authorised professionals and the relevant authority.",
+    seoTitle: "Property Document Checklist Help in Tamil Nadu",
+    seoDescription:
+      "Find out exactly which property documents you need for buying, selling, registration or verification in Tamil Nadu, with a checklist written for your case.",
   },
   {
     slug: "property-verification-coordination",
     title: "Property Verification Coordination",
+    label: "Verify a property before you commit",
     short:
-      "Coordination with independent professionals for title, document and compliance verification.",
-    hero:
-      "Facilitation support to coordinate with independent professionals for property title, document, and compliance verification.",
+      "Title, documents and approvals checked by independent professionals before you commit.",
+    outcome:
+      "Find out whether a property's title, documents and approvals hold up before you commit money to it.",
     image: `${IMG}/2026/02/service3.jpg`,
     icon: `${IMG}/2026/02/icon-service-item-3-1.svg`,
-    about:
-      "Facilitates coordination for verifying property titles, ownership histories and regulatory compliance requirements.",
-    helps:
-      "We connect you with vetted independent professionals who conduct verification, and explain the general scope involved.",
+    handles: [
+      "Agreeing the scope of checks your property needs",
+      "Coordinating an independent advocate or surveyor to carry them out",
+      "Keeping the review moving and passing the findings to you in one place",
+    ],
     process: [
-      "You submit property details",
-      "Verification scope explained",
-      "Professional coordination",
-      "Verification handled independently",
+      "Share the property details",
+      "We agree the verification scope with you",
+      "An independent professional carries out the checks",
+      "You receive the professional's findings",
     ],
     documents: [
       "Title documents",
@@ -90,128 +133,158 @@ export const services: Service[] = [
       "Layout approvals",
       "Tax receipts",
     ],
-    disclaimer: "All verification is conducted by third-party professionals only.",
+    responsibility:
+      "All verification is carried out by independent professionals, who own their opinions and findings. PropITZ owns the coordination and case management.",
+    seoTitle: "Verify a Property Before You Buy in Chennai",
+    seoDescription:
+      "Check a property's title, encumbrance certificate and approvals before you commit. PropITZ coordinates independent advocates and surveyors in Tamil Nadu.",
   },
   {
     slug: "sro-process-assistance",
     title: "SRO Process Assistance",
+    label: "Get through the Sub-Registrar Office",
     short:
-      "Step-by-step guidance on Sub-Registrar Office requirements, appointments and workflows.",
-    hero:
-      "Step-by-step guidance to help you understand Sub-Registrar Office requirements, appointments, and procedural workflows.",
+      "The right office, the right appointment and the right paperwork before your SRO visit.",
+    outcome:
+      "Approach the Sub-Registrar Office prepared: the right office, the right appointment and the right paperwork, with support at the office where you need it.",
     image: `${IMG}/2026/02/service4.avif`,
     icon: `${IMG}/2026/02/icon-service-item-4.svg`,
-    about:
-      "Clarifies Sub-Registrar Office procedures covering registration, documentation and appointments.",
-    helps:
-      "Propitz provides step-by-step procedural guidance and clarifies SRO-related requirements to reduce confusion and delays.",
-    process: [
-      "You submit your SRO-related query",
-      "Process and appointment guidance provided",
-      "Document readiness support",
-      "You independently approach the SRO",
+    handles: [
+      "Confirming which SRO handles your property",
+      "Guiding the appointment and application steps",
+      "Checking your documents are ready before the visit",
+      "Coordinator support at the office where required",
     ],
-    documents: ["Property documents", "Identity proof", "Appointment or application details"],
-    disclaimer: "Propitz does not represent users before government offices.",
+    process: [
+      "Share your SRO requirement",
+      "We confirm the office and the appointment steps",
+      "Document readiness check",
+      "Your SRO visit, with coordinator support where required",
+    ],
+    documents: [
+      "Property documents",
+      "Identity proof",
+      "Appointment or application details",
+    ],
+    responsibility:
+      "PropITZ coordinates your SRO process but does not represent you before government offices. Statutory steps remain with the parties and the relevant authority.",
+    seoTitle: "Sub-Registrar Office (SRO) Help in Tamil Nadu",
+    seoDescription:
+      "Find the right Sub-Registrar Office, book the appointment and get your paperwork ready. PropITZ helps you through SRO processes across Tamil Nadu.",
   },
   {
     slug: "property-advisory-support",
     title: "Property Advisory Support",
+    label: "Decide what to do with a property",
     short:
-      "High-level guidance to frame property decisions and connect with the right professionals.",
-    hero:
-      "High-level guidance to help you frame property-related decisions and connect with appropriate professionals for further evaluation.",
+      "A property question turned into a clear decision path, and the right professional to speak to next.",
+    outcome:
+      "Turn a property question into a clear decision path, and know which professional to speak to next.",
     image: `${IMG}/2026/02/service5.avif`,
-    about:
-      "Offers directional guidance that enables you to structure and understand property-related decisions.",
-    helps:
-      "We clarify your objectives and connect you with qualified professionals for specialised consultation.",
+    handles: [
+      "Understanding what you are trying to achieve",
+      "Setting out your options and the questions to ask",
+      "Pointing out where a professional opinion is needed",
+      "Introducing the right professional for detailed evaluation",
+    ],
     process: [
-      "You submit an advisory query",
-      "Requirement clarification",
-      "Directional guidance",
-      "Professional referral if needed",
+      "Share your property question",
+      "We clarify your objective",
+      "You receive a decision path and next steps",
+      "Introduction to a professional if needed",
     ],
     documents: ["Property details", "Location information", "Ownership details"],
-    disclaimer: "Propitz does not provide investment, legal, or financial advice.",
+    responsibility:
+      "PropITZ helps you frame the decision. It does not provide investment, legal or financial advice; those opinions come from independent professionals.",
+    seoTitle: "Property Advice & Next Steps in Tamil Nadu",
+    seoDescription:
+      "Not sure what to do with a property? PropITZ helps you frame the decision, see your options and reach the right professional in Tamil Nadu.",
   },
   {
     slug: "professional-network-access",
     title: "Professional Network Access",
+    label: "Find the right property professional",
     short:
-      "Enquiry-based introductions to lawyers, architects, surveyors and consultants.",
-    hero:
-      "Enquiry-based facilitation to connect you with relevant property professionals such as lawyers, architects, surveyors, and consultants.",
+      "Introductions to the right independent lawyer, architect, surveyor or consultant.",
+    outcome:
+      "Get introduced to the right independent lawyer, architect, surveyor or consultant for your property need, with your context already shared.",
     image: `${IMG}/2026/02/service6.avif`,
-    about:
-      "Enables you to connect with property-related professionals through an enquiry-based facilitation approach.",
-    helps:
-      "We arrange introductions to qualified professionals — lawyers, architects, surveyors and consultants — tailored to your requirement.",
-    process: [
-      "You submit a service enquiry",
-      "Matching with the professional category",
-      "Introduction facilitated",
-      "Independent engagement by you",
+    handles: [
+      "Understanding your requirement",
+      "Matching it to the right professional category",
+      "Introducing a professional with your context already shared",
     ],
-    documents: ["Service requirement description", "Property information (if applicable)"],
-    disclaimer:
-      "All professionals operate independently, and Propitz does not guarantee outcomes.",
+    process: [
+      "Tell us what you need",
+      "We match the professional category",
+      "Introduction made",
+      "You engage the professional directly",
+    ],
+    documents: [
+      "A description of what you need",
+      "Property information, if applicable",
+    ],
+    responsibility:
+      "Professionals operate independently and own their advice and deliverables. PropITZ makes the introduction and does not guarantee outcomes.",
+    seoTitle: "Find a Property Lawyer, Architect or Surveyor in Chennai",
+    seoDescription:
+      "Get introduced to independent property lawyers, architects, surveyors and consultants in Tamil Nadu, matched to your requirement by PropITZ.",
   },
   {
     slug: "transactional-structuring-support",
     title: "Transactional Structuring Support",
+    label: "Structure your property transaction",
     short:
-      "Help to understand and organise property transactions, ownership frameworks and compliance.",
-    hero:
-      "Support to help you understand and organise property transactions — ownership frameworks, document management and regulatory adherence.",
+      "How your transaction should be organised, from ownership and tax to paperwork, before you sign.",
+    outcome:
+      "Understand how your transaction should be organised, from ownership and tax to documents and compliance, before you sign.",
     image: `${IMG}/2026/04/Transactional-Structuring-Support.jpg`,
-    about:
-      "Assists you in understanding and organising property transactions, addressing ownership frameworks, document management and regulatory adherence.",
-    helps:
-      "We deliver foundational direction and arrange connections with qualified specialists for tax matters, fund transfers and regulatory paperwork.",
+    handles: [
+      "Outlining the ownership and structuring considerations for your transaction",
+      "Coordinating legal and tax specialists on capital gains and compliance",
+      "Repatriation coordination for NRI transactions",
+      "Planning the document flow from agreement to registration",
+    ],
     process: [
-      "You submit a transaction requirement",
-      "Propitz helps outline key considerations",
-      "Coordination with relevant professionals (legal, tax, etc.)",
-      "You proceed with independent execution",
+      "Share your transaction requirement",
+      "We outline the key considerations",
+      "Coordination with legal and tax professionals",
+      "You proceed with execution",
     ],
-    documents: [
-      "Ownership & transaction structuring",
-      "Capital gains & taxation coordination",
-      "Repatriation (for NRI transactions)",
-      "Regulatory & compliance awareness",
-      "Documentation flow planning",
-    ],
-    disclaimer:
-      "Propitz acts only as a facilitation platform. All legal, tax and financial advice is provided by independent professionals.",
+    documents: [],
+    responsibility:
+      "PropITZ coordinates the specialists. All legal, tax and financial advice is provided by independent professionals.",
+    seoTitle: "Structure Your Property Transaction: Tax, NRI & Compliance",
+    seoDescription:
+      "Organise a property transaction before you sign: ownership, capital gains, NRI repatriation and paperwork, coordinated with legal and tax specialists.",
   },
   {
     slug: "negotiation-deal-support",
     title: "Negotiation & Deal Support",
+    label: "Prepare for a property negotiation",
     short:
-      "Structured guidance to prepare for property negotiations and key deal considerations.",
-    hero:
-      "Structured guidance to help you prepare for and navigate property negotiations, including pricing discussions and key deal considerations.",
+      "Prepared on price, terms and paperwork before you sit down to negotiate.",
+    outcome:
+      "Go into a property negotiation prepared on price, terms and paperwork, with the decision staying yours.",
     image: `${IMG}/2026/04/Negotiation-Deal-Support.webp`,
-    about:
-      "Helps you prepare for and navigate property negotiations, including pricing discussions and key deal considerations.",
-    helps:
-      "We offer structured guidance on negotiation strategy and coordinate between parties when needed, helping you understand critical deal elements.",
+    handles: [
+      "Preparing you for price discussions",
+      "Setting out deal and payment-term considerations",
+      "Planning the documentation flow",
+      "Coordinating between parties when needed",
+    ],
     process: [
-      "You submit a negotiation or deal requirement",
-      "Propitz outlines key considerations and approach",
-      "Guidance on pricing, terms and documentation flow",
-      "Coordination support during discussions (if required)",
+      "Share your negotiation or deal requirement",
+      "We outline the key considerations and approach",
+      "Preparation on pricing, terms and documents",
+      "Coordination during discussions, if required",
     ],
-    documents: [
-      "Price discussion preparation",
-      "Deal structuring considerations",
-      "Payment terms awareness",
-      "Documentation flow planning",
-      "Coordination between parties",
-    ],
-    disclaimer:
-      "Propitz does not act as a broker, agent or representative in negotiations. All decisions and agreements are made independently by the involved parties.",
+    documents: [],
+    responsibility:
+      "PropITZ does not act as a broker, agent or representative in negotiations. All decisions and agreements are made by the parties involved.",
+    seoTitle: "Property Negotiation Support in Chennai",
+    seoDescription:
+      "Prepare for a property negotiation on price, payment terms and documentation. PropITZ helps buyers and sellers in Tamil Nadu go in ready.",
   },
 ];
 

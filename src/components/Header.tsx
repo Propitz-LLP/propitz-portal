@@ -31,7 +31,7 @@ import {
 
 const simpleNav = [
   { label: "Marketplace", href: "/property-marketplace" },
-  { label: "Our centres", href: "/contact-us" },
+  { label: "Contact", href: "/contact-us" },
   { label: "About", href: "/about-us" },
 ];
 
@@ -60,8 +60,8 @@ export default function Header() {
       {/* main bar */}
       <div className="border-b border-line bg-bg">
         <div className="container-px flex h-[78px] items-center gap-6">
-          <Link href="/" aria-label="Propitz home" className="shrink-0">
-            <Image src={site.logo} alt="Propitz" width={478} height={141} className="h-[31px] w-auto" priority />
+          <Link href="/" aria-label="PropITZ home" className="shrink-0">
+            <Image src={site.logo} alt="PropITZ" width={478} height={141} className="h-[31px] w-auto" priority />
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex">

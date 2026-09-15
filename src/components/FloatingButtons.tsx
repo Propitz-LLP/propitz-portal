@@ -34,7 +34,7 @@ export default function FloatingButtons({
 
       <a
         href={`tel:${phone}`}
-        aria-label="Call Propitz"
+        aria-label="Call PropITZ"
         className="flex h-11 w-11 items-center justify-center rounded-full bg-brand text-white shadow-lg transition-transform hover:-translate-y-0.5 sm:h-12 sm:w-12"
       >
         <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="currentColor" viewBox="0 0 24 24">

@@ -7,7 +7,7 @@ import { THEME_IMG } from "@/data/site";
 export const metadata: Metadata = {
   title: "Create Account",
   description:
-    "Register for a Propitz account to track your property enquiries and access structured facilitation support.",
+    "Create a PropITZ account to keep your contact details on file for your property enquiries.",
 };
 
 export default async function RegisterPage({
@@ -23,7 +23,7 @@ export default async function RegisterPage({
       <PageHero
         title="Create your account"
         crumb="Register"
-        subtitle="Join Propitz to manage your property enquiries and access structured, verification-led support."
+        subtitle="Save your contact details once, so we can reach you about your property enquiries."
         image={`${THEME_IMG}/hero-bg-image.jpg`}
       />
       <section className="section">

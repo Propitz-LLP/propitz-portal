@@ -7,11 +7,11 @@ import { IconPhone, IconWhatsApp } from "@/components/Icon";
 export default function Footer() {
   return (
     <footer className="dark-grid mt-auto text-slate-300">
-      <div className="container-px grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1.2fr_1.3fr]">
+      <div className="container-px grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1.2fr]">
         {/* Brand */}
         <div className="lg:pr-8">
           <Link href="/" className="inline-flex items-center">
-            <Image src={site.logo} alt="Propitz" width={160} height={46} className="h-10 w-auto brightness-0 invert" unoptimized />
+            <Image src={site.logo} alt="PropITZ" width={160} height={46} className="h-10 w-auto brightness-0 invert" unoptimized />
           </Link>
           <p className="mt-6 max-w-sm text-[15px] leading-relaxed text-slate-400">
             {site.description}
@@ -75,7 +75,10 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Newsletter */}
+        {/*
+          NEWSLETTER (disabled pre-launch). The form had no handler, so any
+          address typed into it was silently discarded. Restore once there is
+          somewhere to store subscribers.
         <div>
           <h4 className="text-lg font-semibold text-white">Subscribe Newsletter</h4>
           <p className="mt-5 text-[15px] leading-relaxed text-slate-400">
@@ -99,11 +102,12 @@ export default function Footer() {
             </button>
           </form>
         </div>
+        */}
       </div>
 
       <div className="border-t border-white/10">
         <div className="container-px py-6 text-center text-sm text-slate-400">
-          © 2026 Propitz.com All Right Reserved.
+          © 2026 PropITZ. All rights reserved.
         </div>
       </div>
     </footer>

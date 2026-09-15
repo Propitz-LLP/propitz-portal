@@ -6,9 +6,9 @@ import ContactForm from "@/components/ContactForm";
 import { site, IMG } from "@/data/site";
 
 export const metadata: Metadata = {
-  title: "Contact Us",
+  title: "Contact Us: Property Help in Chennai",
   description:
-    "Need help with a property process? Submit your query and let Propitz guide you through documentation, registration procedures and professional coordination.",
+    "Talk to PropITZ about registering, verifying or documenting a property in Tamil Nadu. Call, WhatsApp, email or visit our office in Perungudi, Chennai.",
 };
 
 const details = [
@@ -46,7 +46,7 @@ export default function ContactPage() {
     <>
       <PageHero
         title="Contact Us"
-        subtitle="Need help with a property process? Submit your query and let Propitz guide you through documentation, registration procedures and professional coordination."
+        subtitle="Tell us what you are trying to do with a property. We reply by WhatsApp, phone or email, whichever you prefer."
         image={`${IMG}/2026/03/8.jpg`}
       />
 
@@ -89,11 +89,11 @@ export default function ContactPage() {
           <SectionHeading
             eyebrow="Our Locations"
             title="Find us in Chennai"
-            subtitle="Property Guidance, Closer to You."
+            subtitle="Walk in at our Perungudi office, or reach us by phone, WhatsApp or email."
           />
           <div className="mt-10 overflow-hidden rounded-3xl ring-1 ring-line">
             <iframe
-              title="Propitz location"
+              title="PropITZ location"
               src="https://www.google.com/maps?q=Perungudi,+Chennai,+Tamil+Nadu+600096&output=embed"
               className="h-[420px] w-full border-0"
               loading="lazy"

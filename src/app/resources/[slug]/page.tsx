@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
+import ArticleCTA from "@/components/ArticleCTA";
+import LandConverter from "@/components/LandConverter";
 import CTASection from "@/components/CTASection";
 import { resources, getResource } from "@/data/resources";
 
@@ -18,7 +20,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const r = getResource(slug);
   if (!r) return { title: "Resource" };
-  return { title: r.title, description: r.hero };
+  return { title: r.seoTitle, description: r.seoDescription };
 }
 
 export default async function ResourcePage({
@@ -36,6 +38,13 @@ export default async function ResourcePage({
 
       <section className="section">
         <div className="container-px grid gap-12 lg:grid-cols-[1fr_18rem]">
+          <div>
+          {/* the reference page doubles as the tool people searched for */}
+          {resource.slug === "land-measurement-conversion" && (
+            <div className="mb-10">
+              <LandConverter />
+            </div>
+          )}
           <div className="prose-content max-w-none">
             {resource.sections.map((s, i) => (
               <Reveal key={s.heading} delay={i * 80}>
@@ -52,6 +61,9 @@ export default async function ResourcePage({
                 )}
               </Reveal>
             ))}
+          </div>
+          {/* outside prose-content, whose paragraph and list styles would leak in */}
+          <ArticleCTA slug={resource.slug} />
           </div>
 
           <aside className="lg:sticky lg:top-28 lg:self-start">

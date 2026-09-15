@@ -138,7 +138,7 @@ async function google(params: string, key: string): Promise<PlaceResult | null> 
 
 const osmHeaders = {
   // Nominatim rejects requests without an identifying User-Agent.
-  "User-Agent": `Propitz/1.0 (${CONTACT})`,
+  "User-Agent": `PropITZ/1.0 (${CONTACT})`,
   "Accept-Language": "en",
 };
 

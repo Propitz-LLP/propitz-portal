@@ -23,7 +23,7 @@ import { IconChevron, IconPerson, IconSearch } from "@/components/Icon";
  * search, a filter rail and the results.
  *
  * Buy and Sell stay two separate actions; the tabs above them only group
- * them against Specialist Services, which is the marketplace's other half.
+ * them against Property Professionals, which is the marketplace's other half.
  *
  * Verification is a filter in its own right — if an advocate reading the
  * document chain is what we sell, a buyer should be able to search on it.

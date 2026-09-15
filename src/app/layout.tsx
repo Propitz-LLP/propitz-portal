@@ -41,23 +41,23 @@ const mono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://propitz.com"),
   title: {
-    default: "Propitz — One-Point Property Facilitation Platform",
-    template: "%s — Propitz",
+    default: "PropITZ — Property Registration, Verification & Documents in Tamil Nadu",
+    template: "%s — PropITZ",
   },
   description:
-    "Propitz is India's one-point facilitation platform that simplifies property processes by connecting users with structured guidance, verified support, and relevant professional services.",
+    "Register, verify and document property in Tamil Nadu with PropITZ: the right Sub-Registrar Office, documents checked first, and independent professionals coordinated for you.",
   keywords: [
     "property facilitation",
     "property registration",
     "SRO Tamil Nadu",
     "property verification",
     "Chennai real estate",
-    "Propitz",
+    "PropITZ",
   ],
   openGraph: {
-    title: "Propitz — One-Point Property Facilitation Platform",
+    title: "PropITZ — Property in Tamil Nadu, without the guesswork",
     description:
-      "Simplify your property journey with verified guidance, structured support, and a trusted professional network.",
+      "Online where it is faster, in person where it matters. Registration, verification, documents and verified listings across Tamil Nadu.",
     type: "website",
     url: "https://propitz.com",
   },

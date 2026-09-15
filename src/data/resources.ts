@@ -3,6 +3,9 @@ import { IMG } from "./site";
 export type Resource = {
   slug: string;
   title: string;
+  /** Search-phrased page title; the on-page heading keeps `title`. */
+  seoTitle: string;
+  seoDescription: string;
   hero: string;
   image: string;
   sections: { heading: string; body: string[]; list?: string[] }[];
@@ -12,6 +15,9 @@ export const resources: Resource[] = [
   {
     slug: "land-measurement-conversion",
     title: "Land Measurement & Conversion",
+    seoTitle: "Land Area Converter: Cents, Grounds, Acres & Sq Ft",
+    seoDescription:
+      "Convert land area between square feet, cents, grounds, acres and hectares, using the standard definition of each unit used in Tamil Nadu.",
     hero:
       "Understand common land measurement units used in India such as square feet (sq ft), square yards (sq yd), and acres.",
     image: `${IMG}/2026/02/project-image-1.jpg`,
@@ -41,14 +47,17 @@ export const resources: Resource[] = [
   {
     slug: "sub-registrar-office-sro-information-tamil-nadu",
     title: "Sub-Registrar Office (SRO) Information – Tamil Nadu",
+    seoTitle: "Sub-Registrar Office (SRO) in Tamil Nadu: What to Expect",
+    seoDescription:
+      "What happens at a Tamil Nadu Sub-Registrar Office, what to prepare before your visit, and where PropITZ can help with the process.",
     hero:
-      "Every property transaction must be registered at the relevant Sub-Registrar Office (SRO). Propitz helps you understand the process, requirements and preparation.",
+      "Every property transaction must be registered at the relevant Sub-Registrar Office (SRO). PropITZ helps you understand the process, requirements and preparation.",
     image: `${IMG}/2026/02/project-image-2.jpg`,
     sections: [
       {
-        heading: "How Propitz helps with SRO processes",
+        heading: "How PropITZ helps with SRO processes",
         body: [
-          "Propitz provides guidance on property registration procedures — identifying the correct SRO, understanding process workflows, document requirements and appointment scheduling to minimise registration delays.",
+          "PropITZ provides guidance on property registration procedures — identifying the correct SRO, understanding process workflows, document requirements and appointment scheduling to minimise registration delays.",
         ],
         list: [
           "Which SRO your property falls under",
@@ -62,6 +71,9 @@ export const resources: Resource[] = [
   {
     slug: "ec-patta-chitta-gv",
     title: "EC & Patta Chitta & GV",
+    seoTitle: "EC, Patta, Chitta & Guideline Value Explained for Tamil Nadu",
+    seoDescription:
+      "What an Encumbrance Certificate, Patta, Chitta and guideline value are, and why each one matters when you buy property in Tamil Nadu.",
     hero:
       "An Encumbrance Certificate helps you check the ownership history of a property and whether there are any legal or financial liabilities attached to it.",
     image: `${IMG}/2026/02/project-image-3.jpg`,
@@ -81,7 +93,10 @@ export const resources: Resource[] = [
   },
   {
     slug: "propitz-professional-network",
-    title: "Propitz Professional Network",
+    title: "PropITZ Professional Network",
+    seoTitle: "PropITZ Professional Network: How Introductions Work",
+    seoDescription:
+      "How PropITZ introduces you to independent advocates, architects, engineers, surveyors and accountants matched to your property task.",
     hero:
       "Connect with independent professionals — legal advisors, architects, engineers, contractors, accountants, company secretaries and surveyors — based on your specific property needs.",
     image: `${IMG}/2026/02/project-image-4.jpg`,
@@ -89,7 +104,7 @@ export const resources: Resource[] = [
       {
         heading: "A vetted network, matched to your need",
         body: [
-          "The Propitz Professional Network is the core facilitation service that pairs you with independent professionals based on your requirement. Every professional operates independently; Propitz facilitates the introduction.",
+          "The PropITZ Professional Network is the core facilitation service that pairs you with independent professionals based on your requirement. Every professional operates independently; PropITZ facilitates the introduction.",
         ],
         list: [
           "Legal advisors & documentation experts",

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import CTASection from "@/components/CTASection";
+import { IconArrow, IconCheck, IconWhatsApp } from "@/components/Icon";
 import { services, getService } from "@/data/services";
 import { site } from "@/data/site";
 
@@ -20,9 +20,14 @@ export async function generateMetadata({
   const { slug } = await params;
   const service = getService(slug);
   if (!service) return { title: "Service" };
-  return { title: service.title, description: service.hero };
+  return { title: service.seoTitle, description: service.seoDescription };
 }
 
+/**
+ * One service, one template: outcome and CTAs up top, then what PropITZ
+ * handles, the journey, documents, and who is responsible for what. Each
+ * block says something the one above it did not.
+ */
 export default async function ServiceDetailPage({
   params,
 }: {
@@ -32,77 +37,116 @@ export default async function ServiceDetailPage({
   const service = getService(slug);
   if (!service) notFound();
 
-  const others = services.filter((s) => s.slug !== service.slug).slice(0, 4);
+  const whatsappText = encodeURIComponent(
+    `Hi PropITZ, I need help with ${service.title.toLowerCase()}.`
+  );
 
   return (
     <>
-      <PageHero title={service.title} subtitle={service.hero} image={service.image} crumb={service.title} />
+      <PageHero
+        title={service.label}
+        subtitle={service.outcome}
+        image={service.image}
+        crumb={service.title}
+      />
 
       <section className="section">
         <div className="container-px grid gap-12 lg:grid-cols-[1fr_20rem]">
-          {/* Main */}
           <div>
-            <Reveal className="relative mb-10 aspect-[16/9] overflow-hidden rounded-3xl bg-brand-50">
-              <Image src={service.image} alt={service.title} fill className="object-cover" sizes="(max-width:1024px) 100vw, 60vw" priority />
-            </Reveal>
+            {/* top-fold actions: structured request first, WhatsApp beside it */}
+            <div className="flex flex-wrap gap-3">
+              <a
+                href={site.queryForm}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary gap-3 py-3.5 text-[15px]"
+              >
+                Start a request
+                <IconArrow size={16} />
+              </a>
+              <a
+                href={`https://wa.me/${site.whatsapp}?text=${whatsappText}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-ghost gap-2.5 py-3.5 text-[15px]"
+              >
+                <IconWhatsApp size={17} className="text-whatsapp" />
+                Chat on WhatsApp
+              </a>
+            </div>
 
-            <Reveal>
-              <h2 className="text-2xl text-ink">What is this service about?</h2>
-              <p className="mt-3 leading-relaxed text-body">{service.about}</p>
+            <Reveal className="mt-10">
+              <h2 className="text-2xl text-ink">What PropITZ handles</h2>
+              <ul className="mt-5 space-y-3">
+                {service.handles.map((h) => (
+                  <li key={h} className="flex items-start gap-3">
+                    <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-brand-50 text-brand">
+                      <IconCheck size={14} />
+                    </span>
+                    <span className="leading-relaxed text-body">{h}</span>
+                  </li>
+                ))}
+              </ul>
             </Reveal>
 
             <Reveal className="mt-10">
-              <h2 className="text-2xl text-ink">How Propitz helps</h2>
-              <p className="mt-3 leading-relaxed text-body">{service.helps}</p>
+              <h2 className="text-2xl text-ink">Your journey</h2>
+              <ol className="mt-5 grid gap-3 sm:grid-cols-2">
+                {service.process.map((step, i) => (
+                  <li
+                    key={step}
+                    className="flex gap-3 rounded-2xl bg-surface p-4 ring-1 ring-line"
+                  >
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">
+                      {i + 1}
+                    </span>
+                    <span className="text-sm leading-relaxed text-body">{step}</span>
+                  </li>
+                ))}
+              </ol>
             </Reveal>
 
-            <div className="mt-10 grid gap-8 sm:grid-cols-2">
-              <Reveal className="rounded-2xl bg-surface p-6 ring-1 ring-line">
-                <h3 className="text-lg text-ink">Basic Process</h3>
-                <ol className="mt-4 space-y-4">
-                  {service.process.map((step, i) => (
-                    <li key={step} className="flex gap-3">
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">
-                        {i + 1}
-                      </span>
-                      <span className="text-sm leading-relaxed text-body">{step}</span>
-                    </li>
-                  ))}
-                </ol>
-              </Reveal>
-
-              <Reveal delay={120} className="rounded-2xl bg-surface p-6 ring-1 ring-line">
-                <h3 className="text-lg text-ink">Indicative Documents</h3>
-                <ul className="mt-4 space-y-3">
+            {service.documents.length > 0 && (
+              <details className="group mt-10 rounded-2xl bg-surface ring-1 ring-line">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
+                  <span>
+                    <span className="block text-lg font-semibold text-ink">
+                      Documents you will need
+                    </span>
+                    <span className="mt-0.5 block text-sm text-muted">
+                      Indicative list · {service.documents.length} items
+                    </span>
+                  </span>
+                  <span
+                    aria-hidden
+                    className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-50 text-lg text-brand transition-transform group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <ul className="space-y-2.5 border-t border-line px-5 pb-5 pt-4">
                   {service.documents.map((d) => (
-                    <li key={d} className="flex items-start gap-3">
-                      <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand">
-                        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                      </span>
-                      <span className="text-sm leading-relaxed text-body">{d}</span>
+                    <li key={d} className="flex items-start gap-3 text-sm leading-relaxed text-body">
+                      <IconCheck size={15} className="mt-0.5 shrink-0 text-brand" />
+                      {d}
                     </li>
                   ))}
                 </ul>
-              </Reveal>
-            </div>
+              </details>
+            )}
 
-            <Reveal className="mt-10 flex gap-3 rounded-2xl border-l-4 border-accent bg-accent/5 p-5">
-              <svg className="h-6 w-6 shrink-0 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <p className="text-sm leading-relaxed text-body">
-                <span className="font-semibold text-ink">Disclaimer: </span>
-                {service.disclaimer}
+            <div className="mt-10 rounded-2xl border-l-4 border-accent bg-accent/5 p-5">
+              <p className="text-sm font-semibold text-ink">Who is responsible for what</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-body">
+                {service.responsibility}
               </p>
-            </Reveal>
+            </div>
           </div>
 
           {/* Sidebar */}
           <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
             <div className="card p-6">
-              <h3 className="text-lg text-ink">All Services</h3>
+              <h3 className="text-lg text-ink">All services</h3>
               <ul className="mt-4 space-y-1">
                 {services.map((s) => (
                   <li key={s.slug}>
@@ -122,40 +166,19 @@ export default async function ServiceDetailPage({
             </div>
 
             <div className="card overflow-hidden bg-ink p-6 text-white">
-              <h3 className="text-lg text-white">Need help now?</h3>
+              <h3 className="text-lg text-white">Prefer to talk?</h3>
               <p className="mt-2 text-sm text-slate-300">
-                Talk to our team about {service.title.toLowerCase()}.
+                Call us about {service.title.toLowerCase()}.
               </p>
-              <a href={`tel:${site.phoneDigits}`} className="btn-accent mt-5 w-full">
+              <a href={`tel:${site.phoneDigits}`} className="btn-accent mt-5 w-full py-3.5 text-[15px]">
                 {site.phone}
-              </a>
-              <a href={site.queryForm} target="_blank" rel="noopener noreferrer" className="btn-outline mt-3 w-full">
-                Submit your Query
               </a>
             </div>
           </aside>
         </div>
       </section>
 
-      {/* Related */}
-      <section className="section bg-surface">
-        <div className="container-px">
-          <h2 className="text-2xl text-ink">Explore other services</h2>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {others.map((s) => (
-              <Link key={s.slug} href={`/services/${s.slug}`} className="card group flex flex-col overflow-hidden p-0 hover:-translate-y-1">
-                <div className="relative aspect-[16/10] overflow-hidden bg-brand-50">
-                  <Image src={s.image} alt={s.title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="(max-width:768px) 100vw, 25vw" />
-                </div>
-                <div className="p-5">
-                  <h3 className="text-sm font-semibold text-ink group-hover:text-brand">{s.title}</h3>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
+      {/* No "other services" block: the sidebar already lists all eight. */}
       <CTASection />
     </>
   );

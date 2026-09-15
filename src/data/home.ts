@@ -6,6 +6,8 @@
 /*  the fold read from here.                                            */
 /* ------------------------------------------------------------------ */
 
+import { site } from "./site";
+
 export type Intent = {
   key: string;
   label: string;
@@ -15,15 +17,24 @@ export type Intent = {
 };
 
 /**
- * The hero question — "what do you need help with?". These are processes,
- * not transactions; buying and selling live with the marketplace instead.
+ * The hero question — "what do you need help with?". Problem-led, in the
+ * order people usually arrive: the transaction first, then the process it
+ * needs. Buying and selling sit here too, so they are not repeated in a
+ * separate band below.
  */
 export const intents: Intent[] = [
   {
-    key: "register",
-    label: "Register",
-    ta: "பத்திரப் பதிவு",
-    href: "/services/property-registration-assistance",
+    key: "buy",
+    label: "Buy",
+    ta: "வாங்க",
+    href: "/property-marketplace",
+  },
+  {
+    key: "sell",
+    label: "Sell",
+    ta: "விற்க",
+    // Temporary: the seller intake is still the Google Form.
+    href: site.queryForm,
   },
   {
     key: "verify",
@@ -32,16 +43,22 @@ export const intents: Intent[] = [
     href: "/services/property-verification-coordination",
   },
   {
-    key: "patta",
-    label: "Patta & EC",
-    ta: "பட்டா · EC",
-    href: "/resources/ec-patta-chitta-gv",
+    key: "register",
+    label: "Register",
+    ta: "பத்திரப் பதிவு",
+    href: "/services/property-registration-assistance",
   },
   {
-    key: "advisory",
-    label: "Advisory",
-    ta: "ஆலோசனை",
-    href: "/services/property-advisory-support",
+    key: "documents",
+    label: "Documents",
+    ta: "ஆவணங்கள்",
+    href: "/services/document-checklist-guidance",
+  },
+  {
+    key: "services",
+    label: "Property Services",
+    ta: "சொத்து சேவைகள்",
+    href: "/services",
   },
 ];
 
@@ -68,7 +85,7 @@ export const registrationWalkthrough = {
     },
     {
       title: "A coordinator goes with you",
-      text: "Someone from Propitz walks into the office with you on the day.",
+      text: "Someone from PropITZ walks into the office with you on the day.",
     },
   ],
   checklist: [
@@ -91,7 +108,7 @@ export const trustStats = [
 /** The phygital promise — online where it is faster, in person where it matters. */
 export const phygital = {
   online: [
-    "Track where your file has reached, at any hour.",
+    "Start a request online, without visiting an office.",
     "Document checklists built for your exact transaction.",
     "Listings with the verification status shown up front.",
   ],
@@ -107,7 +124,7 @@ export const freeTools = [
   { label: "Find my Sub-Registrar Office", href: "/resources/sub-registrar-office-sro-information-tamil-nadu" },
   { label: "Land measurement conversion", href: "/resources/land-measurement-conversion" },
   { label: "EC, Patta, Chitta & GV", href: "/resources/ec-patta-chitta-gv" },
-  { label: "Propitz professional network", href: "/resources/propitz-professional-network" },
+  { label: "PropITZ professional network", href: "/resources/propitz-professional-network" },
 ];
 
 /**

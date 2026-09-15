@@ -102,7 +102,7 @@ export default function WhoWeAre() {
                   <Star key={i} />
                 ))}
               </div>
-              <p className="mt-2 text-[15px] text-body">Our 5k+ Satisfice Client</p>
+              <p className="mt-2 text-[15px] text-body">5k+ satisfied clients</p>
             </div>
             <div className="relative h-[240px] overflow-hidden rounded-3xl">
               <Image src={`${IMG}/2026/03/10.jpg`} alt="Client meeting" fill className="object-cover" unoptimized />

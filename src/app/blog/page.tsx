@@ -8,9 +8,9 @@ import { posts } from "@/data/blog";
 import { IMG } from "@/data/site";
 
 export const metadata: Metadata = {
-  title: "Blog",
+  title: "Property Guides for Tamil Nadu: Registration, EC & Verification",
   description:
-    "Insights and step-by-step guides on property verification, documentation and registration in Tamil Nadu.",
+    "Step-by-step guides to property registration, encumbrance certificates, document checks and verification in Tamil Nadu, written for first-time buyers.",
 };
 
 export default function BlogPage() {

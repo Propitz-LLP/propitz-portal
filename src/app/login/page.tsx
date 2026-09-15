@@ -6,7 +6,7 @@ import { THEME_IMG } from "@/data/site";
 
 export const metadata: Metadata = {
   title: "Log In",
-  description: "Log in to your Propitz account.",
+  description: "Log in to your PropITZ account.",
 };
 
 export default async function LoginPage({
@@ -22,7 +22,7 @@ export default async function LoginPage({
       <PageHero
         title="Welcome back"
         crumb="Log In"
-        subtitle="Log in to access your Propitz account and continue where you left off."
+        subtitle="Log in to access your PropITZ account and continue where you left off."
         image={`${THEME_IMG}/hero-bg-image.jpg`}
       />
       <section className="section">

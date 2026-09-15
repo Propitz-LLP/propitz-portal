@@ -45,7 +45,7 @@ export default async function AccountPage() {
             <div className="rounded-3xl bg-white p-6 shadow-[var(--shadow-card)] ring-1 ring-line sm:p-8">
               <h2 className="text-2xl">Welcome, {fullName || "there"}</h2>
               <p className="mt-2 text-body">
-                You&apos;re signed in to your Propitz account. Update your
+                You&apos;re signed in to your PropITZ account. Update your
                 details below so we can reach you about your enquiries.
               </p>
 
