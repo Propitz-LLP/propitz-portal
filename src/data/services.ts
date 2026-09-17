@@ -68,10 +68,11 @@ export const services: Service[] = [
     image: `${IMG}/2026/04/EC-Patta-Chitta-Guideline-Value-GV.jpeg`,
     icon: `${IMG}/2026/02/icon-service-item-1.svg`,
     handles: [
-      "Identifying the Sub-Registrar Office that holds your survey number",
-      "Checking your documents before anything is booked; where legal verification is in scope, an independent advocate reviews the title chain",
-      "Booking the TNREGINET slot and telling you who must attend and what is paid",
-      "Execution-day assistance at the Sub-Registrar Office, where included and permitted",
+      "Identifying the Sub-Registrar Office with jurisdiction over your property",
+      "Organising the documents the registration requires, and flagging gaps before the appointment",
+      "Coordinating an advocate or other professional where your case needs one",
+      "Guiding the appointment and registration workflow, including the TNREGINET booking",
+      "Execution-day support at the SRO, where included in the engagement",
     ],
     process: [
       "Share property and transaction details",
@@ -80,10 +81,12 @@ export const services: Service[] = [
       "Coordinate appointment and execution-day process",
     ],
     documents: [
-      "Sale deed or agreement",
-      "ID and address proof of every signatory",
-      "Property tax receipts",
-      "Encumbrance certificate",
+      "Parent / title deed",
+      "Encumbrance Certificate",
+      "Patta, Chitta and applicable revenue records",
+      "Latest property-tax receipt",
+      "Identity and PAN documents of all parties",
+      "Sale agreement or draft deed, where available",
     ],
     responsibility:
       "PropITZ coordinates the process; statutory execution remains with the parties, authorised professionals and the relevant authority.",
@@ -116,10 +119,10 @@ export const services: Service[] = [
     image: `${IMG}/2026/02/service2.jpg`,
     icon: `${IMG}/2026/02/icon-service-item-2.svg`,
     handles: [
-      "Identifying the document set for buying, selling, registration or verification",
-      "A checklist written for your case, not a generic list",
-      "Answering questions on missing or unclear documents",
-      "Referring you to a professional when a document needs one",
+      "Identifying the document set that applies to your property and transaction",
+      "Organising your documents in the order they will be needed",
+      "Highlighting missing, outdated or inconsistent records before they cause delays",
+      "Pointing you to the professional or authority route when a record needs correcting",
     ],
     process: [
       "Tell us what you are trying to do",
@@ -131,10 +134,10 @@ export const services: Service[] = [
     note:
       "Document requirements vary by property type, ownership history and transaction. The checklist provided is specific to the information supplied.",
     documents: [
-      "Title deeds",
-      "Identity proof",
-      "Prior agreements",
-      "Government receipts",
+      "Any title or parent deeds you already hold",
+      "Encumbrance Certificate, if you have one",
+      "Patta / Chitta, if available",
+      "Details of the transaction you are planning",
     ],
     responsibility:
       "PropITZ organises your document requirements. It does not verify, certify or authenticate documents; that remains with authorised professionals and the relevant authority.",
@@ -167,9 +170,10 @@ export const services: Service[] = [
     image: `${IMG}/2026/02/service3.jpg`,
     icon: `${IMG}/2026/02/icon-service-item-3-1.svg`,
     handles: [
-      "Agreeing the scope of checks your property needs",
-      "Coordinating an independent advocate or surveyor to carry them out",
-      "Keeping the review moving and passing the findings to you in one place",
+      "Agreeing the verification scope for your property and transaction",
+      "Collecting the property records the review needs",
+      "Coordinating the advocate, surveyor or other professional the scope requires",
+      "Tracking the review and sharing the professionals’ findings with you",
     ],
     process: [
       "Share the property details",
@@ -193,10 +197,9 @@ export const services: Service[] = [
     note:
       "Verification is not a blanket guarantee. What was checked depends on the agreed scope, and the findings reflect the records available on the review date.",
     documents: [
-      "Title documents",
-      "Encumbrance certificate",
-      "Layout approvals",
-      "Tax receipts",
+      "Copies of the documents the seller has shared",
+      "Property address and survey number",
+      "Sale agreement or offer terms, if any",
     ],
     responsibility:
       "Professional legal opinions, surveys and valuations are issued independently by the respective qualified professionals. PropITZ coordinates the case and customer journey.",
@@ -241,9 +244,9 @@ export const services: Service[] = [
       "Coordinate the SRO visit where included in the engagement",
     ],
     documents: [
-      "Property documents",
-      "Identity proof",
-      "Appointment or application details",
+      "Documents for the transaction being registered",
+      "Identity and PAN documents of all parties",
+      "Appointment or application details, if already started",
     ],
     responsibility:
       "PropITZ coordinates your SRO process but does not represent you before government offices. Statutory steps remain with the parties and the relevant authority.",
@@ -275,16 +278,16 @@ export const services: Service[] = [
       "Whether you are evaluating a purchase, preparing to sell, dealing with a documentation issue or planning a property transaction, PropITZ helps structure the requirement, identify the issues that need attention and coordinate the right specialist inputs.",
     image: `${IMG}/2026/02/service5.avif`,
     handles: [
-      "Understanding what you are trying to achieve",
-      "Setting out your options and the questions to ask",
-      "Pointing out where a professional opinion is needed",
-      "Introducing the right professional for detailed evaluation",
+      "Structuring your requirement into clear questions and options",
+      "Identifying the issues that need attention before you decide",
+      "Coordinating the right specialist inputs where a professional opinion is needed",
+      "A next-step plan: what to do, and in what order",
     ],
     process: [
       "Share your property question",
       "We clarify your objective",
-      "You receive a decision path and next steps",
-      "Introduction to a professional if needed",
+      "You receive a next-step plan",
+      "Specialist inputs coordinated where needed",
     ],
     scope: {
       heading: "Typical use cases",
@@ -295,7 +298,11 @@ export const services: Service[] = [
         "Transaction planning — sequence of verification, documentation and execution",
       ],
     },
-    documents: ["Property details", "Location information", "Ownership details"],
+    documents: [
+      "Property details and location",
+      "Ownership documents you hold",
+      "Any documents related to the issue or transaction",
+    ],
     responsibility:
       "PropITZ does not provide regulated legal, tax, financial or investment advice. Such advice is provided by the appropriate independent professional.",
     faqs: [
@@ -326,9 +333,10 @@ export const services: Service[] = [
       "PropITZ helps connect property owners, buyers and sellers with relevant professionals based on the requirement, property location and scope of work.",
     image: `${IMG}/2026/02/service6.avif`,
     handles: [
-      "Understanding your requirement",
-      "Matching it to the right professional category",
-      "Introducing a professional with your context already shared",
+      "Understanding your requirement, property location and scope of work",
+      "Matching the requirement to the right type of professional",
+      "Introducing a professional, with your context shared",
+      "Coordinating the requirement until the professional takes it forward",
     ],
     process: [
       "Tell us what you need",
@@ -350,7 +358,7 @@ export const services: Service[] = [
     },
     documents: [
       "A description of what you need",
-      "Property information, if applicable",
+      "Property location and details, if applicable",
     ],
     responsibility:
       "PropITZ coordinates the requirement and customer journey. Professionals are independent and remain responsible for their professional advice and deliverables.",
@@ -377,21 +385,21 @@ export const services: Service[] = [
     title: "Transactional Structuring Support",
     label: "Structure your property transaction before money starts moving",
     short:
-      "How your transaction should be organised, from ownership and tax to paperwork, before you sign.",
+      "The right order for due diligence, payments, agreements and execution, before money moves.",
     outcome:
       "PropITZ helps organise the sequence of a property transaction so that due diligence, advance payments, agreements, documentation, professional inputs and final execution happen in the right order.",
     image: `${IMG}/2026/04/Transactional-Structuring-Support.jpg`,
     handles: [
-      "Outlining the ownership and structuring considerations for your transaction",
-      "Coordinating legal and tax specialists on capital gains and compliance",
-      "Repatriation coordination for NRI transactions",
-      "Planning the document flow from agreement to registration",
+      "Mapping the order of due diligence, agreements, payments and execution for your transaction",
+      "Identifying the professional and legal inputs each stage needs",
+      "Coordinating the engaged advocate and other professionals through the workflow",
+      "Tracking prerequisites so money does not move before the checks it depends on",
     ],
     process: [
-      "Share your transaction requirement",
-      "We outline the key considerations",
-      "Coordination with legal and tax professionals",
-      "You proceed with execution",
+      "Share your transaction details",
+      "We map the sequence and its prerequisites",
+      "Professional and legal inputs are coordinated",
+      "Registration and closing proceed in order",
     ],
     scope: {
       heading: "What this may include",
@@ -405,7 +413,11 @@ export const services: Service[] = [
         "Closing / execution sequence",
       ],
     },
-    documents: [],
+    documents: [
+      "Title documents for the property",
+      "Sale agreement or draft terms, if any",
+      "Proposed payment schedule",
+    ],
     responsibility:
       "Legal documents and legal opinions are prepared or issued by the engaged advocate. PropITZ coordinates the transaction workflow.",
     faqs: [
@@ -422,9 +434,10 @@ export const services: Service[] = [
         a: "Yes, subject to scope and with the appropriate professional inputs.",
       },
     ],
-    seoTitle: "Structure Your Property Transaction: Tax, NRI & Compliance",
+    seoTitle:
+      "Structure Your Property Transaction Before Money Moves",
     seoDescription:
-      "Organise a property transaction before you sign: ownership, capital gains, NRI repatriation and paperwork, coordinated with legal and tax specialists.",
+      "Plan the order of due diligence, advance payments, agreements and registration for a property transaction in Tamil Nadu, coordinated by PropITZ with your advocate.",
   },
   {
     slug: "negotiation-deal-support",
@@ -436,10 +449,10 @@ export const services: Service[] = [
       "Property negotiations involve more than the headline price. PropITZ helps customers prepare for discussions around price, payment timing, documentation conditions, advance terms, timelines and other transaction milestones.",
     image: `${IMG}/2026/04/Negotiation-Deal-Support.webp`,
     handles: [
-      "Preparing you for price discussions",
-      "Setting out deal and payment-term considerations",
-      "Planning the documentation flow",
-      "Coordinating between parties when needed",
+      "Helping you prepare your position before discussions begin",
+      "Identifying which terms depend on documents or due diligence still pending",
+      "Coordinating discussions between the parties, where the engagement includes it",
+      "Recording agreed terms and milestones so they carry into the documentation",
     ],
     process: [
       "Share your negotiation or deal requirement",
@@ -459,7 +472,11 @@ export const services: Service[] = [
         "Handover / closing terms",
       ],
     },
-    documents: [],
+    documents: [
+      "Current asking or offer price",
+      "Draft terms or agreement, if any",
+      "Property documents shared so far",
+    ],
     responsibility:
       "PropITZ does not guarantee a particular transaction price or outcome. Final commercial terms are agreed between the parties.",
     faqs: [

@@ -176,7 +176,7 @@ export default async function ServiceDetailPage({
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
                   <span>
                     <span className="block text-lg font-semibold text-ink">
-                      Documents you will need
+                      What to have ready
                     </span>
                     <span className="mt-0.5 block text-sm text-muted">
                       Indicative list · {service.documents.length} items
