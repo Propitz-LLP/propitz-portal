@@ -7,23 +7,19 @@ import RegionLine from "@/components/RegionLine";
 import {
   IconAdvisory,
   IconArrow,
-  IconBuy,
   IconCheck,
   IconDeed,
   IconDoc,
   IconPlay,
-  IconSell,
   IconVerify,
   IconWhatsApp,
 } from "@/components/Icon";
 
 const intentIcon: Record<string, (p: { size?: number; className?: string }) => React.ReactElement> = {
-  buy: IconBuy,
-  sell: IconSell,
-  verify: IconVerify,
   register: IconDeed,
-  documents: IconDoc,
-  services: IconAdvisory,
+  verify: IconVerify,
+  patta: IconDoc,
+  advisory: IconAdvisory,
 };
 
 /**
@@ -88,11 +84,11 @@ export default function IntentHero() {
         </div>
       </div>
 
-      {/* the six problem-led intents */}
+      {/* the four process intents */}
       <p className="mt-11 mb-3.5 text-[13px] font-bold uppercase tracking-[0.06em] text-faint">
         What do you need help with?
       </p>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {intents.map((i) => {
           const Icon = intentIcon[i.key];
           const active = i.key === "register";

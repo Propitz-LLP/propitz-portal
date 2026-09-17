@@ -15,23 +15,15 @@ export type Intent = {
 };
 
 /**
- * The hero question — "what do you need help with?". Problem-led, in the
- * order people usually arrive: the transaction first, then the process it
- * needs. Buying and selling sit here too, so they are not repeated in a
- * separate band below.
+ * The hero question — "what do you need help with?". These are processes,
+ * not transactions; buying and selling live with the marketplace instead.
  */
 export const intents: Intent[] = [
   {
-    key: "buy",
-    label: "Buy",
-    ta: "வாங்க",
-    href: "/property-marketplace",
-  },
-  {
-    key: "sell",
-    label: "Sell",
-    ta: "விற்க",
-    href: "/sell",
+    key: "register",
+    label: "Register",
+    ta: "பத்திரப் பதிவு",
+    href: "/services/property-registration-assistance",
   },
   {
     key: "verify",
@@ -40,22 +32,16 @@ export const intents: Intent[] = [
     href: "/services/property-verification-coordination",
   },
   {
-    key: "register",
-    label: "Register",
-    ta: "பத்திரப் பதிவு",
-    href: "/services/property-registration-assistance",
+    key: "patta",
+    label: "Patta & EC",
+    ta: "பட்டா · EC",
+    href: "/resources/ec-patta-chitta-gv",
   },
   {
-    key: "documents",
-    label: "Documents",
-    ta: "ஆவணங்கள்",
-    href: "/services/document-checklist-guidance",
-  },
-  {
-    key: "services",
-    label: "Property Services",
-    ta: "சொத்து சேவைகள்",
-    href: "/services",
+    key: "advisory",
+    label: "Advisory",
+    ta: "ஆலோசனை",
+    href: "/services/property-advisory-support",
   },
 ];
 
