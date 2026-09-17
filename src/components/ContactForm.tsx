@@ -1,107 +1,102 @@
 "use client";
 
-import { useState } from "react";
-import { site } from "@/data/site";
+import { useActionState, useState } from "react";
+import { submitLead } from "@/app/leads/actions";
+import { CHANNELS, REQUIREMENTS, type LeadState, type RequirementKey } from "@/data/leads";
+import { whatsappHref } from "@/data/site";
+import { IconWhatsApp } from "@/components/Icon";
 
 const field =
   "w-full rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink placeholder:text-slate-400 focus:border-brand focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand/20 transition";
 
 const label = "mb-1.5 block text-sm font-medium text-ink";
 
-/** Requirement categories, so an enquiry arrives already classified. */
-const REQUIREMENTS = [
-  "Buying a property",
-  "Selling a property",
-  "Verifying a property",
-  "Registering a property",
-  "Documents (Patta, EC, checklist)",
-  "Sub-Registrar Office process",
-  "Finding a property professional",
-  "Something else",
-];
-
-const CHANNELS = ["WhatsApp", "Call", "Email"] as const;
+const initial: LeadState = {};
 
 /**
- * First enquiry, no account needed. Asks for the four things a coordinator
- * needs to act — who, how to reach them, where the property is, and what
- * they need — plus how they would like to be contacted.
+ * Start a Request: the site's structured intake, no account needed.
  *
- * Still delivered as a pre-filled email: there is no lead store yet. The
- * subject line carries the category and location so the inbox can be
- * sorted until enquiries go into a CRM.
+ * Asks for the four things a coordinator needs to act (who, how to reach
+ * them, where the property is, what they need) plus how they would like to
+ * be contacted, and stores it as a lead in Supabase.
  */
-export default function ContactForm() {
-  const [sent, setSent] = useState(false);
-  const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    requirement: "",
-    location: "",
-    channel: "WhatsApp" as (typeof CHANNELS)[number],
-    message: "",
-  });
+export default function ContactForm({ need }: { need?: RequirementKey }) {
+  const [state, action, pending] = useActionState(submitLead, initial);
+  const [channel, setChannel] = useState<(typeof CHANNELS)[number]>("WhatsApp");
+  const preselected = REQUIREMENTS.find((r) => r.key === need)?.label ?? "";
 
-  const update =
-    (k: keyof typeof form) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
-      setForm((f) => ({ ...f, [k]: e.target.value }));
-
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const subject = encodeURIComponent(
-      `[${form.requirement}] ${form.name} — ${form.location}`
+  if (state.ok) {
+    return (
+      <div className="card p-6 sm:p-8">
+        <p className="text-xl font-semibold text-ink">Thank you. Your request is in.</p>
+        <p className="mt-2 leading-relaxed text-body">
+          A coordinator will review it and get back to you the way you asked.
+          Initial review normally begins within one business day.
+        </p>
+        <a
+          href={whatsappHref("Hi PropITZ, I have just sent a request on your website.")}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-ghost mt-6 gap-2.5 py-3.5 text-[15px]"
+        >
+          <IconWhatsApp size={17} className="text-whatsapp" />
+          Follow up on WhatsApp
+        </a>
+      </div>
     );
-    const body = encodeURIComponent(
-      [
-        `Name: ${form.name}`,
-        `Mobile: ${form.phone}`,
-        `Email: ${form.email || "not given"}`,
-        `Requirement: ${form.requirement}`,
-        `Property location: ${form.location}`,
-        `Preferred contact: ${form.channel}`,
-        "",
-        form.message,
-      ].join("\n")
-    );
-    window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`;
-    setSent(true);
-  };
+  }
 
   return (
-    <form onSubmit={onSubmit} className="card p-6 sm:p-8">
+    <form action={action} className="card p-6 sm:p-8">
+      <input type="hidden" name="source" value="request" />
+      <input type="hidden" name="page" value="contact-us" />
+      {/* honeypot */}
+      <input type="text" name="company" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
+
+      <h2 className="mb-5 text-2xl text-ink">Start a Request</h2>
+
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className={label}>Full name</label>
-          <input required value={form.name} onChange={update("name")} autoComplete="name" className={field} placeholder="Your name" />
+          <label className={label} htmlFor="req-name">Full name</label>
+          <input id="req-name" name="name" required autoComplete="name" className={field} placeholder="Your name" />
         </div>
         <div>
-          <label className={label}>Mobile number</label>
-          <input required type="tel" value={form.phone} onChange={update("phone")} autoComplete="tel" className={field} placeholder="+91 98765 43210" />
+          <label className={label} htmlFor="req-phone">Mobile number</label>
+          <input id="req-phone" name="phone" required type="tel" autoComplete="tel" className={field} placeholder="+91 98765 43210" />
         </div>
         <div>
-          <label className={label}>What do you need help with?</label>
-          <select required value={form.requirement} onChange={update("requirement")} className={field}>
+          <label className={label} htmlFor="req-need">What do you need help with?</label>
+          <select id="req-need" name="requirement" required defaultValue={preselected} className={field}>
             <option value="" disabled>
               Choose one
             </option>
             {REQUIREMENTS.map((r) => (
-              <option key={r} value={r}>
-                {r}
+              <option key={r.key} value={r.label}>
+                {r.label}
               </option>
             ))}
           </select>
         </div>
         <div>
-          <label className={label}>Property location</label>
-          <input required value={form.location} onChange={update("location")} className={field} placeholder="Area, town or district" />
+          <label className={label} htmlFor="req-location">Property location</label>
+          <input id="req-location" name="location" required className={field} placeholder="Area, town or district" />
         </div>
         <div className="sm:col-span-2">
-          <label className={label}>
-            Email <span className="font-normal text-muted">(optional)</span>
+          <label className={label} htmlFor="req-email">
+            Email{" "}
+            <span className="font-normal text-muted">
+              {channel === "Email" ? "(needed to reply by email)" : "(optional)"}
+            </span>
           </label>
-          <input type="email" value={form.email} onChange={update("email")} autoComplete="email" className={field} placeholder="you@example.com" />
+          <input
+            id="req-email"
+            type="email"
+            name="email"
+            required={channel === "Email"}
+            autoComplete="email"
+            className={field}
+            placeholder="you@example.com"
+          />
         </div>
       </div>
 
@@ -112,7 +107,7 @@ export default function ContactForm() {
             <label
               key={c}
               className={`cursor-pointer rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
-                form.channel === c
+                channel === c
                   ? "border-brand bg-brand-50 text-brand"
                   : "border-line-strong text-body hover:border-brand"
               }`}
@@ -121,31 +116,34 @@ export default function ContactForm() {
                 type="radio"
                 name="channel"
                 value={c}
-                checked={form.channel === c}
-                onChange={() => setForm((f) => ({ ...f, channel: c }))}
+                checked={channel === c}
+                onChange={() => setChannel(c)}
                 className="sr-only"
               />
-              {c}
+              {c === "Call" ? "Callback" : c}
             </label>
           ))}
         </div>
       </fieldset>
 
       <div className="mt-4">
-        <label className={label}>
+        <label className={label} htmlFor="req-message">
           Anything else? <span className="font-normal text-muted">(optional)</span>
         </label>
-        <textarea value={form.message} onChange={update("message")} rows={4} className={field} placeholder="Survey number, deadlines, what you have tried so far…" />
+        <textarea id="req-message" name="message" rows={4} className={field} placeholder="Survey number, deadlines, what you have tried so far…" />
       </div>
 
-      <button type="submit" className="btn-primary mt-6 w-full justify-center sm:w-auto">
-        Send enquiry
-      </button>
-      {sent && (
-        <p className="mt-4 rounded-xl bg-brand-50 px-4 py-3 text-sm text-brand-dark">
-          Your email app should open with the enquiry ready to send.
-        </p>
+      {state.error && (
+        <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{state.error}</p>
       )}
+
+      <button
+        type="submit"
+        disabled={pending}
+        className="btn-primary mt-6 w-full justify-center disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+      >
+        {pending ? "Sending…" : "Send request"}
+      </button>
     </form>
   );
 }

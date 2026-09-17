@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { heroImage, heroVideo, site } from "@/data/site";
+import { heroImage, heroVideo, whatsappHref } from "@/data/site";
+import { requestHref } from "@/data/leads";
+import ChecklistDownload from "@/components/home/ChecklistDownload";
 import { intents, registrationWalkthrough as walk } from "@/data/home";
 import RegionLine from "@/components/RegionLine";
 import {
@@ -47,23 +49,18 @@ export default function IntentHero() {
             process until completion.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <a
-              href={site.queryForm}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary gap-3 py-3.5 text-[15.5px]"
-            >
-              Start a request
+            <Link href={requestHref()} className="btn-primary gap-3 py-3.5 text-[15.5px]">
+              Start a Request
               <IconArrow size={16} />
-            </a>
+            </Link>
             <a
-              href={`https://wa.me/${site.whatsapp}?text=${encodeURIComponent("Hi PropITZ, I need help with a property.")}`}
+              href={whatsappHref("Hi PropITZ, I need help with a property.")}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-ghost gap-2.5 py-3.5 text-[15.5px]"
             >
               <IconWhatsApp size={18} className="text-whatsapp" />
-              Chat on WhatsApp
+              WhatsApp
             </a>
           </div>
         </div>
@@ -161,7 +158,7 @@ export default function IntentHero() {
 
           <div className="rounded-2xl bg-bg-alt p-5">
             <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.07em] text-faint">
-              Bring these with you
+              Documents to gather
             </p>
             <ul className="flex flex-col">
               {walk.checklist.map((d) => (
@@ -171,12 +168,7 @@ export default function IntentHero() {
                 </li>
               ))}
             </ul>
-            <Link
-              href="/contact-us"
-              className="btn-dark mt-4 w-full justify-center gap-2 py-3 text-[13.5px]"
-            >
-              Get my checklist
-            </Link>
+            <ChecklistDownload />
           </div>
         </div>
       </div>

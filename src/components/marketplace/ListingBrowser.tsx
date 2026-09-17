@@ -10,6 +10,7 @@ import {
 import ListingCard from "@/components/ListingCard";
 import BuySellSwitch from "@/components/BuySellSwitch";
 import MarketplaceTabs from "@/components/marketplace/MarketplaceTabs";
+import { requestHref } from "@/data/leads";
 import { IconChevron, IconPerson, IconSearch } from "@/components/Icon";
 // --- Map view (disabled) -----------------------------------------------
 // Commented out of the header row below rather than deleted, so it can be
@@ -211,7 +212,7 @@ export default function ListingBrowser() {
                 survey number, and answer what the listing cannot.
               </p>
             </div>
-            <Link href="/contact-us" className="btn-primary shrink-0 gap-3 py-3.5 text-sm">
+            <Link href={requestHref("buy")} className="btn-primary shrink-0 gap-3 py-3.5 text-sm">
               Book a site visit
             </Link>
           </div>

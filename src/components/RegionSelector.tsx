@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { site } from "@/data/site";
+import { whatsappHref } from "@/data/site";
 import { regions } from "@/data/regions";
 import { useRegion } from "./RegionProvider";
-import { IconCheck, IconPhone, IconPin, IconSearch } from "./Icon";
+import { IconCheck, IconPin, IconSearch, IconWhatsApp } from "./Icon";
 
 /**
  * Pick a location: type an area or pincode, use the device location, or tap
@@ -117,11 +117,13 @@ export default function RegionSelector({ showLabel = true }: { showLabel?: boole
             <p className="flex flex-wrap items-center gap-1.5">
               Coordinator support across {centre.name} —
               <a
-                href={`tel:${site.phoneDigits}`}
+                href={whatsappHref()}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 font-semibold text-brand"
               >
-                <IconPhone size={12} />
-                call to arrange
+                <IconWhatsApp size={12} />
+                message us to arrange
               </a>
             </p>
           )
@@ -130,10 +132,12 @@ export default function RegionSelector({ showLabel = true }: { showLabel?: boole
             No PropITZ centre here yet — nearest is {centre.name}
             {typeof location.km === "number" ? `, about ${location.km} km away` : ""}.
             <a
-              href={`tel:${site.phoneDigits}`}
+              href={whatsappHref()}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-1 font-semibold text-brand"
             >
-              <IconPhone size={12} />
+              <IconWhatsApp size={12} />
               Ask us if we can help
             </a>
           </p>

@@ -1,24 +1,28 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import CTASection from "@/components/CTASection";
-import { posts } from "@/data/blog";
+import { publishedPosts as posts } from "@/data/blog";
 import { IMG } from "@/data/site";
 
 export const metadata: Metadata = {
-  title: "Property Guides for Tamil Nadu: Registration, EC & Verification",
+  title: "Property Insights: Land, Fraud Prevention & Pricing in India",
   description:
-    "Step-by-step guides to property registration, encumbrance certificates, document checks and verification in Tamil Nadu, written for first-time buyers.",
+    "Articles from PropITZ on land demand, protecting land from impersonation fraud in Tamil Nadu, and how property prices are really set in India.",
 };
 
 export default function BlogPage() {
+  // Nothing is published until the real articles arrive.
+  if (posts.length === 0) notFound();
+
   return (
     <>
       <PageHero
-        title="Insights & Guides"
-        subtitle="Practical reading to help you navigate property decisions with confidence."
+        title="Insights"
+        subtitle="What we are seeing in land and property transactions, and what it means for you."
         image={`${IMG}/2026/02/post-1.jpg`}
         crumb="Blog"
       />

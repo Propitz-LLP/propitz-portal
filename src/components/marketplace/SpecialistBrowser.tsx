@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { specialistCaveat, specialistStages, specialists } from "@/data/marketplace";
 import { regions } from "@/data/regions";
-import { site } from "@/data/site";
+import { requestHref } from "@/data/leads";
 import SpecialistCard from "@/components/SpecialistCard";
 import MarketplaceTabs from "@/components/marketplace/MarketplaceTabs";
 import { IconChevron, IconPerson, IconSearch } from "@/components/Icon";
@@ -156,10 +156,10 @@ export default function SpecialistBrowser() {
               </p>
             </div>
             <a
-              href={`tel:${site.phoneDigits}`}
+              href={requestHref("professional")}
               className="btn-primary shrink-0 gap-3 py-3.5 text-sm"
             >
-              Call us
+              Start a Request
             </a>
           </div>
         </div>

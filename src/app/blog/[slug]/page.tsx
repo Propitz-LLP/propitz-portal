@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import Reveal from "@/components/Reveal";
 import ArticleCTA from "@/components/ArticleCTA";
 import CTASection from "@/components/CTASection";
-import { posts, getPost } from "@/data/blog";
+import { publishedPosts as posts, getPost } from "@/data/blog";
 
 export function generateStaticParams() {
   return posts.map((p) => ({ slug: p.slug }));

@@ -4,7 +4,8 @@ import SpecialistBrowser from "@/components/marketplace/SpecialistBrowser";
 import SectionHeading from "@/components/SectionHeading";
 import Reveal from "@/components/Reveal";
 import CTASection from "@/components/CTASection";
-import { site } from "@/data/site";
+import { whatsappHref } from "@/data/site";
+import { requestHref } from "@/data/leads";
 import { specialistCaveat } from "@/data/marketplace";
 
 export async function generateMetadata({
@@ -99,16 +100,16 @@ export default async function MarketplacePage({
               {specialistCaveat}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href={site.queryForm}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary"
-              >
+              <a href={requestHref("professional")} className="btn-primary">
                 Request an introduction
               </a>
-              <a href={`tel:${site.phoneDigits}`} className="btn-dark">
-                Call us
+              <a
+                href={whatsappHref("Hi PropITZ, I am looking for a property professional.")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-dark"
+              >
+                WhatsApp
               </a>
             </div>
           </div>
@@ -194,11 +195,16 @@ export default async function MarketplacePage({
             ))}
           </div>
           <div className="mt-10 flex flex-wrap gap-3">
-            <a href={site.queryForm} target="_blank" rel="noopener noreferrer" className="btn-primary">
-              Start a request
+            <a href={requestHref("buy")} className="btn-primary">
+              Start a Request
             </a>
-            <a href={`tel:${site.phoneDigits}`} className="btn-ghost">
-              Call us
+            <a
+              href={whatsappHref("Hi PropITZ, I have a question about buying or selling a property.")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-ghost"
+            >
+              WhatsApp
             </a>
           </div>
         </div>

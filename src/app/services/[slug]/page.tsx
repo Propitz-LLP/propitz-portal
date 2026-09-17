@@ -5,8 +5,27 @@ import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import CTASection from "@/components/CTASection";
 import { IconArrow, IconCheck, IconWhatsApp } from "@/components/Icon";
-import { services, getService } from "@/data/services";
-import { site } from "@/data/site";
+import {
+  services,
+  getService,
+  PRICING_BASIS,
+  PRICING_NOTE,
+  TIMELINE_NOTE,
+} from "@/data/services";
+import { site, whatsappHref } from "@/data/site";
+import { requestHref, type RequirementKey } from "@/data/leads";
+
+/** Opens Start a Request with the matching requirement already chosen. */
+const need: Record<string, RequirementKey> = {
+  "property-registration-assistance": "register",
+  "document-checklist-guidance": "documents",
+  "property-verification-coordination": "verify",
+  "sro-process-assistance": "sro",
+  "property-advisory-support": "advisory",
+  "professional-network-access": "professional",
+  "transactional-structuring-support": "structuring",
+  "negotiation-deal-support": "negotiation",
+};
 
 export function generateStaticParams() {
   return services.map((s) => ({ slug: s.slug }));
@@ -25,8 +44,12 @@ export async function generateMetadata({
 
 /**
  * One service, one template: outcome and CTAs up top, then what PropITZ
- * handles, the journey, documents, and who is responsible for what. Each
- * block says something the one above it did not.
+ * does, any page-specific scope list, the journey, documents, pricing
+ * basis and timeline, FAQs, and who is responsible for what.
+ *
+ * CTA hierarchy on every page: "Start a Request" (primary), WhatsApp
+ * (secondary), "Talk to Us" (text link). There is no service list in the
+ * sidebar: the header menu and footer already list all eight.
  */
 export default async function ServiceDetailPage({
   params,
@@ -37,12 +60,27 @@ export default async function ServiceDetailPage({
   const service = getService(slug);
   if (!service) notFound();
 
-  const whatsappText = encodeURIComponent(
+  const whatsapp = whatsappHref(
     `Hi PropITZ, I need help with ${service.title.toLowerCase()}.`
   );
 
+  // FAQ rich results for search.
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: service.faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <PageHero
         title={service.label}
         subtitle={service.outcome}
@@ -53,30 +91,34 @@ export default async function ServiceDetailPage({
       <section className="section">
         <div className="container-px grid gap-12 lg:grid-cols-[1fr_20rem]">
           <div>
-            {/* top-fold actions: structured request first, WhatsApp beside it */}
-            <div className="flex flex-wrap gap-3">
-              <a
-                href={site.queryForm}
-                target="_blank"
-                rel="noopener noreferrer"
+            {/* top-fold actions: Start a Request, then WhatsApp, then Talk to Us */}
+            <div className="flex flex-wrap items-center gap-3">
+              <Link
+                href={requestHref(need[service.slug])}
                 className="btn-primary gap-3 py-3.5 text-[15px]"
               >
-                Start a request
+                Start a Request
                 <IconArrow size={16} />
-              </a>
+              </Link>
               <a
-                href={`https://wa.me/${site.whatsapp}?text=${whatsappText}`}
+                href={whatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-ghost gap-2.5 py-3.5 text-[15px]"
               >
                 <IconWhatsApp size={17} className="text-whatsapp" />
-                Chat on WhatsApp
+                WhatsApp
               </a>
+              <Link
+                href="/contact-us"
+                className="px-2 text-[15px] font-semibold text-brand underline underline-offset-4 hover:text-brand-dark"
+              >
+                Talk to Us
+              </Link>
             </div>
 
             <Reveal className="mt-10">
-              <h2 className="text-2xl text-ink">What PropITZ handles</h2>
+              <h2 className="text-2xl text-ink">What PropITZ does</h2>
               <ul className="mt-5 space-y-3">
                 {service.handles.map((h) => (
                   <li key={h} className="flex items-start gap-3">
@@ -89,8 +131,25 @@ export default async function ServiceDetailPage({
               </ul>
             </Reveal>
 
+            {service.scope && (
+              <Reveal className="mt-10">
+                <h2 className="text-2xl text-ink">{service.scope.heading}</h2>
+                <ul className="mt-5 grid gap-2.5 sm:grid-cols-2">
+                  {service.scope.items.map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-start gap-3 rounded-xl bg-surface px-4 py-3 text-sm leading-relaxed text-body ring-1 ring-line"
+                    >
+                      <IconCheck size={15} className="mt-0.5 shrink-0 text-brand" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </Reveal>
+            )}
+
             <Reveal className="mt-10">
-              <h2 className="text-2xl text-ink">Your journey</h2>
+              <h2 className="text-2xl text-ink">What happens after you enquire</h2>
               <ol className="mt-5 grid gap-3 sm:grid-cols-2">
                 {service.process.map((step, i) => (
                   <li
@@ -105,6 +164,12 @@ export default async function ServiceDetailPage({
                 ))}
               </ol>
             </Reveal>
+
+            {service.note && (
+              <p className="mt-6 rounded-2xl bg-brand-50 px-5 py-4 text-sm leading-relaxed text-ink">
+                {service.note}
+              </p>
+            )}
 
             {service.documents.length > 0 && (
               <details className="group mt-10 rounded-2xl bg-surface ring-1 ring-line">
@@ -135,6 +200,39 @@ export default async function ServiceDetailPage({
               </details>
             )}
 
+            <Reveal className="mt-10 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-2xl bg-surface p-5 ring-1 ring-line">
+                <p className="text-xs font-bold uppercase tracking-[0.08em] text-faint">Pricing</p>
+                <p className="mt-2 text-lg font-semibold text-ink">{PRICING_BASIS}</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-body">{PRICING_NOTE}</p>
+              </div>
+              <div className="rounded-2xl bg-surface p-5 ring-1 ring-line">
+                <p className="text-xs font-bold uppercase tracking-[0.08em] text-faint">Timeline</p>
+                <p className="mt-2 text-lg font-semibold text-ink">Review starts within one business day</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-body">{TIMELINE_NOTE}</p>
+              </div>
+            </Reveal>
+
+            <Reveal className="mt-10">
+              <h2 className="text-2xl text-ink">Questions people ask</h2>
+              <div className="mt-5 divide-y divide-line rounded-2xl bg-surface ring-1 ring-line">
+                {service.faqs.map((f) => (
+                  <details key={f.q} className="group">
+                    <summary className="flex cursor-pointer list-none items-start justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
+                      <span className="font-semibold leading-snug text-ink">{f.q}</span>
+                      <span
+                        aria-hidden
+                        className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand-50 text-brand transition-transform group-open:rotate-45"
+                      >
+                        +
+                      </span>
+                    </summary>
+                    <p className="px-5 pb-5 text-sm leading-relaxed text-body">{f.a}</p>
+                  </details>
+                ))}
+              </div>
+            </Reveal>
+
             <div className="mt-10 rounded-2xl border-l-4 border-accent bg-accent/5 p-5">
               <p className="text-sm font-semibold text-ink">Who is responsible for what</p>
               <p className="mt-1.5 text-sm leading-relaxed text-body">
@@ -145,40 +243,37 @@ export default async function ServiceDetailPage({
 
           {/* Sidebar */}
           <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
-            <div className="card p-6">
-              <h3 className="text-lg text-ink">All services</h3>
-              <ul className="mt-4 space-y-1">
-                {services.map((s) => (
-                  <li key={s.slug}>
-                    <Link
-                      href={`/services/${s.slug}`}
-                      className={`block rounded-xl px-4 py-2.5 text-sm transition-colors ${
-                        s.slug === service.slug
-                          ? "bg-brand text-white"
-                          : "text-body hover:bg-brand-50 hover:text-brand"
-                      }`}
-                    >
-                      {s.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
             <div className="card overflow-hidden bg-ink p-6 text-white">
-              <h3 className="text-lg text-white">Prefer to talk?</h3>
+              <h3 className="text-lg text-white">Need help with this?</h3>
               <p className="mt-2 text-sm text-slate-300">
-                Call us about {service.title.toLowerCase()}.
+                Tell us about your property and we will review the scope.
               </p>
-              <a href={`tel:${site.phoneDigits}`} className="btn-accent mt-5 w-full py-3.5 text-[15px]">
-                {site.phone}
+              <Link
+                href={requestHref(need[service.slug])}
+                className="btn-accent mt-5 w-full py-3.5 text-[15px]"
+              >
+                Start a Request
+              </Link>
+              <a
+                href={whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-outline mt-3 w-full gap-2 py-3.5 text-[15px]"
+              >
+                <IconWhatsApp size={17} />
+                WhatsApp {site.whatsappDisplay}
               </a>
+              <Link
+                href="/contact-us"
+                className="mt-4 block text-center text-sm font-semibold text-slate-200 underline underline-offset-4 hover:text-white"
+              >
+                Talk to Us
+              </Link>
             </div>
           </aside>
         </div>
       </section>
 
-      {/* No "other services" block: the sidebar already lists all eight. */}
       <CTASection />
     </>
   );

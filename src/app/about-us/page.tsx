@@ -5,30 +5,46 @@ import SectionHeading from "@/components/SectionHeading";
 import Reveal from "@/components/Reveal";
 import Stats from "@/components/Stats";
 import CTASection from "@/components/CTASection";
-import { IMG } from "@/data/site";
+import { IconCheck } from "@/components/Icon";
+import { IMG, site } from "@/data/site";
 
 export const metadata: Metadata = {
   title: "About Us: Property Facilitation in Tamil Nadu",
   description:
-    "PropITZ helps you register, verify and document property in Tamil Nadu, coordinating independent advocates, surveyors and consultants from one place.",
+    "PropITZ, operated by Peri Gold Developers Pvt Ltd, helps you register, verify and document property in Tamil Nadu, coordinating independent advocates, surveyors and consultants.",
 };
 
+/** Mission and vision as approved by PropITZ for launch. */
 const pillars = [
   {
     title: "Our Mission",
     icon: `${IMG}/2026/02/icon-approach-item-1.svg`,
-    text: "To build a structured, transparent property ecosystem that removes confusion and delay — giving every user clarity at each step of their property journey.",
+    text: "To simplify property ownership and transactions through clear processes, coordinated professional support and accessible digital and on-ground assistance.",
   },
   {
     title: "Our Vision",
     icon: `${IMG}/2026/02/icon-approach-item-2.svg`,
-    text: "A well-integrated property market supported by nationwide centres and verified professionals, making property processes accessible everywhere in India.",
+    text: "To build a trusted property-services platform starting in Tamil Nadu and expanding region by region across India, making property processes more transparent, organised and easier to navigate.",
   },
   {
     title: "Our Values",
     icon: `${IMG}/2026/02/icon-approach-item-3.svg`,
-    text: "Transparency, integrity and professional facilitation — we guide and coordinate, connecting you with independent experts you can trust.",
+    text: "Transparency, integrity and clear responsibility: we coordinate the process and connect you with independent professionals, and we say plainly who is responsible for what.",
   },
+];
+
+const propitzDoes = [
+  "Understands your requirement and scopes the case",
+  "Explains the process and the documents that apply",
+  "Coordinates the steps, the professionals and the paperwork",
+  "Manages the case and keeps you updated until completion",
+];
+
+const professionalsDo = [
+  "Advocates issue legal opinions and draft legal documents",
+  "Surveyors, valuers and engineers issue their own reports",
+  "Each professional is responsible for their own opinion or deliverable",
+  "Government authorities issue official records and make statutory decisions",
 ];
 
 export default function AboutPage() {
@@ -53,13 +69,12 @@ export default function AboutPage() {
               align="left"
               eyebrow="Who We Are"
               title="One point for property processes in Tamil Nadu"
-              subtitle="PropITZ is designed to simplify property ownership by bridging the gap between users and the professional services they need. From documentation to registration and verification, we bring structure and transparency to every step."
+              subtitle="PropITZ brings the steps of a property task into one place: what has to happen, which documents apply, and which independent professional carries out each part."
             />
             <p className="mt-6 leading-relaxed text-body">
-              We are not a broker or an agent. We are a facilitation platform —
-              guiding you through processes, organising your paperwork and
-              connecting you with verified, independent professionals so you can
-              make confident decisions.
+              We are not a broker or an agent. We coordinate the process, organise
+              your paperwork and connect you with independent professionals, so you
+              can make decisions with the facts in front of you.
             </p>
           </div>
         </div>
@@ -71,7 +86,7 @@ export default function AboutPage() {
           <SectionHeading
             eyebrow="Our Approach"
             title="What drives us"
-            subtitle="A clear mission, an ambitious vision and values that keep you at the centre."
+            subtitle="Starting in Tamil Nadu, and growing region by region."
           />
           <div className="mt-14 grid gap-8 md:grid-cols-3">
             {pillars.map((p, i) => (
@@ -89,13 +104,70 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Stats */}
+      {/* Who does what */}
       <section className="section">
         <div className="container-px">
+          <SectionHeading
+            eyebrow="How we work"
+            title="What PropITZ does, and what professionals do"
+            subtitle="PropITZ owns coordination and case management. Independent professionals own their professional work."
+          />
+          <div className="mt-12 grid gap-6 md:grid-cols-2">
+            {[
+              { title: "PropITZ", items: propitzDoes },
+              { title: "Independent professionals and authorities", items: professionalsDo },
+            ].map((col) => (
+              <Reveal key={col.title}>
+                <div className="card h-full p-7">
+                  <h3 className="text-lg text-ink">{col.title}</h3>
+                  <ul className="mt-4 space-y-3">
+                    {col.items.map((t) => (
+                      <li key={t} className="flex items-start gap-3 leading-relaxed text-body">
+                        <IconCheck size={16} className="mt-1 shrink-0 text-brand" />
+                        {t}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Stats: verified figures only */}
+      <section className="section pt-0">
+        <div className="container-px">
           <div className="rounded-3xl bg-ink px-8 py-14">
-            <SectionHeading light title="Trusted experience, real results" subtitle="Numbers that reflect the depth of our support across the property lifecycle." />
-            <div className="mt-10">
+            <SectionHeading light title="Experience behind the platform" />
+            <div className="mx-auto mt-10 max-w-2xl">
               <Stats onDark />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Company information */}
+      <section className="section pt-0">
+        <div className="container-px">
+          <div className="grid gap-6 rounded-3xl bg-surface p-8 ring-1 ring-line md:grid-cols-3">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.08em] text-faint">Operating company</p>
+              <p className="mt-2 font-semibold text-ink">{site.legalEntity}</p>
+              <p className="mt-1 text-sm text-body">PropITZ is operated by {site.legalEntity}.</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.08em] text-faint">Registered office</p>
+              <p className="mt-2 text-sm leading-relaxed text-ink">{site.address}</p>
+              <p className="mt-1 text-sm text-body">Also our office open to visitors.</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.08em] text-faint">Contact</p>
+              <p className="mt-2 text-sm leading-relaxed text-ink">
+                WhatsApp {site.whatsappDisplay}
+                <br />
+                {site.email}
+              </p>
             </div>
           </div>
         </div>

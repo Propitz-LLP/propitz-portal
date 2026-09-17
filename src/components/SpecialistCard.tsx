@@ -1,4 +1,4 @@
-import { site } from "@/data/site";
+import { requestHref } from "@/data/leads";
 import type { Specialist } from "@/data/marketplace";
 import {
   IconArrow,
@@ -52,9 +52,7 @@ export default function SpecialistCard({ specialist }: { specialist: Specialist 
 
       <div className="mt-auto pt-5">
         <a
-          href={site.queryForm}
-          target="_blank"
-          rel="noopener noreferrer"
+          href={requestHref("professional")}
           className="btn-dark w-full justify-center gap-2.5 py-3.5 text-[13.5px]"
         >
           Request an introduction

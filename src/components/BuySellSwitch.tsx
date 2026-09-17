@@ -1,12 +1,11 @@
 import Link from "next/link";
-import { site } from "@/data/site";
 import { IconBuy, IconSell } from "./Icon";
 
 /**
  * Buy / Sell. The question that changes everything below it, so it sits
  * above the search rather than among the filters.
  *
- * Sell currently points at the enquiry form — there is no seller flow yet.
+ * Sell opens the on-platform seller enquiry at /sell.
  */
 export default function BuySellSwitch({
   active = "buy",
@@ -36,7 +35,7 @@ export default function BuySellSwitch({
         Buy <span className="ta text-xs font-medium text-muted">வாங்க</span>
       </Link>
       <Link
-        href={site.queryForm}
+        href="/sell"
         aria-current={active === "sell" ? "page" : undefined}
         className={`${base} ${full ? "grow" : ""} ${active === "sell" ? on : off}`}
       >

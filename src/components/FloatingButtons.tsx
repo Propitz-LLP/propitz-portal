@@ -2,13 +2,11 @@
 
 import { useEffect, useState } from "react";
 
-export default function FloatingButtons({
-  phone,
-  whatsapp,
-}: {
-  phone: string;
-  whatsapp: string;
-}) {
+/**
+ * Persistent WhatsApp action on every page, plus back-to-top. There is no
+ * call button: the number is published for WhatsApp only.
+ */
+export default function FloatingButtons({ whatsapp }: { whatsapp: string }) {
   const [showTop, setShowTop] = useState(false);
 
   useEffect(() => {
@@ -31,16 +29,6 @@ export default function FloatingButtons({
           </svg>
         </button>
       )}
-
-      <a
-        href={`tel:${phone}`}
-        aria-label="Call PropITZ"
-        className="flex h-11 w-11 items-center justify-center rounded-full bg-brand text-white shadow-lg transition-transform hover:-translate-y-0.5 sm:h-12 sm:w-12"
-      >
-        <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M6.62 10.79a15.53 15.53 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.24 1.02l-2.21 2.21z" />
-        </svg>
-      </a>
 
       <a
         href={`https://wa.me/${whatsapp}`}

@@ -13,6 +13,31 @@ export type Resource = {
 
 export const resources: Resource[] = [
   {
+    slug: "stamp-duty-registration-fee-calculator",
+    title: "Stamp Duty & Registration Fee Calculator",
+    seoTitle: "Tamil Nadu Stamp Duty & Registration Fee Calculator (Sale Deed)",
+    seoDescription:
+      "Estimate stamp duty and registration fee for a sale deed in Tamil Nadu, including the registration fee concession for women purchasers.",
+    hero:
+      "Estimate the stamp duty and registration fee on a standard sale deed in Tamil Nadu before you book registration.",
+    image: `${IMG}/2026/04/EC-Patta-Chitta-Guideline-Value-GV.jpeg`,
+    sections: [
+      {
+        heading: "What this calculator covers",
+        body: [
+          "It estimates the two main government charges on a standard Sale / Conveyance deed: stamp duty and the registration fee, both worked out on the value the Sub-Registrar applies to the property.",
+          "It does not cover other transaction types, such as gift, settlement, partition or mortgage deeds, and it does not include other charges you may pay at registration.",
+        ],
+      },
+      {
+        heading: "Before you pay",
+        body: [
+          "Rates and concessions change by Government order. Confirm the current figures on TNREGINET or with the Sub-Registrar Office before paying anything.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "land-measurement-conversion",
     title: "Land Measurement & Conversion",
     seoTitle: "Land Area Converter: Cents, Grounds, Acres & Sq Ft",
@@ -102,7 +127,7 @@ export const resources: Resource[] = [
     image: `${IMG}/2026/02/project-image-4.jpg`,
     sections: [
       {
-        heading: "A vetted network, matched to your need",
+        heading: "A professional network, matched to your need",
         body: [
           "The PropITZ Professional Network is the core facilitation service that pairs you with independent professionals based on your requirement. Every professional operates independently; PropITZ facilitates the introduction.",
         ],

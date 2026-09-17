@@ -6,8 +6,6 @@
 /*  the fold read from here.                                            */
 /* ------------------------------------------------------------------ */
 
-import { site } from "./site";
-
 export type Intent = {
   key: string;
   label: string;
@@ -33,8 +31,7 @@ export const intents: Intent[] = [
     key: "sell",
     label: "Sell",
     ta: "விற்க",
-    // Temporary: the seller intake is still the Google Form.
-    href: site.queryForm,
+    href: "/sell",
   },
   {
     key: "verify",
@@ -69,7 +66,7 @@ export const intents: Intent[] = [
  */
 export const registrationWalkthrough = {
   title: "Registering a property",
-  summary: "Four steps, one coordinator with you on the day of execution.",
+  summary: "Four steps, with execution-day assistance where your engagement includes it.",
   steps: [
     {
       title: "We identify the correct office",
@@ -77,32 +74,35 @@ export const registrationWalkthrough = {
     },
     {
       title: "Your documents are checked first",
-      text: "An advocate reads the parent-document chain before anything is booked.",
+      text: "Where legal verification is part of your case, an independent advocate reviews the title chain before registration is scheduled.",
     },
     {
       title: "We book the TNREGINET slot",
       text: "You are told who must be present, and what is paid at the counter.",
     },
     {
-      title: "A coordinator goes with you",
-      text: "Someone from PropITZ walks into the office with you on the day.",
+      title: "Assistance on the day",
+      text: "Where included, a PropITZ coordinator accompanies you through the SRO process, as far as the office permits.",
     },
   ],
+  /** A preview of the downloadable checklist; the PDF has the full list. */
   checklist: [
-    "Parent document",
-    "Patta & chitta",
-    "Encumbrance certificate",
-    "Property tax receipt",
-    "ID of every signatory",
+    "Parent / title deed",
+    "Encumbrance Certificate",
+    "Patta, Chitta & revenue records",
+    "Approvals, where applicable",
+    "ID & PAN of every party",
   ],
 };
 
-/** Trust strip under the hero. */
+/**
+ * Trust strip under the hero. Verified figures only: PropITZ asked for no
+ * customer count, team size or network size until each is verified.
+ */
 export const trustStats = [
-  { value: "10+", label: "Years working with", strong: "Tamil Nadu property offices" },
-  { value: "500+", label: "Customers taken through", strong: "a completed process" },
+  { value: "15+", label: "Years of", strong: "real-estate expertise" },
+  { value: "1,000+", label: "Advisory transactions", strong: "handled" },
   { value: "8", label: "Named services, each with", strong: "a defined scope" },
-  { value: "50+", label: "Advocates and surveyors", strong: "on the network" },
 ];
 
 /** The phygital promise — online where it is faster, in person where it matters. */
@@ -113,16 +113,17 @@ export const phygital = {
     "Listings with the verification status shown up front.",
   ],
   ground: [
-    "Physical assistance centres you can walk into.",
-    "A coordinator who goes to the SRO with you.",
+    "An office in Perungudi, Chennai you can walk into.",
+    "Execution-day assistance at the SRO, where included.",
     "Site visits and boundary checks done in person.",
   ],
 };
 
 /** Free tools — the reason someone lands here from search. */
 export const freeTools = [
-  { label: "Find my Sub-Registrar Office", href: "/resources/sub-registrar-office-sro-information-tamil-nadu" },
-  { label: "Land measurement conversion", href: "/resources/land-measurement-conversion" },
+  { label: "Stamp duty & registration fee calculator", href: "/resources/stamp-duty-registration-fee-calculator" },
+  { label: "Land area converter", href: "/resources/land-measurement-conversion" },
+  { label: "Sub-Registrar Office (SRO) guide", href: "/resources/sub-registrar-office-sro-information-tamil-nadu" },
   { label: "EC, Patta, Chitta & GV", href: "/resources/ec-patta-chitta-gv" },
   { label: "PropITZ professional network", href: "/resources/propitz-professional-network" },
 ];
@@ -137,7 +138,7 @@ export const servicesDetail = [
     n: "01",
     title: "Property registration assistance",
     ta: "பத்திரப் பதிவு",
-    blurb: "Which office, which annexures, who must be present, and someone with you on the day.",
+    blurb: "Which office, which annexures, who must be present, and execution-day assistance where included.",
     href: "/services/property-registration-assistance",
   },
   {

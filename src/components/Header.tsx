@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { site } from "@/data/site";
+import { requestHref } from "@/data/leads";
 import { freeTools, servicesDetail } from "@/data/home";
 import { propertyTypes } from "@/data/marketplace";
 import AuthNav from "@/components/AuthNav";
@@ -25,7 +26,6 @@ import {
   IconClose,
   IconMenu,
   IconPerson,
-  IconPhone,
   IconScreen,
 } from "@/components/Icon";
 
@@ -102,11 +102,11 @@ export default function Header() {
               <AuthNav />
             </div>
             <Link
-              href="/contact-us"
+              href={requestHref()}
               className="hidden items-center gap-2 rounded-full bg-brand px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-dark sm:inline-flex"
             >
-              <IconPhone size={15} />
-              Talk to us
+              Start a Request
+              <IconArrow size={15} />
             </Link>
             <button
               type="button"
@@ -327,17 +327,17 @@ export default function Header() {
                 <p className="text-[13.5px] font-bold text-ink">Online, then in person</p>
               </div>
               <p className="text-[13px] leading-[1.5] text-body">
-                Start any service here. Finish it with a coordinator beside you at the
-                Chennai, Chengalpattu or Tiruvallur centre.
+                Start any service here. Meet us at our office in Perungudi, Chennai
+                when the step needs a person.
               </p>
             </div>
 
             <Link
-              href="/contact-us"
+              href={requestHref()}
               onClick={() => setDrawerFor(null)}
               className="btn-primary w-full justify-center gap-3 py-3.5 text-[15px]"
             >
-              Talk to us
+              Start a Request
               <IconArrow size={16} />
             </Link>
           </div>

@@ -78,7 +78,7 @@ export default function RootLayout({
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
-          <FloatingButtons phone={site.phoneDigits} whatsapp={site.whatsapp} />
+          <FloatingButtons whatsapp={site.whatsapp} />
         </RegionProvider>
       </body>
     </html>

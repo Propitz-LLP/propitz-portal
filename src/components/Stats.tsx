@@ -7,7 +7,7 @@ export default function Stats({
   onDark?: boolean;
 }) {
   return (
-    <div className="grid grid-cols-3 gap-4 sm:gap-8">
+    <div className="grid grid-cols-2 gap-4 sm:gap-8">
       {stats.map((s, i) => (
         <Reveal key={s.label} delay={i * 120}>
           <div className="text-center">

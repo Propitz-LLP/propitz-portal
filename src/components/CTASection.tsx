@@ -1,5 +1,6 @@
-import { site } from "@/data/site";
-import { THEME_IMG } from "@/data/site";
+import Link from "next/link";
+import { THEME_IMG, whatsappHref } from "@/data/site";
+import { requestHref } from "@/data/leads";
 import Reveal from "./Reveal";
 
 export default function CTASection({
@@ -26,16 +27,16 @@ export default function CTASection({
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <a href={`tel:${site.phoneDigits}`} className="btn-accent">
-              Call us
-            </a>
+            <Link href={requestHref()} className="btn-accent">
+              Start a Request
+            </Link>
             <a
-              href={site.queryForm}
+              href={whatsappHref("Hi PropITZ, I need help with a property.")}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-outline"
             >
-              Start a request
+              WhatsApp
             </a>
           </div>
         </Reveal>

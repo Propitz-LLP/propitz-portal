@@ -5,6 +5,7 @@ import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import ArticleCTA from "@/components/ArticleCTA";
 import LandConverter from "@/components/LandConverter";
+import RegistrationFeeCalculator from "@/components/RegistrationFeeCalculator";
 import CTASection from "@/components/CTASection";
 import { resources, getResource } from "@/data/resources";
 
@@ -43,6 +44,11 @@ export default async function ResourcePage({
           {resource.slug === "land-measurement-conversion" && (
             <div className="mb-10">
               <LandConverter />
+            </div>
+          )}
+          {resource.slug === "stamp-duty-registration-fee-calculator" && (
+            <div className="mb-10">
+              <RegistrationFeeCalculator />
             </div>
           )}
           <div className="prose-content max-w-none">

@@ -16,26 +16,32 @@ export type ArticleCta = {
 
 export const articleCtas: Record<string, ArticleCta> = {
   /* blog */
-  "what-is-property-verification-why-it-matters-before-any-property-purchase": {
-    question: "Want a property checked before you commit?",
-    text: "We scope the checks and coordinate an independent advocate or surveyor to carry them out.",
+  "next-25-years-land-demand-housing-food-energy": {
+    question: "Looking at a plot?",
+    text: "Value is decided plot by plot. We coordinate title, record and approval checks before you commit.",
     action: "Verify a property",
     href: "/services/property-verification-coordination",
   },
-  "documents-you-must-check-before-buying-a-property-in-chennai": {
-    question: "Not sure your documents are complete?",
-    text: "Tell us what you are buying and we will list exactly which documents apply to it.",
-    action: "Get your document checklist",
-    href: "/services/document-checklist-guidance",
+  "your-land-was-already-sold-property-impersonation-fraud-tamil-nadu": {
+    question: "Holding land that has sat untouched for years?",
+    text: "We can help you pull the EC, check the Patta and revenue records, and bring in an advocate if something looks wrong.",
+    action: "Check your property records",
+    href: "/services/property-verification-coordination",
   },
-  "property-registration-in-tamil-nadu-a-step-by-step-guide-for-first-time-buyers": {
-    question: "Registering a property soon?",
-    text: "We confirm the right office, check your documents first and support you on the day.",
-    action: "Start a registration request",
-    href: "/services/property-registration-assistance",
+  "price-identification-in-property-transactions": {
+    question: "Preparing to negotiate a purchase?",
+    text: "We help you prepare on price, payment terms and documentation before you sit down to negotiate.",
+    action: "Get negotiation support",
+    href: "/services/negotiation-deal-support",
   },
 
   /* resources */
+  "stamp-duty-registration-fee-calculator": {
+    question: "Registering a property soon?",
+    text: "We confirm the right Sub-Registrar Office, check your documents before booking and can assist on execution day.",
+    action: "Start a registration request",
+    href: "/services/property-registration-assistance",
+  },
   "land-measurement-conversion": {
     question: "Need the land measured on site?",
     text: "A conversion only goes so far. A licensed surveyor can confirm the actual extent against the survey records.",
@@ -65,6 +71,6 @@ export const articleCtas: Record<string, ArticleCta> = {
 export const fallbackCta: ArticleCta = {
   question: "Have a property question of your own?",
   text: "Tell us what you are trying to do and we will explain the steps.",
-  action: "Start a request",
+  action: "Start a Request",
   href: "/contact-us",
 };

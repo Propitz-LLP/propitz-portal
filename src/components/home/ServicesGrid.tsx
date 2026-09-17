@@ -12,7 +12,7 @@ export default function ServicesGrid() {
         </h2>
         <p className="mt-3.5 text-[17px] leading-[1.6] text-body">
           We explain what has to happen, prepare you for it, and bring in the
-          verified professional who performs it.
+          independent professional who performs it.
         </p>
       </div>
 

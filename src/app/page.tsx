@@ -1,8 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { resourceCards } from "@/data/site";
-import { posts } from "@/data/blog";
-import Testimonials from "@/components/Testimonials";
+import { publishedPosts as posts } from "@/data/blog";
 import FAQ from "@/components/FAQ";
 import CTASection from "@/components/CTASection";
 import IntentHero from "@/components/home/IntentHero";
@@ -21,8 +20,8 @@ function ArrowUpRight({ className = "" }: { className?: string }) {
 
 /**
  * Homepage, in the order a visitor needs it: what do you need, the services
- * that answer it, why PropITZ, the marketplace, free tools, customer
- * stories, guides, then the final call to action.
+ * that answer it, why PropITZ, the marketplace, free tools, articles, FAQs,
+ * then the final call to action.
  *
  * Removed pre-launch because each repeated something already above it: the
  * About block with mission, vision and a second stats row; a second "Our
@@ -71,29 +70,22 @@ export default function Home() {
         </div>
       </section>
 
-      {/* customer stories */}
-      <section className="section bg-white">
-        <div className="container-px">
-          <div className="mb-12 text-center">
-            <span className="chip-plain">Testimonials</span>
-            <h2 className="mx-auto mt-6 max-w-2xl text-4xl leading-tight sm:text-5xl">
-              What our customers say
-            </h2>
-          </div>
-          <Testimonials />
-        </div>
-      </section>
+      {/*
+        Customer stories are removed until PropITZ has genuine testimonials
+        and photos from customers who have agreed to be quoted.
+      */}
 
-      {/* knowledge */}
+      {/* insights, shown only while there are published articles */}
+      {posts.length > 0 && (
       <section className="section">
         <div className="container-px">
           <div className="mb-12 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
             <div>
-              <span className="chip-plain">Guides</span>
-              <h2 className="mt-6 text-4xl leading-tight sm:text-5xl">Property guides</h2>
+              <span className="chip-plain">Insights</span>
+              <h2 className="mt-6 text-4xl leading-tight sm:text-5xl">From our desk</h2>
             </div>
             <Link href="/blog" className="btn-dark pr-3">
-              View all guides
+              View all articles
               <span className="btn-arrow bg-white/15">
                 <ArrowUpRight className="h-4 w-4" />
               </span>
@@ -109,7 +101,7 @@ export default function Home() {
                   <h3 className="mt-6 text-xl leading-snug transition-colors group-hover:text-brand">{p.title}</h3>
                   <div className="mt-5 border-t border-line pt-4">
                     <span className="inline-flex items-center gap-2 text-sm font-semibold text-ink">
-                      Read the guide
+                      Read the article
                       <ArrowUpRight className="h-4 w-4" />
                     </span>
                   </div>
@@ -119,6 +111,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      )}
 
       {/* FAQ */}
       <section className="section pt-0">
