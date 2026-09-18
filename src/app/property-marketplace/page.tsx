@@ -7,6 +7,7 @@ import CTASection from "@/components/CTASection";
 import { whatsappHref } from "@/data/site";
 import { requestHref } from "@/data/leads";
 import { specialistCaveat } from "@/data/marketplace";
+import { fetchPublicListings } from "@/lib/listings";
 
 export async function generateMetadata({
   searchParams,
@@ -68,6 +69,7 @@ export default async function MarketplacePage({
 }) {
   const { view } = await searchParams;
   const specialists = view === "specialists";
+  const listings = specialists ? [] : await fetchPublicListings();
 
   // The sections below the browser are specific to the half being shown —
   // the buy/sell workflow and fee model say nothing about an introduction.
@@ -122,7 +124,7 @@ export default async function MarketplacePage({
 
   return (
     <>
-      <ListingBrowser />
+      <ListingBrowser listings={listings} />
 
       {/* Verified & enrolled */}
       <section className="pb-16 sm:pb-20">

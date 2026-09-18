@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import PageHero from "@/components/PageHero";
 import { createClient } from "@/lib/supabase/server";
@@ -7,6 +8,7 @@ import { signOut } from "@/app/auth/actions";
 import { THEME_IMG } from "@/data/site";
 import { splitE164 } from "@/lib/phone";
 import ProfileForm from "@/components/ProfileForm";
+import { getViewer } from "@/lib/roles";
 
 export const metadata: Metadata = {
   title: "My Account",
@@ -32,6 +34,9 @@ export default async function AccountPage() {
   // the form opens on the default country with an empty number.
   const { iso, national } = splitE164(storedMobile, savedCountry);
 
+  // Most people have no role and never see the management panel.
+  const viewer = await getViewer();
+
   return (
     <>
       <PageHero
@@ -55,6 +60,40 @@ export default async function AccountPage() {
                 country={iso}
                 mobile={national}
               />
+
+              {viewer?.role && (
+                <div className="mt-8 border-t border-line pt-6">
+                  <p className="text-[10.5px] font-bold uppercase tracking-[0.09em] text-faint">
+                    Marketplace
+                  </p>
+                  <p className="mt-2 text-sm text-body">
+                    You can add and edit marketplace data. Changes to listings
+                    are live as soon as you save them.
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-2.5">
+                    <Link
+                      href="/account/listings"
+                      className="rounded-full border border-line-strong px-4 py-2.5 text-[13.5px] font-semibold text-body transition-colors hover:border-brand hover:text-brand"
+                    >
+                      Listings
+                    </Link>
+                    <Link
+                      href="/account/professionals"
+                      className="rounded-full border border-line-strong px-4 py-2.5 text-[13.5px] font-semibold text-body transition-colors hover:border-brand hover:text-brand"
+                    >
+                      Specialist roster
+                    </Link>
+                    {viewer.role === "admin" && (
+                      <Link
+                        href="/account/team"
+                        className="rounded-full border border-line-strong px-4 py-2.5 text-[13.5px] font-semibold text-body transition-colors hover:border-brand hover:text-brand"
+                      >
+                        Who can edit
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              )}
 
               <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
                 <p className="text-sm text-body">
