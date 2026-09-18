@@ -14,6 +14,11 @@ import { safeRedirect, HOME } from "@/lib/redirectTo";
  *
  * The login link carries the current page along, so signing in returns the
  * user to where they were rather than dropping them on the account screen.
+ *
+ * Signing in and out happen in server actions, which set the session cookie
+ * without the browser client ever firing an auth event. The header stays
+ * mounted across those redirects, so it also re-reads the session on every
+ * navigation; otherwise it keeps saying "Login" until a manual refresh.
  */
 export default function AuthNav({ variant = "desktop" }: { variant?: "desktop" | "mobile" }) {
   const [signedIn, setSignedIn] = useState(false);
@@ -22,14 +27,26 @@ export default function AuthNav({ variant = "desktop" }: { variant?: "desktop" |
   useEffect(() => {
     if (!isSupabaseConfigured) return;
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => setSignedIn(!!data.user));
+
+    // getSession reads the cookie the server action just set, with no
+    // network round-trip, so the label is right on the first paint after
+    // the redirect. Re-runs on every route change.
+    let live = true;
+    supabase.auth
+      .getSession()
+      .then(({ data }) => live && setSignedIn(!!data.session?.user));
+
+    // Still subscribe, for sign-ins and expiries that happen client-side.
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) =>
       setSignedIn(!!session?.user)
     );
-    return () => subscription.unsubscribe();
-  }, []);
+    return () => {
+      live = false;
+      subscription.unsubscribe();
+    };
+  }, [pathname]);
 
   // safeRedirect drops the auth screens themselves, so /login never points
   // back at itself and the fallback is the home page.

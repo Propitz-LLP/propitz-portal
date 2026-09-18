@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------ */
-/*  Shape of the private specialist roster.                            */
+/*  Shape of the professionals list.                                   */
 /*                                                                     */
 /*  Split from the fetching in lib/professionals.ts because the form is */
 /*  a client component: anything it imports must not reach for          */
@@ -18,9 +18,30 @@ export type Professional = {
   email: string;
   areas: string;
   registration: string;
+  /** Internal notes. Never published. */
   notes: string;
   active: boolean;
+  /** Shown on the public Property Professionals tab when true. */
+  published: boolean;
+  /** Their agreement to being shown publicly. Required before publishing. */
+  publicConsent: boolean;
+  /** One or two lines shown publicly. Phone and email never are. */
+  publicNote: string;
+  /** Years in practice, shown publicly when set. */
+  experienceYears: number | null;
   createdBy: string | null;
+};
+
+/** What a visitor sees on the marketplace: no phone, no email, no notes. */
+export type PublicProfessional = {
+  id: string;
+  trade: string;
+  name: string;
+  firm: string;
+  areas: string;
+  registration: string;
+  publicNote: string;
+  experienceYears: number | null;
 };
 
 /** Trade keys the database will accept, taken from the public cards. */

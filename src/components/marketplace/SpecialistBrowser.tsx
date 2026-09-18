@@ -3,6 +3,8 @@ import { specialistCaveat, specialistStages, specialists } from "@/data/marketpl
 import { regions } from "@/data/regions";
 import { requestHref } from "@/data/leads";
 import SpecialistCard from "@/components/SpecialistCard";
+import ProfessionalCard from "@/components/marketplace/ProfessionalCard";
+import { tradeLabel, type PublicProfessional } from "@/data/professionals";
 import MarketplaceTabs from "@/components/marketplace/MarketplaceTabs";
 import { IconChevron, IconPerson, IconSearch } from "@/components/Icon";
 
@@ -10,14 +12,26 @@ import { IconChevron, IconPerson, IconSearch } from "@/components/Icon";
  * The other half of the marketplace: the professional network, browsable
  * by trade.
  *
- * Deliberately built to the same shape as the listing browser — same
+ * Shows the professionals working with PropITZ, and the trades we can
+ * introduce. Built to the same shape as the listing browser — same
  * breadcrumb, search rail, filter column and card grid — so switching tabs
  * feels like changing what you are looking at, not where you are.
+ *
+ * A professional appears here only after being published with their own
+ * consent, and their phone and email are never shown: enquiries come
+ * through PropITZ.
  *
  * Filters are presented but not yet wired to state, matching the property
  * side; there are six trades, so nothing is hidden by that.
  */
-export default function SpecialistBrowser() {
+export default function SpecialistBrowser({
+  professionals = [],
+}: {
+  /** Published professionals. Empty until someone is listed. */
+  professionals?: PublicProfessional[];
+}) {
+  const trades = [...new Set(professionals.map((p) => p.trade))];
+
   return (
     <section className="container-px pt-10">
       <p className="mb-4 text-[13px] text-muted">
@@ -127,14 +141,38 @@ export default function SpecialistBrowser() {
         <div>
           <div className="mb-5 flex flex-wrap items-center gap-3.5 border-b border-line pb-4">
             <p className="text-sm text-body">
-              <b className="font-bold text-ink">{specialists.length}</b>{" "}
-              specialisations across Chennai, Chengalpattu and Tiruvallur
+              {professionals.length > 0 ? (
+                <>
+                  <b className="font-bold text-ink">{professionals.length}</b>{" "}
+                  {professionals.length === 1 ? "professional" : "professionals"}{" "}
+                  across {trades.map(tradeLabel).join(", ")}
+                </>
+              ) : (
+                <>
+                  <b className="font-bold text-ink">{specialists.length}</b>{" "}
+                  specialisations across Chennai, Chengalpattu and Tiruvallur
+                </>
+              )}
             </p>
             <span className="ml-auto inline-flex items-center gap-2 rounded-full border border-line-strong bg-surface px-4 py-2.5 text-[13.5px] font-semibold text-body">
               Sort: Most requested
               <IconChevron size={11} />
             </span>
           </div>
+
+          {professionals.length > 0 && (
+            <>
+              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {professionals.map((p) => (
+                  <ProfessionalCard key={p.id} professional={p} />
+                ))}
+              </div>
+
+              <p className="mt-10 mb-3.5 text-[13px] font-bold uppercase tracking-[0.06em] text-faint">
+                Every profession we can introduce
+              </p>
+            </>
+          )}
 
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {specialists.map((s) => (

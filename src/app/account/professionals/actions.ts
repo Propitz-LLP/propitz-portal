@@ -18,14 +18,28 @@ function readProfessional(formData: FormData) {
     registration: String(formData.get("registration") ?? "").trim(),
     notes: String(formData.get("notes") ?? "").trim(),
     active: formData.get("active") === "on",
+    published: formData.get("published") === "on",
+    public_consent: formData.get("publicConsent") === "on",
+    public_note: String(formData.get("publicNote") ?? "").trim(),
+    experience_years: readYears(formData),
   };
 }
 
+/** Years in practice, shown publicly. Blank or nonsense becomes null. */
+function readYears(formData: FormData) {
+  const raw = String(formData.get("experienceYears") ?? "").trim();
+  if (!raw) return null;
+  const years = Number(raw);
+  return Number.isInteger(years) && years >= 0 && years <= 80 ? years : null;
+}
+
 /**
- * Add or update someone on the roster.
+ * Add or update a professional.
  *
  * These are other people's personal details, so the form asks for consent
  * to be recorded before it will save — the checkbox is the record of it.
+ * Publishing one on the marketplace needs a second confirmation: that they
+ * agreed to appear there.
  */
 export async function saveProfessional(
   _prev: FormState,
@@ -46,6 +60,13 @@ export async function saveProfessional(
       error:
         "Confirm this professional agreed to their details being recorded.",
     };
+  if (values.published && !values.public_consent)
+    return {
+      error:
+        "To publish, confirm this professional agreed to being listed on the marketplace.",
+    };
+  if (values.published && !values.active)
+    return { error: "Mark the professional available before publishing them." };
 
   const supabase = await createClient();
 
@@ -63,6 +84,7 @@ export async function saveProfessional(
   }
 
   revalidatePath("/account/professionals");
+  revalidatePath("/property-marketplace");
   return { message: id ? "Details updated." : `${values.name} added.` };
 }
 

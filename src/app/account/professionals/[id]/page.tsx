@@ -26,7 +26,7 @@ export default async function EditProfessionalPage({
       <PageHero
         title="Edit professional"
         crumb={professional.name}
-        subtitle="Internal roster. These details are never published."
+        subtitle="Internal list. These details are never published."
         image={`${THEME_IMG}/hero-bg-image.jpg`}
       />
       <section className="section">
@@ -36,7 +36,7 @@ export default async function EditProfessionalPage({
               href="/account/professionals"
               className="text-sm font-semibold text-body hover:text-ink"
             >
-              ← Roster
+              ← Property Professionals
             </Link>
             <div className="mt-5 rounded-3xl bg-white p-6 shadow-[var(--shadow-card)] ring-1 ring-line sm:p-8">
               <ProfessionalForm professional={professional} />

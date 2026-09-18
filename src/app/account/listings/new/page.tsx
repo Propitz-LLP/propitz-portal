@@ -4,7 +4,7 @@ import ListingForm from "@/components/account/ListingForm";
 import { requireContributor } from "@/lib/roles";
 import { THEME_IMG } from "@/data/site";
 
-export const metadata: Metadata = { title: "Add a listing" };
+export const metadata: Metadata = { title: "Add a property listing" };
 
 export default async function NewListingPage() {
   await requireContributor();
@@ -12,8 +12,8 @@ export default async function NewListingPage() {
   return (
     <>
       <PageHero
-        title="Add a listing"
-        crumb="New listing"
+        title="Add a property listing"
+        crumb="New property listing"
         subtitle="It appears on the marketplace as soon as you save."
         image={`${THEME_IMG}/hero-bg-image.jpg`}
       />

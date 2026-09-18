@@ -8,6 +8,7 @@ import { whatsappHref } from "@/data/site";
 import { requestHref } from "@/data/leads";
 import { specialistCaveat } from "@/data/marketplace";
 import { fetchPublicListings } from "@/lib/listings";
+import { fetchPublishedProfessionals } from "@/lib/professionals";
 
 export async function generateMetadata({
   searchParams,
@@ -70,13 +71,14 @@ export default async function MarketplacePage({
   const { view } = await searchParams;
   const specialists = view === "specialists";
   const listings = specialists ? [] : await fetchPublicListings();
+  const professionals = specialists ? await fetchPublishedProfessionals() : [];
 
   // The sections below the browser are specific to the half being shown —
   // the buy/sell workflow and fee model say nothing about an introduction.
   if (specialists) {
     return (
       <>
-        <SpecialistBrowser />
+        <SpecialistBrowser professionals={professionals} />
 
         <section className="section bg-surface">
           <div className="container-px">

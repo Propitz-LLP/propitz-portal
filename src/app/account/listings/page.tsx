@@ -6,7 +6,7 @@ import { fetchManagedListings } from "@/lib/listings";
 import { deleteListing, togglePublished } from "./actions";
 import { THEME_IMG } from "@/data/site";
 
-export const metadata: Metadata = { title: "Manage listings" };
+export const metadata: Metadata = { title: "Manage property listings" };
 
 export default async function ManageListingsPage() {
   // The proxy guards /account; this checks the role, and row level security
@@ -17,8 +17,8 @@ export default async function ManageListingsPage() {
   return (
     <>
       <PageHero
-        title="Listings"
-        crumb="Manage listings"
+        title="Property Listings"
+        crumb="Property Listings"
         subtitle="Add a property, correct one, or take it off the marketplace."
         image={`${THEME_IMG}/hero-bg-image.jpg`}
       />

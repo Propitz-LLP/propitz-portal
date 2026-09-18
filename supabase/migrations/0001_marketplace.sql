@@ -28,7 +28,7 @@ comment on table public.contributors is
 -- Bootstrap the first admin. Change the address if it should be someone
 -- else; without at least one admin, nobody can manage the list.
 insert into public.contributors (email, role)
-values ('marketing@propitz.com', 'admin')
+values ('mr.jyothikumar.a@gmail.com', 'admin')
 on conflict (email) do update set role = 'admin';
 
 -- ------------------------- role helper functions ------------------

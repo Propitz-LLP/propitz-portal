@@ -75,13 +75,13 @@ export default async function AccountPage() {
                       href="/account/listings"
                       className="rounded-full border border-line-strong px-4 py-2.5 text-[13.5px] font-semibold text-body transition-colors hover:border-brand hover:text-brand"
                     >
-                      Listings
+                      Property Listings
                     </Link>
                     <Link
                       href="/account/professionals"
                       className="rounded-full border border-line-strong px-4 py-2.5 text-[13.5px] font-semibold text-body transition-colors hover:border-brand hover:text-brand"
                     >
-                      Specialist roster
+                      Property Professionals
                     </Link>
                     {viewer.role === "admin" && (
                       <Link

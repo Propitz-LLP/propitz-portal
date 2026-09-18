@@ -8,7 +8,7 @@ import { tradeLabel } from "@/data/professionals";
 import { deleteProfessional, toggleActive } from "./actions";
 import { THEME_IMG } from "@/data/site";
 
-export const metadata: Metadata = { title: "Specialist roster" };
+export const metadata: Metadata = { title: "Property Professionals" };
 
 export default async function ProfessionalsPage() {
   const viewer = await requireContributor();
@@ -17,9 +17,9 @@ export default async function ProfessionalsPage() {
   return (
     <>
       <PageHero
-        title="Specialist roster"
-        crumb="Roster"
-        subtitle="The professionals a coordinator can call on. Internal only."
+        title="Property Professionals"
+        crumb="Property Professionals"
+        subtitle="The professionals PropITZ works with. Publish the ones who agreed to appear on the marketplace."
         image={`${THEME_IMG}/hero-bg-image.jpg`}
       />
       <section className="section">
@@ -34,12 +34,14 @@ export default async function ProfessionalsPage() {
 
             <div className="mt-5 rounded-2xl bg-bg-alt p-5">
               <p className="text-[14.5px] font-bold text-ink">
-                This list is never published.
+                Publishing is opt-in, per professional.
               </p>
               <p className="mt-1.5 text-[13.5px] leading-[1.55] text-body">
-                The marketplace shows six trade cards, not individual people.
-                Names and numbers recorded here are used only to match an
-                introduction request, and are readable only by the team.
+                Nobody appears on the marketplace until you tick
+                &ldquo;Show on the Property Professionals tab&rdquo; and confirm
+                they agreed to it. Phone numbers, email addresses and internal
+                notes are never published, so enquiries always come through
+                PropITZ.
               </p>
             </div>
 
@@ -56,8 +58,17 @@ export default async function ProfessionalsPage() {
                         <span className="rounded-full bg-brand-50 px-2.5 py-1 text-[11.5px] font-semibold text-brand">
                           {tradeLabel(p.trade)}
                         </span>
-                        {!p.active && (
+                        {p.published ? (
+                          <span className="rounded-full bg-ok px-2.5 py-1 text-[11.5px] font-semibold text-white">
+                            On the marketplace
+                          </span>
+                        ) : (
                           <span className="rounded-full bg-slate-200 px-2.5 py-1 text-[11.5px] font-semibold text-body">
+                            Not published
+                          </span>
+                        )}
+                        {!p.active && (
+                          <span className="rounded-full bg-warn px-2.5 py-1 text-[11.5px] font-semibold text-white">
                             Unavailable
                           </span>
                         )}
@@ -109,8 +120,8 @@ export default async function ProfessionalsPage() {
               <h2 className="text-xl text-ink">Add a professional</h2>
               <p className="mt-1.5 text-sm text-body">
                 {roster.length === 0
-                  ? "Nobody is on the roster yet."
-                  : `${roster.length} on the roster.`}
+                  ? "Nobody is on the list yet."
+                  : `${roster.length} on the list.`}
               </p>
               <div className="mt-6">
                 <ProfessionalForm />

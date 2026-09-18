@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import {
   saveProfessional,
   type FormState,
@@ -24,6 +24,7 @@ export default function ProfessionalForm({
   professional?: Professional;
 }) {
   const [state, action, pending] = useActionState(saveProfessional, initial);
+  const [publishing, setPublishing] = useState(professional?.published ?? false);
 
   return (
     <form action={action}>
@@ -109,14 +110,41 @@ export default function ProfessionalForm({
           />
         </div>
 
+        <div>
+          <label className={label}>Years in practice</label>
+          <input
+            name="experienceYears"
+            type="number"
+            min="0"
+            max="80"
+            defaultValue={professional?.experienceYears ?? ""}
+            className={field}
+            placeholder="Shown publicly, e.g. 12"
+          />
+        </div>
+
         <div className="sm:col-span-2">
-          <label className={label}>Notes</label>
+          <label className={label}>
+            Public description{" "}
+            <span className="font-normal text-muted">(shown on the marketplace)</span>
+          </label>
+          <textarea
+            name="publicNote"
+            rows={2}
+            defaultValue={professional?.publicNote}
+            className={field}
+            placeholder="One or two lines on what they do, in plain language."
+          />
+        </div>
+
+        <div className="sm:col-span-2">
+          <label className={label}>Internal notes</label>
           <textarea
             name="notes"
             rows={3}
             defaultValue={professional?.notes}
             className={field}
-            placeholder="What they are good for, and anything a coordinator should know before making an introduction."
+            placeholder="Never published. What they are good for, and anything a coordinator should know before making an introduction."
           />
         </div>
       </div>
@@ -137,9 +165,56 @@ export default function ProfessionalForm({
           <b className="font-semibold text-ink">
             They agreed to their details being recorded
           </b>{" "}
-          and to being contacted about Propitz introductions.
+          and to being contacted about PropITZ introductions.
         </span>
       </label>
+
+      {/* Publishing is a separate decision, and needs its own consent. */}
+      <fieldset className="mt-5 rounded-2xl border border-line p-5">
+        <legend className="px-1.5 text-xs font-bold uppercase tracking-[0.08em] text-faint">
+          Marketplace listing
+        </legend>
+
+        <label className="flex items-start gap-3 text-sm text-body">
+          <input
+            type="checkbox"
+            name="published"
+            defaultChecked={professional?.published ?? false}
+            onChange={(e) => setPublishing(e.target.checked)}
+            className="mt-0.5 h-4 w-4 shrink-0"
+          />
+          <span>
+            <b className="font-semibold text-ink">
+              Show on the Property Professionals tab.
+            </b>{" "}
+            Name, firm, profession, areas, registration, years in practice and
+            the public description are shown. Phone and email never are, and
+            enquiries come through PropITZ.
+          </span>
+        </label>
+
+        <label className="mt-3 flex items-start gap-3 text-sm text-body">
+          <input
+            type="checkbox"
+            name="publicConsent"
+            defaultChecked={professional?.publicConsent ?? false}
+            className="mt-0.5 h-4 w-4 shrink-0"
+          />
+          <span>
+            <b className="font-semibold text-ink">
+              They agreed to being listed publicly
+            </b>{" "}
+            on the PropITZ marketplace.
+          </span>
+        </label>
+
+        {publishing && (
+          <p className="mt-3 text-[13px] leading-relaxed text-muted">
+            Publishing needs both boxes ticked and the professional marked
+            available. They can ask to be removed at any time.
+          </p>
+        )}
+      </fieldset>
 
       {state.error && (
         <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -157,7 +232,7 @@ export default function ProfessionalForm({
         disabled={pending}
         className="btn-primary mt-6 justify-center py-3.5 text-sm disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {pending ? "Saving…" : professional ? "Save changes" : "Add to roster"}
+        {pending ? "Saving…" : professional ? "Save changes" : "Add to the list"}
       </button>
     </form>
   );
