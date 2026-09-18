@@ -82,8 +82,9 @@ export const faqs = [
     a: "No. A legal opinion is issued by an independent advocate. PropITZ coordinates the verification workflow and records.",
   },
   {
+    // "Empanelled" definition confirmed by PropITZ, 18 September 2026.
     q: "Are the professionals employees of PropITZ?",
-    a: "Professionals may be independent empanelled specialists unless specifically stated otherwise. The professional issuing an opinion or deliverable is responsible for that work.",
+    a: "No. Professionals may be independent empanelled specialists unless specifically stated otherwise. Empanelled means the professional is on the PropITZ panel of independent professionals we introduce customers to. It is not employment, and PropITZ does not supervise or guarantee their professional work. The professional issuing an opinion or deliverable is responsible for that work.",
   },
   {
     q: "How much does it cost?",

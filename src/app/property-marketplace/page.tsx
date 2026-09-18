@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import ListingBrowser from "@/components/marketplace/ListingBrowser";
 import SpecialistBrowser from "@/components/marketplace/SpecialistBrowser";
 import SectionHeading from "@/components/SectionHeading";
@@ -19,16 +20,18 @@ export async function generateMetadata({
 
   // Both tabs share one route, so each gets its own search listing.
   return view === "specialists"
-    ? {
+    ? pageMetadata({
         title: "Property Professionals: Advocates, Engineers, Architects & More",
         description:
           "Get introduced to independent advocates, engineers, architects, tax consultants, documentation specialists and civil contractors for your property in Tamil Nadu.",
-      }
-    : {
+        path: "/property-marketplace?view=specialists",
+      })
+    : pageMetadata({
         title: "Property Listings in Chennai with Documents Reviewed",
         description:
           "Buy or sell property in Chennai, Chengalpattu and Tiruvallur. Every listing shows which documents have been reviewed before it goes live.",
-      };
+        path: "/property-marketplace",
+      });
 }
 
 const workflow = [

@@ -39,7 +39,7 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://propitz.com"),
+  metadataBase: new URL("https://www.propitz.com"),
   title: {
     default: "PropITZ — Property Registration, Verification & Documents in Tamil Nadu",
     template: "%s — PropITZ",
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     description:
       "Online where it is faster, in person where it matters. Registration, verification, documents and verified listings across Tamil Nadu.",
     type: "website",
-    url: "https://propitz.com",
+    url: "/",
   },
 };
 

@@ -62,7 +62,7 @@ export default function ContactForm({ need }: { need?: RequirementKey }) {
         </div>
         <div>
           <label className={label} htmlFor="req-phone">Mobile number</label>
-          <input id="req-phone" name="phone" required type="tel" autoComplete="tel" className={field} placeholder="+91 98765 43210" />
+          <input id="req-phone" name="phone" required type="tel" autoComplete="tel" className={field} placeholder="Your mobile number" />
         </div>
         <div>
           <label className={label} htmlFor="req-need">What do you need help with?</label>

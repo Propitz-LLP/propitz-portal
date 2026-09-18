@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -8,11 +9,12 @@ import CTASection from "@/components/CTASection";
 import { publishedPosts as posts } from "@/data/blog";
 import { IMG } from "@/data/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Property Insights: Land, Fraud Prevention & Pricing in India",
   description:
     "Articles from PropITZ on land demand, protecting land from impersonation fraud in Tamil Nadu, and how property prices are really set in India.",
-};
+  path: "/blog",
+});
 
 export default function BlogPage() {
   // Nothing is published until the real articles arrive.

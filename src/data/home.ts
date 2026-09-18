@@ -152,7 +152,7 @@ export const servicesDetail = [
     n: "05",
     title: "Property advisory & requirement support",
     ta: "ஆலோசனை",
-    blurb: "Matching a requirement to a corridor, and reading guideline value against the asking price.",
+    blurb: "Clarify your property requirement, understand the options and identify the right next steps and professional inputs.",
     href: "/services/property-advisory-support",
   },
   {
@@ -173,7 +173,7 @@ export const servicesDetail = [
     n: "08",
     title: "Negotiation & deal support",
     ta: "பேச்சுவார்த்தை",
-    blurb: "Someone on your side of the table who knows what the paperwork will allow.",
+    blurb: "Prepare the price, terms, documentation conditions and transaction milestones before negotiations move forward.",
     href: "/services/negotiation-deal-support",
   },
 ];

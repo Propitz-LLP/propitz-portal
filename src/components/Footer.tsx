@@ -80,8 +80,16 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-px py-6 text-center text-sm text-slate-400">
-          © 2026 PropITZ, operated by {site.legalEntity}. All rights reserved.
+        <div className="container-px flex flex-col items-center gap-3 py-6 text-center text-sm text-slate-400 sm:flex-row sm:justify-between sm:text-left">
+          <p>© 2026 PropITZ, operated by {site.legalEntity}. All rights reserved.</p>
+          <div className="flex gap-5">
+            <Link href="/terms-of-use" className="-my-2 inline-block py-2 transition-colors hover:text-accent">
+              Terms of Use
+            </Link>
+            <Link href="/privacy-policy" className="-my-2 inline-block py-2 transition-colors hover:text-accent">
+              Privacy Policy
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

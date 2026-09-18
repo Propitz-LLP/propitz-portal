@@ -38,7 +38,7 @@ export const articleCtas: Record<string, ArticleCta> = {
   /* resources */
   "stamp-duty-registration-fee-calculator": {
     question: "Registering a property soon?",
-    text: "We confirm the right Sub-Registrar Office, check your documents before booking and can assist on execution day.",
+    text: "We confirm the right Sub-Registrar Office, check your documents before booking and can assist on execution day, where included in the engagement.",
     action: "Start a registration request",
     href: "/services/property-registration-assistance",
   },

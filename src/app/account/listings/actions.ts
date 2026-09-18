@@ -79,6 +79,7 @@ export async function saveListing(
   }
 
   revalidatePath("/property-marketplace");
+  revalidatePath("/");
   revalidatePath("/account/listings");
   redirect("/account/listings");
 }
@@ -95,6 +96,7 @@ export async function togglePublished(formData: FormData) {
   await supabase.from("listings").update({ published: next }).eq("id", id);
 
   revalidatePath("/property-marketplace");
+  revalidatePath("/");
   revalidatePath("/account/listings");
 }
 
@@ -109,5 +111,6 @@ export async function deleteListing(formData: FormData) {
   await supabase.from("listings").delete().eq("id", id);
 
   revalidatePath("/property-marketplace");
+  revalidatePath("/");
   revalidatePath("/account/listings");
 }

@@ -100,7 +100,7 @@ export const resources: Resource[] = [
     seoDescription:
       "What an Encumbrance Certificate, Patta, Chitta and guideline value are, and why each one matters when you buy property in Tamil Nadu.",
     hero:
-      "An Encumbrance Certificate helps you check the ownership history of a property and whether there are any legal or financial liabilities attached to it.",
+      "An Encumbrance Certificate records registered transactions and encumbrances for the period searched. It is an important part of property verification, but it does not by itself establish clear title or identify every possible claim.",
     image: `${IMG}/project-image-3.jpg`,
     sections: [
       {
@@ -109,9 +109,9 @@ export const resources: Resource[] = [
           "Understanding these documents helps you evaluate a property with confidence before you commit.",
         ],
         list: [
-          "Encumbrance Certificate (EC) — verifies ownership history and any liabilities on the property.",
-          "Patta & Chitta — Tamil Nadu land ownership and classification records.",
-          "Guideline Value (GV) — the government-set minimum valuation used to calculate stamp duty and registration charges.",
+          "Encumbrance Certificate (EC) — records registered transactions and encumbrances for the period searched. It is an important part of property verification, but it does not by itself establish clear title or identify every possible claim.",
+          "Patta & Chitta — Patta and related revenue records identify the recorded landholder, survey details and land classification in the revenue records. They are not conclusive proof of legal title.",
+          "Guideline Value (GV) — the government valuation benchmark used in registration; the applicable transaction value may depend on the higher relevant value under current rules.",
         ],
       },
     ],

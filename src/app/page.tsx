@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { resourceCards } from "@/data/site";
@@ -9,6 +10,14 @@ import TrustStrip from "@/components/home/TrustStrip";
 import Phygital from "@/components/home/Phygital";
 import ServicesGrid from "@/components/home/ServicesGrid";
 import MarketplaceTeaser from "@/components/home/MarketplaceTeaser";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
+// The marketplace teaser reads live listings; saving a listing also
+// revalidates "/" straight away (see account/listings/actions.ts).
+export const revalidate = 300;
 
 function ArrowUpRight({ className = "" }: { className?: string }) {
   return (

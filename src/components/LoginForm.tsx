@@ -16,6 +16,9 @@ import { field } from "./fieldClass";
 
 const initial: AuthState = {};
 
+/** Hands the typed email to /forgot-password without putting it in the URL. */
+export const RESET_EMAIL_KEY = "propitz:reset-email";
+
 export default function LoginForm({
   redirectTo = HOME,
   notice,
@@ -48,6 +51,7 @@ export default function LoginForm({
               Email Address
             </label>
             <input
+              id="login-email"
               name="email"
               type="email"
               required
@@ -57,9 +61,25 @@ export default function LoginForm({
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-ink">
-              Password
-            </label>
+            <div className="mb-1.5 flex items-baseline justify-between gap-3">
+              <label className="block text-sm font-medium text-ink">
+                Password
+              </label>
+              <Link
+                href="/forgot-password"
+                onClick={() => {
+                  const email = (document.getElementById("login-email") as HTMLInputElement | null)?.value.trim();
+                  try {
+                    if (email) sessionStorage.setItem(RESET_EMAIL_KEY, email);
+                  } catch {
+                    // Storage blocked: the visitor just types the email again.
+                  }
+                }}
+                className="-my-2 inline-block py-2 text-sm font-semibold text-brand hover:text-brand-dark"
+              >
+                Forgot password?
+              </Link>
+            </div>
             <input
               name="password"
               type="password"

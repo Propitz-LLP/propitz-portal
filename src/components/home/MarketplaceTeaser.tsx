@@ -1,11 +1,19 @@
 import Link from "next/link";
-import { listings, propertyTypes } from "@/data/marketplace";
+import { propertyTypes } from "@/data/marketplace";
+import { fetchHomeListings } from "@/lib/listings";
 import ListingCard from "@/components/ListingCard";
 import BuySellSwitch from "@/components/BuySellSwitch";
+import MarketplaceTabs from "@/components/marketplace/MarketplaceTabs";
 import { IconCheck, IconSearch } from "@/components/Icon";
 
-/** Homepage slice of the marketplace: the switch, the filters and three listings. */
-export default function MarketplaceTeaser() {
+/**
+ * Homepage slice of the marketplace: its tabs, the buy/sell switch, the
+ * filters and the three newest published listings, or sample cards until
+ * real ones exist.
+ */
+export default async function MarketplaceTeaser() {
+  const { listings, sample } = await fetchHomeListings(3);
+
   return (
     <section className="section container-px pt-0">
       <div className="mb-7 max-w-[62ch]">
@@ -19,6 +27,9 @@ export default function MarketplaceTeaser() {
           chain.
         </p>
       </div>
+
+      {/* Same two halves as the marketplace page; Professionals opens that tab there. */}
+      <MarketplaceTabs active="property" className="mb-6" />
 
       <BuySellSwitch className="mb-5" />
 
@@ -43,8 +54,14 @@ export default function MarketplaceTeaser() {
         */}
       </div>
 
+      {sample && (
+        <p className="mb-4 text-sm text-muted">
+          Sample listings, shown to illustrate the marketplace until live listings are published.
+        </p>
+      )}
+
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {listings.slice(0, 3).map((l) => (
+        {listings.map((l) => (
           <ListingCard key={l.id} listing={l} />
         ))}
       </div>

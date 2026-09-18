@@ -7,6 +7,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { isValidMobile, toE164, mobileError, DEFAULT_COUNTRY } from "@/lib/phone";
 import { safeRedirect, HOME } from "@/lib/redirectTo";
 import { siteOrigin } from "@/lib/siteUrl";
+import { LEGAL_VERSION } from "@/data/legal";
 
 export type AuthState = { error?: string; message?: string };
 
@@ -53,6 +54,8 @@ export async function signUp(
     return { error: "Password must be at least 8 characters." };
   if (password !== confirmPassword)
     return { error: "Passwords do not match." };
+  if (formData.get("acceptTerms") !== "yes")
+    return { error: "Please accept the Terms of Use and Privacy Policy to create an account." };
 
   const supabase = await createClient();
   const origin = await siteOrigin();
@@ -69,6 +72,9 @@ export async function signUp(
         full_name: fullName,
         mobile: toE164(mobile, country),
         mobile_country: country,
+        // Which version of the terms was accepted, and when.
+        terms_version: LEGAL_VERSION,
+        terms_accepted_at: new Date().toISOString(),
       },
       emailRedirectTo: origin
         ? `${origin}/auth/confirm?next=${next}`
@@ -215,6 +221,66 @@ export async function completeProfile(
   revalidatePath("/", "layout");
   // The number is in place now, so honour wherever they were headed.
   redirect(safeRedirect(formData.get("redirect"), "/account"));
+}
+
+/* ---------------------------- Forgot password ---------------------------- */
+/** Where the emailed reset link lands once Supabase has signed the user in. */
+const RESET_PASSWORD_PATH = "/account/reset-password";
+
+export async function requestPasswordReset(
+  _prev: AuthState,
+  formData: FormData
+): Promise<AuthState> {
+  if (!isSupabaseConfigured) return { error: NOT_CONFIGURED };
+
+  const { email } = readCredentials(formData);
+  if (!email) return { error: "Please enter your email address." };
+
+  const supabase = await createClient();
+  const origin = await siteOrigin();
+
+  // The link goes through /auth/confirm, which turns it into a session and
+  // then hands over to the page where the new password is set.
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: origin
+      ? `${origin}/auth/confirm?next=${encodeURIComponent(RESET_PASSWORD_PATH)}`
+      : undefined,
+  });
+
+  if (error?.status === 429)
+    return { error: "Too many reset requests. Please wait a few minutes and try again." };
+  if (error) console.error("auth: password reset request failed —", error.message);
+
+  // Same answer whether or not the address has an account, so the form
+  // can't be used to find out who is registered.
+  return {
+    message:
+      "If an account exists for that email, we have sent a link to reset your password. It may take a minute to arrive; check your spam folder too.",
+  };
+}
+
+/* ----------------------------- Reset password ---------------------------- */
+export async function updatePassword(
+  _prev: AuthState,
+  formData: FormData
+): Promise<AuthState> {
+  if (!isSupabaseConfigured) return { error: NOT_CONFIGURED };
+
+  const { password, confirmPassword } = readCredentials(formData);
+
+  if (password.length < 8)
+    return { error: "Password must be at least 8 characters." };
+  if (password !== confirmPassword)
+    return { error: "Passwords do not match." };
+
+  const supabase = await createClient();
+
+  // The reset link signed the user in, so updateUser acts on that session.
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) return { error: error.message };
+
+  revalidatePath("/", "layout");
+  return { message: "Your password has been updated." };
 }
 
 /* --------------------------------- Logout -------------------------------- */

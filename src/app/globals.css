@@ -208,6 +208,19 @@
     content: "";
     @apply absolute left-0 top-2 h-2.5 w-2.5 rounded-full bg-accent;
   }
+  /* Numbered lists (legal clauses): a, b, c instead of the bullet dot. */
+  .prose-content ol {
+    @apply mb-5 space-y-2 pl-1;
+    counter-reset: clause;
+  }
+  .prose-content ol > li {
+    counter-increment: clause;
+    @apply pl-8;
+  }
+  .prose-content ol > li::before {
+    content: "(" counter(clause, lower-alpha) ")";
+    @apply top-0 h-auto w-auto rounded-none bg-transparent font-semibold text-ink;
+  }
 }
 
 /* Subtle entrance animation */

@@ -59,7 +59,7 @@ export default function SellerForm() {
         </div>
         <div>
           <label className={label} htmlFor="sell-phone">Mobile number</label>
-          <input id="sell-phone" name="phone" type="tel" required autoComplete="tel" className={field} placeholder="+91 98765 43210" />
+          <input id="sell-phone" name="phone" type="tel" required autoComplete="tel" className={field} placeholder="Your mobile number" />
         </div>
       </div>
 

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import PageHero from "@/components/PageHero";
 import ServiceCard from "@/components/ServiceCard";
 import Reveal from "@/components/Reveal";
@@ -6,11 +7,12 @@ import CTASection from "@/components/CTASection";
 import { services } from "@/data/services";
 import { IMG } from "@/data/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Property Services in Chennai & Tamil Nadu",
   description:
     "Eight property services in Tamil Nadu: registration, document checklists, verification, SRO help, advice, professional introductions, transaction structuring and negotiation.",
-};
+  path: "/services",
+});
 
 export default function ServicesPage() {
   return (

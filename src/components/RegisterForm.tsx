@@ -124,6 +124,27 @@ export default function RegisterForm({
           </div>
         </div>
 
+        <label className="mt-5 flex items-start gap-3 text-sm leading-relaxed text-body">
+          <input
+            type="checkbox"
+            name="acceptTerms"
+            value="yes"
+            required
+            className="mt-1 h-4 w-4 shrink-0 accent-[var(--color-brand)]"
+          />
+          <span>
+            I agree to the{" "}
+            <Link href="/terms-of-use" target="_blank" className="font-semibold text-brand underline-offset-4 hover:underline">
+              Terms of Use
+            </Link>{" "}
+            and have read the{" "}
+            <Link href="/privacy-policy" target="_blank" className="font-semibold text-brand underline-offset-4 hover:underline">
+              Privacy Policy
+            </Link>
+            .
+          </span>
+        </label>
+
         {state.error && (
           <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
             {state.error}

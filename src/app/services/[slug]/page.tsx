@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import PageHero from "@/components/PageHero";
@@ -39,7 +40,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const service = getService(slug);
   if (!service) return { title: "Service" };
-  return { title: service.seoTitle, description: service.seoDescription };
+  return pageMetadata({
+    title: service.seoTitle,
+    description: service.seoDescription,
+    path: `/services/${service.slug}`,
+  });
 }
 
 /**

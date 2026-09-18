@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import PageHero from "@/components/PageHero";
 import SectionHeading from "@/components/SectionHeading";
 import Reveal from "@/components/Reveal";
@@ -6,11 +7,12 @@ import ContactForm from "@/components/ContactForm";
 import { site, IMG, whatsappHref } from "@/data/site";
 import { REQUIREMENTS, type RequirementKey } from "@/data/leads";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact Us: Start a Property Request in Chennai",
   description:
     "Start a request with PropITZ about registering, verifying or documenting a property in Tamil Nadu, or message us on WhatsApp. Office in Perungudi, Chennai.",
-};
+  path: "/contact-us",
+});
 
 /** The number is WhatsApp only; it is never shown as a call line. */
 const details = [
@@ -61,7 +63,7 @@ export default async function ContactPage({
     <>
       <PageHero
         title="Contact Us"
-        subtitle="Tell us what you are trying to do with a property. We reply by WhatsApp, callback or email, whichever you prefer."
+        subtitle="Tell us what you need help with. Share your property requirement and choose how you would like us to respond - WhatsApp, callback or email."
         image={`${IMG}/8.jpg`}
       />
 

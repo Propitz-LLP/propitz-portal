@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import PageHero from "@/components/PageHero";
 import SectionHeading from "@/components/SectionHeading";
 import SellerForm from "@/components/SellerForm";
 import { IconCheck } from "@/components/Icon";
 import { IMG } from "@/data/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Sell Your Property in Chennai & Tamil Nadu",
   description:
     "Planning to sell a property in Tamil Nadu? Tell PropITZ when to call and we will explain the documents, checks and steps involved before you list.",
-};
+  path: "/sell",
+});
 
 const steps = [
   "We call you at the time you choose",

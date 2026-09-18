@@ -18,7 +18,7 @@ export default function BuySellSwitch({
   full?: boolean;
 }) {
   const base =
-    "flex items-center justify-center gap-2 rounded-full px-6 py-3 text-[14.5px] transition-colors";
+    "flex items-center justify-center gap-2 rounded-full px-4 py-3 text-[14.5px] transition-colors sm:px-6";
   const on = "bg-surface font-bold text-ink shadow-[0_1px_3px_rgba(20,28,39,0.10)]";
   const off = "font-semibold text-body hover:text-ink";
 

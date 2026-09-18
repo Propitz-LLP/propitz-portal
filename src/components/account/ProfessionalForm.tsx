@@ -85,7 +85,7 @@ export default function ProfessionalForm({
             name="phone"
             defaultValue={professional?.phone}
             className={field}
-            placeholder="+91 98765 43210"
+            placeholder="Professional's mobile number"
           />
         </div>
 

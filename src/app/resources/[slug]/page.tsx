@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import PageHero from "@/components/PageHero";
@@ -21,7 +22,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const r = getResource(slug);
   if (!r) return { title: "Resource" };
-  return { title: r.seoTitle, description: r.seoDescription };
+  return pageMetadata({
+    title: r.seoTitle,
+    description: r.seoDescription,
+    path: `/resources/${r.slug}`,
+  });
 }
 
 export default async function ResourcePage({

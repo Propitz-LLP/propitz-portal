@@ -106,7 +106,7 @@ export const services: Service[] = [
     ],
     seoTitle: "Property Registration Assistance in Chennai & Tamil Nadu",
     seoDescription:
-      "Register your property at the right Sub-Registrar Office in Tamil Nadu. PropITZ checks your documents, books the TNREGINET slot and can assist on execution day.",
+      "Register your property at the right Sub-Registrar Office in Tamil Nadu. PropITZ checks your documents, books the TNREGINET slot and, where included in the engagement, assists on execution day.",
   },
   {
     slug: "document-checklist-guidance",
@@ -364,8 +364,9 @@ export const services: Service[] = [
       "PropITZ coordinates the requirement and customer journey. Professionals are independent and remain responsible for their professional advice and deliverables.",
     faqs: [
       {
+        // "Empanelled" definition confirmed by PropITZ, 18 September 2026.
         q: "Are the professionals employees of PropITZ?",
-        a: "Professionals may be independent empanelled specialists unless specifically stated otherwise.",
+        a: "No. Professionals may be independent empanelled specialists unless specifically stated otherwise. Empanelled means the professional is on the PropITZ panel of independent professionals we introduce customers to. It is not employment, and PropITZ does not supervise or guarantee their professional work.",
       },
       {
         q: "How is a professional selected?",
@@ -451,14 +452,14 @@ export const services: Service[] = [
     handles: [
       "Helping you prepare your position before discussions begin",
       "Identifying which terms depend on documents or due diligence still pending",
-      "Coordinating discussions between the parties, where the engagement includes it",
+      "Supporting your preparation during discussions, where the engagement includes it",
       "Recording agreed terms and milestones so they carry into the documentation",
     ],
     process: [
       "Share your negotiation or deal requirement",
       "We outline the key considerations and approach",
       "Preparation on pricing, terms and documents",
-      "Coordination during discussions, if required",
+      "Preparation support during discussions, if required",
     ],
     scope: {
       heading: "Areas of support",
@@ -478,11 +479,11 @@ export const services: Service[] = [
       "Property documents shared so far",
     ],
     responsibility:
-      "PropITZ does not guarantee a particular transaction price or outcome. Final commercial terms are agreed between the parties.",
+      "PropITZ does not act as your agent, broker or legal representative, and does not guarantee a particular transaction price or outcome. Final commercial terms are agreed between the parties.",
     faqs: [
       {
         q: "Will PropITZ negotiate the price for me?",
-        a: "The level of negotiation support depends on the engagement. PropITZ can help prepare and coordinate discussions around price, terms and milestones.",
+        a: "No. PropITZ does not negotiate on your behalf or act as your agent or legal representative. Depending on the engagement, PropITZ helps you prepare on price, terms and milestones so you can negotiate from an informed position.",
       },
       {
         q: "Can you guarantee a particular purchase or sale price?",

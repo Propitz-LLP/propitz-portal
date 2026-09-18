@@ -4,8 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import { safeRedirect, HOME } from "@/lib/redirectTo";
 
 /**
- * Handles the link Supabase emails to a new user, in either shape it can
- * arrive in:
+ * Handles the links Supabase emails (sign-up confirmation and password
+ * reset), in either shape they can arrive in:
  *
  *  - `?code=…` — what the stock "Confirm signup" template produces, which
  *    bounces through Supabase's own /auth/v1/verify endpoint first.
@@ -36,6 +36,16 @@ export async function GET(request: NextRequest) {
     if (!error) {
       return NextResponse.redirect(new URL(next, request.url));
     }
+  }
+
+  // A failed password-reset link goes back to where a new one can be sent.
+  if (next.startsWith("/account/reset-password")) {
+    return NextResponse.redirect(
+      new URL(
+        "/forgot-password?error=That%20reset%20link%20has%20expired%20or%20was%20already%20used.%20Please%20request%20a%20new%20one.",
+        request.url
+      )
+    );
   }
 
   return NextResponse.redirect(

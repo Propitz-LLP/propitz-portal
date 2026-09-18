@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import PageHero from "@/components/PageHero";
 import SectionHeading from "@/components/SectionHeading";
@@ -6,13 +7,14 @@ import Reveal from "@/components/Reveal";
 import Stats from "@/components/Stats";
 import CTASection from "@/components/CTASection";
 import { IconCheck } from "@/components/Icon";
-import { IMG, site } from "@/data/site";
+import { IMG, site, whatsappHref } from "@/data/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "About Us: Property Facilitation in Tamil Nadu",
   description:
     "PropITZ, operated by Peri Gold Developers Pvt Ltd, helps you register, verify and document property in Tamil Nadu, coordinating independent advocates, surveyors and consultants.",
-};
+  path: "/about-us",
+});
 
 /** Mission and vision as approved by PropITZ for launch. */
 const pillars = [
@@ -164,7 +166,14 @@ export default function AboutPage() {
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.08em] text-faint">Contact</p>
               <p className="mt-2 text-sm leading-relaxed text-ink">
-                WhatsApp {site.whatsappDisplay}
+                <a
+                  href={whatsappHref("Hi PropITZ, I need help with a property.")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline-offset-4 hover:text-brand hover:underline"
+                >
+                  WhatsApp {site.whatsappDisplay}
+                </a>
                 <br />
                 {site.email}
               </p>

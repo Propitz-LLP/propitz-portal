@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -19,7 +20,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) return { title: "Article" };
-  return { title: post.title, description: post.excerpt };
+  return pageMetadata({
+    title: post.title,
+    description: post.excerpt,
+    path: `/blog/${post.slug}`,
+  });
 }
 
 export default async function BlogPostPage({

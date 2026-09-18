@@ -6,10 +6,15 @@
 /*  database to read — an unconfigured checkout, or the migration not   */
 /*  run yet. A configured, empty table shows an empty state instead of  */
 /*  sample inventory, so nobody mistakes placeholders for real stock.   */
+/*                                                                     */
+/*  The homepage teaser is the exception: it always shows three cards,  */
+/*  falling back to the samples (labelled as such) until real listings  */
+/*  are published.                                                     */
 /* ------------------------------------------------------------------ */
 
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { createPublicClient } from "@/lib/supabase/publicClient";
 import {
   listings as sampleListings,
   type Badge,
@@ -92,6 +97,35 @@ export async function fetchPublicListings(): Promise<Listing[]> {
   }
 
   return (data ?? []).map(toListing);
+}
+
+/**
+ * The homepage teaser: the newest published listings, or the samples when
+ * there are none yet or the table can't be read. `sample` tells the page
+ * which it got, so placeholders are never presented as real stock.
+ *
+ * Reads as the anonymous role (no cookies), so the homepage stays cacheable.
+ */
+export async function fetchHomeListings(
+  limit = 3
+): Promise<{ listings: Listing[]; sample: boolean }> {
+  const fallback = { listings: sampleListings.slice(0, limit), sample: true };
+  if (!isSupabaseConfigured) return fallback;
+
+  const { data, error } = await createPublicClient()
+    .from("listings")
+    .select("*")
+    .eq("published", true)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.warn("listings: homepage falling back to sample data —", error.message);
+    return fallback;
+  }
+  if (!data?.length) return fallback;
+
+  return { listings: data.map(toListing), sample: false };
 }
 
 /** Everything the team can see, published or not. */
