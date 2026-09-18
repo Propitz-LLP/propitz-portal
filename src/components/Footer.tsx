@@ -12,7 +12,7 @@ export default function Footer() {
         {/* Brand */}
         <div className="lg:pr-8">
           <Link href="/" className="inline-flex items-center">
-            <Image src={site.logo} alt="PropITZ" width={160} height={46} className="h-10 w-auto brightness-0 invert" unoptimized />
+            <Image src={site.logo} alt="PropITZ" width={478} height={813} className="h-[80px] w-auto lg:h-[100px]" unoptimized />
           </Link>
           <p className="mt-6 max-w-sm text-[15px] leading-relaxed text-slate-400">
             {site.description}

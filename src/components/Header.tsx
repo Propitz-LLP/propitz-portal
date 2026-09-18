@@ -59,9 +59,9 @@ export default function Header() {
     <header className="relative z-50">
       {/* main bar */}
       <div className="border-b border-line bg-bg">
-        <div className="container-px flex h-[78px] items-center gap-6">
+        <div className="container-px flex h-[96px] items-center gap-6 lg:h-[120px]">
           <Link href="/" aria-label="PropITZ home" className="shrink-0">
-            <Image src={site.logo} alt="PropITZ" width={478} height={141} className="h-[31px] w-auto" priority />
+            <Image src={site.logo} alt="PropITZ" width={478} height={813} className="h-[80px] w-auto lg:h-[100px]" priority />
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex">

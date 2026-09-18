@@ -12,7 +12,7 @@ export const IMG =
 
 export const site = {
   name: "PropITZ",
-  logo: `${IMG}/logo2.png`,
+  logo: `${IMG}/logo.png`,
   tagline: "One-Point Property Facilitation Platform",
   /**
    * WhatsApp only. This number is not published as a voice line; calls are
