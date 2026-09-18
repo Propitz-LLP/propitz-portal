@@ -25,7 +25,7 @@ export default function SellPage() {
         title="Sell a property"
         crumb="Sell"
         subtitle="Tell us when to call. We will explain what a sale in Tamil Nadu involves before you commit to anything."
-        image={`${IMG}/2026/03/8.jpg`}
+        image={`${IMG}/8.jpg`}
       />
 
       <section className="section">

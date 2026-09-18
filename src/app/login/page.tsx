@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import LoginForm from "@/components/LoginForm";
 import { safeRedirect } from "@/lib/redirectTo";
-import { THEME_IMG } from "@/data/site";
+import { IMG } from "@/data/site";
 
 export const metadata: Metadata = {
   title: "Log In",
@@ -23,7 +23,7 @@ export default async function LoginPage({
         title="Welcome back"
         crumb="Log In"
         subtitle="Log in to your PropITZ account to keep your contact details up to date."
-        image={`${THEME_IMG}/hero-bg-image.jpg`}
+        image={`${IMG}/hero-bg-image.jpg`}
       />
       <section className="section">
         <div className="container-px">

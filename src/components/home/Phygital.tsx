@@ -25,7 +25,7 @@ export default function Phygital() {
         <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="overflow-hidden rounded-3xl border border-line shadow-[var(--shadow-card)]">
             <Image
-              src={`${IMG}/2026/04/A2.jpeg`}
+              src={`${IMG}/A2.jpeg`}
               alt="PropITZ staff working with customers in the office and at a site"
               width={1024}
               height={687}

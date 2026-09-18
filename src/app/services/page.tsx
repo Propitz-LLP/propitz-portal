@@ -18,7 +18,7 @@ export default function ServicesPage() {
       <PageHero
         title="Our Services"
         subtitle="Eight services for registering, verifying and documenting property in Tamil Nadu. Pick the job you need done."
-        image={`${IMG}/2026/03/7.jpg`}
+        image={`${IMG}/7.jpg`}
       />
       <section className="section">
         <div className="container-px">

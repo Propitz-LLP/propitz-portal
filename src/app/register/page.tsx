@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import RegisterForm from "@/components/RegisterForm";
 import { safeRedirect } from "@/lib/redirectTo";
-import { THEME_IMG } from "@/data/site";
+import { IMG } from "@/data/site";
 
 export const metadata: Metadata = {
   title: "Create Account",
@@ -24,7 +24,7 @@ export default async function RegisterPage({
         title="Create your account"
         crumb="Register"
         subtitle="Save your contact details once, so we can reach you about your property enquiries."
-        image={`${THEME_IMG}/hero-bg-image.jpg`}
+        image={`${IMG}/hero-bg-image.jpg`}
       />
       <section className="section">
         <div className="container-px">

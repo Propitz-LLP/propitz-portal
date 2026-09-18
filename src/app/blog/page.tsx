@@ -23,7 +23,7 @@ export default function BlogPage() {
       <PageHero
         title="Insights"
         subtitle="What we are seeing in land and property transactions, and what it means for you."
-        image={`${IMG}/2026/02/post-1.jpg`}
+        image={`${IMG}/post-1.jpg`}
         crumb="Blog"
       />
       <section className="section">

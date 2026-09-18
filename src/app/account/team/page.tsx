@@ -5,7 +5,7 @@ import TeamForm from "@/components/account/TeamForm";
 import { requireAdmin } from "@/lib/roles";
 import { createClient } from "@/lib/supabase/server";
 import { removeContributor, setRole } from "./actions";
-import { THEME_IMG } from "@/data/site";
+import { IMG } from "@/data/site";
 
 export const metadata: Metadata = { title: "Who can edit" };
 
@@ -27,7 +27,7 @@ export default async function TeamPage() {
         title="Who can edit"
         crumb="Team"
         subtitle="Grant and remove access to marketplace data."
-        image={`${THEME_IMG}/hero-bg-image.jpg`}
+        image={`${IMG}/hero-bg-image.jpg`}
       />
       <section className="section">
         <div className="container-px">

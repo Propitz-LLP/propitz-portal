@@ -28,7 +28,7 @@ export const posts: BlogPost[] = [
       "The next 25 years could demand more new land than humanity has ever built on — several times over",
     date: "17 Sep, 2026",
     author: "PropITZ",
-    image: `${IMG}/2026/04/Land-Measurement-Conversion-1.jpeg`,
+    image: `${IMG}/Land-Measurement-Conversion-1.jpeg`,
     excerpt:
       "Housing, farmland and energy all want the same flat, watered, connected ground. Why rising total demand does not lift every parcel, and where land value really comes from.",
     body: [
@@ -57,7 +57,7 @@ export const posts: BlogPost[] = [
     title: "Sir, Your Land Was Already Sold",
     date: "17 Sep, 2026",
     author: "PropITZ",
-    image: `${IMG}/2026/04/EC-Patta-Chitta-Guideline-Value-GV-1.jpeg`,
+    image: `${IMG}/EC-Patta-Chitta-Guideline-Value-GV-1.jpeg`,
     excerpt:
       "Owners of land held untouched for decades are finding it already registered to someone else. How impersonation fraud works in Tamil Nadu, and five steps to protect land you hold.",
     body: [
@@ -113,7 +113,7 @@ export const posts: BlogPost[] = [
     title: "Price identification in property transactions",
     date: "17 Sep, 2026",
     author: "PropITZ",
-    image: `${IMG}/2026/04/Negotiation-Deal-Support.webp`,
+    image: `${IMG}/Negotiation-Deal-Support.webp`,
     excerpt:
       "Most property buyers in India are winning the negotiation but losing the deal. Why the price itself is often not real, and how to build a defensible price range instead.",
     body: [

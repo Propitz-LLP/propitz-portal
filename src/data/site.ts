@@ -6,12 +6,13 @@
 /*  testimonials without the same confirmation.                        */
 /* ------------------------------------------------------------------ */
 
-export const IMG = "https://propitz.com/wp-content/uploads";
-export const THEME_IMG = "https://propitz.com/wp-content/themes/shadez/images";
+/** Site media, hosted in the Supabase Storage `assets` bucket (`images/` folder). */
+export const IMG =
+  "https://vkrlvjnsunciemrxtlfs.supabase.co/storage/v1/object/public/assets/images";
 
 export const site = {
   name: "PropITZ",
-  logo: `${IMG}/2026/02/logo2.png`,
+  logo: `${IMG}/logo2.png`,
   tagline: "One-Point Property Facilitation Platform",
   /**
    * WhatsApp only. This number is not published as a voice line; calls are
@@ -50,8 +51,8 @@ export const nav: NavItem[] = [
   { label: "Contact Us", href: "/contact-us" },
 ];
 
-export const heroImage = `${THEME_IMG}/hero-bg-image.jpg`;
-export const heroVideo = `${IMG}/2026/03/V1.mp4`;
+export const heroImage = `${IMG}/hero-bg-image.jpg`;
+export const heroVideo = `${IMG}/V1.mp4`;
 
 /**
  * Verified figures only. A customer count, team size and network size are
@@ -64,10 +65,10 @@ export const stats = [
 
 /* Free tools cards on the homepage (dark section) */
 export const resourceCards = [
-  { title: "Stamp Duty & Registration Fee Calculator", href: "/resources/stamp-duty-registration-fee-calculator", image: `${IMG}/2026/04/EC-Patta-Chitta-Guideline-Value-GV.jpeg` },
-  { title: "Land Area Converter", href: "/resources/land-measurement-conversion", image: `${IMG}/2026/04/Land-Measurement-Conversion-1.jpeg` },
-  { title: "Sub-Registrar Office (SRO) Information – Tamil Nadu", href: "/resources/sub-registrar-office-sro-information-tamil-nadu", image: `${IMG}/2026/04/Sub-Registrar-Office-SRO-Information.jpeg` },
-  { title: "EC & Patta Chitta & GV", href: "/resources/ec-patta-chitta-gv", image: `${IMG}/2026/04/EC-Patta-Chitta-Guideline-Value-GV-1.jpeg` },
+  { title: "Stamp Duty & Registration Fee Calculator", href: "/resources/stamp-duty-registration-fee-calculator", image: `${IMG}/EC-Patta-Chitta-Guideline-Value-GV.jpeg` },
+  { title: "Land Area Converter", href: "/resources/land-measurement-conversion", image: `${IMG}/Land-Measurement-Conversion-1.jpeg` },
+  { title: "Sub-Registrar Office (SRO) Information – Tamil Nadu", href: "/resources/sub-registrar-office-sro-information-tamil-nadu", image: `${IMG}/Sub-Registrar-Office-SRO-Information.jpeg` },
+  { title: "EC & Patta Chitta & GV", href: "/resources/ec-patta-chitta-gv", image: `${IMG}/EC-Patta-Chitta-Guideline-Value-GV-1.jpeg` },
 ];
 
 /** Homepage FAQs, drawn from the launch FAQ set PropITZ approved. */

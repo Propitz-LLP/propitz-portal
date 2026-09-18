@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { THEME_IMG, whatsappHref } from "@/data/site";
+import { IMG, whatsappHref } from "@/data/site";
 import { requestHref } from "@/data/leads";
 import Reveal from "./Reveal";
 
@@ -12,7 +12,7 @@ export default function CTASection({
     <section className="relative overflow-hidden">
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${THEME_IMG}/2.jpeg)` }}
+        style={{ backgroundImage: `url(${IMG}/2.jpeg)` }}
         aria-hidden
       />
       <div className="absolute inset-0 bg-gradient-to-r from-brand-dark/95 to-brand/85" aria-hidden />

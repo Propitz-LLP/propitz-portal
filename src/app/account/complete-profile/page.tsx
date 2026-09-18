@@ -4,7 +4,7 @@ import PageHero from "@/components/PageHero";
 import CompleteProfileForm from "@/components/CompleteProfileForm";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { THEME_IMG } from "@/data/site";
+import { IMG } from "@/data/site";
 
 export const metadata: Metadata = {
   title: "Complete your profile",
@@ -34,7 +34,7 @@ export default async function CompleteProfilePage() {
         title="One last thing"
         crumb="Complete your profile"
         subtitle="We use your mobile number to reach you about your property enquiries."
-        image={`${THEME_IMG}/hero-bg-image.jpg`}
+        image={`${IMG}/hero-bg-image.jpg`}
       />
       <section className="section">
         <div className="container-px">

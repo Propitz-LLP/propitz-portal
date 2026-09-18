@@ -20,7 +20,7 @@ export const resources: Resource[] = [
       "Estimate stamp duty and registration fee for a sale deed in Tamil Nadu, including the registration fee concession for women purchasers.",
     hero:
       "Estimate the stamp duty and registration fee on a standard sale deed in Tamil Nadu before you book registration.",
-    image: `${IMG}/2026/04/EC-Patta-Chitta-Guideline-Value-GV.jpeg`,
+    image: `${IMG}/EC-Patta-Chitta-Guideline-Value-GV.jpeg`,
     sections: [
       {
         heading: "What this calculator covers",
@@ -45,7 +45,7 @@ export const resources: Resource[] = [
       "Convert land area between square feet, cents, grounds, acres and hectares, using the standard definition of each unit used in Tamil Nadu.",
     hero:
       "Understand common land measurement units used in India such as square feet (sq ft), square yards (sq yd), and acres.",
-    image: `${IMG}/2026/02/project-image-1.jpg`,
+    image: `${IMG}/project-image-1.jpg`,
     sections: [
       {
         heading: "Why land measurement matters",
@@ -77,7 +77,7 @@ export const resources: Resource[] = [
       "What happens at a Tamil Nadu Sub-Registrar Office, what to prepare before your visit, and where PropITZ can help with the process.",
     hero:
       "Every property transaction must be registered at the relevant Sub-Registrar Office (SRO). PropITZ helps you understand the process, requirements and preparation.",
-    image: `${IMG}/2026/02/project-image-2.jpg`,
+    image: `${IMG}/project-image-2.jpg`,
     sections: [
       {
         heading: "How PropITZ helps with SRO processes",
@@ -101,7 +101,7 @@ export const resources: Resource[] = [
       "What an Encumbrance Certificate, Patta, Chitta and guideline value are, and why each one matters when you buy property in Tamil Nadu.",
     hero:
       "An Encumbrance Certificate helps you check the ownership history of a property and whether there are any legal or financial liabilities attached to it.",
-    image: `${IMG}/2026/02/project-image-3.jpg`,
+    image: `${IMG}/project-image-3.jpg`,
     sections: [
       {
         heading: "Three critical property documents",
@@ -124,7 +124,7 @@ export const resources: Resource[] = [
       "How PropITZ introduces you to independent advocates, architects, engineers, surveyors and accountants matched to your property task.",
     hero:
       "Connect with independent professionals — legal advisors, architects, engineers, contractors, accountants, company secretaries and surveyors — based on your specific property needs.",
-    image: `${IMG}/2026/02/project-image-4.jpg`,
+    image: `${IMG}/project-image-4.jpg`,
     sections: [
       {
         heading: "A professional network, matched to your need",

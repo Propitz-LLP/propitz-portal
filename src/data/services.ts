@@ -65,8 +65,8 @@ export const services: Service[] = [
       "The right Sub-Registrar Office, documents checked first, and execution-day assistance where included.",
     outcome:
       "PropITZ helps coordinate the property registration process from document readiness to execution-day support. We help identify the applicable Sub-Registrar Office, organise the required documents, coordinate relevant professionals where needed and guide you through the registration workflow.",
-    image: `${IMG}/2026/04/EC-Patta-Chitta-Guideline-Value-GV.jpeg`,
-    icon: `${IMG}/2026/02/icon-service-item-1.svg`,
+    image: `${IMG}/EC-Patta-Chitta-Guideline-Value-GV.jpeg`,
+    icon: `${IMG}/icon-service-item-1.svg`,
     handles: [
       "Identifying the Sub-Registrar Office with jurisdiction over your property",
       "Organising the documents the registration requires, and flagging gaps before the appointment",
@@ -116,8 +116,8 @@ export const services: Service[] = [
       "The exact documents your property task needs, in the order the office asks for them.",
     outcome:
       "Buying, selling, registering or verifying a property can require different document sets. PropITZ identifies the documents applicable to your property and transaction, helps organise them in the right order and highlights missing or inconsistent records before they create delays.",
-    image: `${IMG}/2026/02/service2.jpg`,
-    icon: `${IMG}/2026/02/icon-service-item-2.svg`,
+    image: `${IMG}/service-2.jpg`,
+    icon: `${IMG}/icon-service-item-2.svg`,
     handles: [
       "Identifying the document set that applies to your property and transaction",
       "Organising your documents in the order they will be needed",
@@ -167,8 +167,8 @@ export const services: Service[] = [
       "Title, documents and approvals checked by independent professionals before you commit.",
     outcome:
       "PropITZ coordinates the review of the property records and professional checks required to understand potential issues before a purchase or transaction proceeds.",
-    image: `${IMG}/2026/02/service3.jpg`,
-    icon: `${IMG}/2026/02/icon-service-item-3-1.svg`,
+    image: `${IMG}/service-3.jpg`,
+    icon: `${IMG}/icon-service-item-3-1.svg`,
     handles: [
       "Agreeing the verification scope for your property and transaction",
       "Collecting the property records the review needs",
@@ -229,8 +229,8 @@ export const services: Service[] = [
       "The right office, the right appointment and the right paperwork before your SRO visit.",
     outcome:
       "PropITZ helps identify the applicable Sub-Registrar Office, understand the process, prepare the required documents and coordinate the procedural steps involved before and during your SRO visit.",
-    image: `${IMG}/2026/02/service4.avif`,
-    icon: `${IMG}/2026/02/icon-service-item-4.svg`,
+    image: `${IMG}/service4.avif`,
+    icon: `${IMG}/icon-service-item-4.svg`,
     handles: [
       "Identifying the Sub-Registrar Office that holds jurisdiction over your property",
       "Explaining the process and the appointment steps",
@@ -276,7 +276,7 @@ export const services: Service[] = [
       "A property question turned into a clear decision path, and the right professional to speak to next.",
     outcome:
       "Whether you are evaluating a purchase, preparing to sell, dealing with a documentation issue or planning a property transaction, PropITZ helps structure the requirement, identify the issues that need attention and coordinate the right specialist inputs.",
-    image: `${IMG}/2026/02/service5.avif`,
+    image: `${IMG}/service5.avif`,
     handles: [
       "Structuring your requirement into clear questions and options",
       "Identifying the issues that need attention before you decide",
@@ -331,7 +331,7 @@ export const services: Service[] = [
       "Introductions to the right independent lawyer, architect, surveyor or consultant.",
     outcome:
       "PropITZ helps connect property owners, buyers and sellers with relevant professionals based on the requirement, property location and scope of work.",
-    image: `${IMG}/2026/02/service6.avif`,
+    image: `${IMG}/service6.avif`,
     handles: [
       "Understanding your requirement, property location and scope of work",
       "Matching the requirement to the right type of professional",
@@ -388,7 +388,7 @@ export const services: Service[] = [
       "The right order for due diligence, payments, agreements and execution, before money moves.",
     outcome:
       "PropITZ helps organise the sequence of a property transaction so that due diligence, advance payments, agreements, documentation, professional inputs and final execution happen in the right order.",
-    image: `${IMG}/2026/04/Transactional-Structuring-Support.jpg`,
+    image: `${IMG}/Transactional-Structuring-Support.jpg`,
     handles: [
       "Mapping the order of due diligence, agreements, payments and execution for your transaction",
       "Identifying the professional and legal inputs each stage needs",
@@ -447,7 +447,7 @@ export const services: Service[] = [
       "Prepared on price, terms and paperwork before you sit down to negotiate.",
     outcome:
       "Property negotiations involve more than the headline price. PropITZ helps customers prepare for discussions around price, payment timing, documentation conditions, advance terms, timelines and other transaction milestones.",
-    image: `${IMG}/2026/04/Negotiation-Deal-Support.webp`,
+    image: `${IMG}/Negotiation-Deal-Support.webp`,
     handles: [
       "Helping you prepare your position before discussions begin",
       "Identifying which terms depend on documents or due diligence still pending",

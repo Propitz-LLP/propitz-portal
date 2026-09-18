@@ -5,7 +5,7 @@ import PageHero from "@/components/PageHero";
 import ProfessionalForm from "@/components/account/ProfessionalForm";
 import { requireContributor } from "@/lib/roles";
 import { fetchProfessional } from "@/lib/professionals";
-import { THEME_IMG } from "@/data/site";
+import { IMG } from "@/data/site";
 
 export const metadata: Metadata = { title: "Edit professional" };
 
@@ -27,7 +27,7 @@ export default async function EditProfessionalPage({
         title="Edit professional"
         crumb={professional.name}
         subtitle="Internal list. These details are never published."
-        image={`${THEME_IMG}/hero-bg-image.jpg`}
+        image={`${IMG}/hero-bg-image.jpg`}
       />
       <section className="section">
         <div className="container-px">

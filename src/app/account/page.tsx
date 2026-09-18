@@ -5,7 +5,7 @@ import PageHero from "@/components/PageHero";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { signOut } from "@/app/auth/actions";
-import { THEME_IMG } from "@/data/site";
+import { IMG } from "@/data/site";
 import { splitE164 } from "@/lib/phone";
 import ProfileForm from "@/components/ProfileForm";
 import { getViewer } from "@/lib/roles";
@@ -42,7 +42,7 @@ export default async function AccountPage() {
       <PageHero
         title="My Account"
         crumb="Account"
-        image={`${THEME_IMG}/hero-bg-image.jpg`}
+        image={`${IMG}/hero-bg-image.jpg`}
       />
       <section className="section">
         <div className="container-px">

@@ -4,7 +4,7 @@ import PageHero from "@/components/PageHero";
 import { requireContributor } from "@/lib/roles";
 import { fetchManagedListings } from "@/lib/listings";
 import { deleteListing, togglePublished } from "./actions";
-import { THEME_IMG } from "@/data/site";
+import { IMG } from "@/data/site";
 
 export const metadata: Metadata = { title: "Manage property listings" };
 
@@ -20,7 +20,7 @@ export default async function ManageListingsPage() {
         title="Property Listings"
         crumb="Property Listings"
         subtitle="Add a property, correct one, or take it off the marketplace."
-        image={`${THEME_IMG}/hero-bg-image.jpg`}
+        image={`${IMG}/hero-bg-image.jpg`}
       />
       <section className="section">
         <div className="container-px">

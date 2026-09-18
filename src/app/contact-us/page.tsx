@@ -62,7 +62,7 @@ export default async function ContactPage({
       <PageHero
         title="Contact Us"
         subtitle="Tell us what you are trying to do with a property. We reply by WhatsApp, callback or email, whichever you prefer."
-        image={`${IMG}/2026/03/8.jpg`}
+        image={`${IMG}/8.jpg`}
       />
 
       <section className="section">

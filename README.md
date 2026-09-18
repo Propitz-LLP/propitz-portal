@@ -68,13 +68,10 @@ Fonts (Poppins for headings, Inter for body) are loaded via `<link>` in `layout.
 
 ## Images & media
 
-Images, the hero video and service photos are referenced directly from the live
-site (`https://propitz.com/wp-content/...`) — configured in `next.config.ts`
-(`images.unoptimized = true` + `remotePatterns`). They load automatically when
-you run the app with internet access.
-
-To self-host instead: download the assets into `public/`, then swap the
-`https://propitz.com/...` URLs in `src/data/*` for local `/`-paths.
+Images, the hero video and service photos are hosted in Supabase Storage
+(public `assets` bucket, `images/` folder) and referenced through the `IMG`
+constant in `src/data/site.ts`. To add or replace media, upload the file to
+`assets/images/` and reference it as `${IMG}/<file-name>`.
 
 ## Notes
 

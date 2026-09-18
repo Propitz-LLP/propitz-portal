@@ -6,7 +6,7 @@ import { requireContributor } from "@/lib/roles";
 import { fetchProfessionals } from "@/lib/professionals";
 import { tradeLabel } from "@/data/professionals";
 import { deleteProfessional, toggleActive } from "./actions";
-import { THEME_IMG } from "@/data/site";
+import { IMG } from "@/data/site";
 
 export const metadata: Metadata = { title: "Property Professionals" };
 
@@ -20,7 +20,7 @@ export default async function ProfessionalsPage() {
         title="Property Professionals"
         crumb="Property Professionals"
         subtitle="The professionals PropITZ works with. Publish the ones who agreed to appear on the marketplace."
-        image={`${THEME_IMG}/hero-bg-image.jpg`}
+        image={`${IMG}/hero-bg-image.jpg`}
       />
       <section className="section">
         <div className="container-px">

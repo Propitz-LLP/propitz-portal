@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import ListingForm from "@/components/account/ListingForm";
 import { requireContributor } from "@/lib/roles";
-import { THEME_IMG } from "@/data/site";
+import { IMG } from "@/data/site";
 
 export const metadata: Metadata = { title: "Add a property listing" };
 
@@ -15,7 +15,7 @@ export default async function NewListingPage() {
         title="Add a property listing"
         crumb="New property listing"
         subtitle="It appears on the marketplace as soon as you save."
-        image={`${THEME_IMG}/hero-bg-image.jpg`}
+        image={`${IMG}/hero-bg-image.jpg`}
       />
       <section className="section">
         <div className="container-px">

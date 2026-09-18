@@ -18,17 +18,17 @@ export const metadata: Metadata = {
 const pillars = [
   {
     title: "Our Mission",
-    icon: `${IMG}/2026/02/icon-approach-item-1.svg`,
+    icon: `${IMG}/icon-approach-item-1.svg`,
     text: "To simplify property ownership and transactions through clear processes, coordinated professional support and accessible digital and on-ground assistance.",
   },
   {
     title: "Our Vision",
-    icon: `${IMG}/2026/02/icon-approach-item-2.svg`,
+    icon: `${IMG}/icon-approach-item-2.svg`,
     text: "To build a trusted property-services platform starting in Tamil Nadu and expanding region by region across India, making property processes more transparent, organised and easier to navigate.",
   },
   {
     title: "Our Values",
-    icon: `${IMG}/2026/02/icon-approach-item-3.svg`,
+    icon: `${IMG}/icon-approach-item-3.svg`,
     text: "Transparency, integrity and clear responsibility: we coordinate the process and connect you with independent professionals, and we say plainly who is responsible for what.",
   },
 ];
@@ -53,7 +53,7 @@ export default function AboutPage() {
       <PageHero
         title="About PropITZ"
         subtitle="Property processes can be confusing. PropITZ helps you understand the steps, organise your documents, and coordinate with the right professionals."
-        image={`${IMG}/2026/04/Land-Measurement-Conversion-1.jpeg`}
+        image={`${IMG}/Land-Measurement-Conversion-1.jpeg`}
       />
 
       {/* Intro */}
@@ -61,7 +61,7 @@ export default function AboutPage() {
         <div className="container-px grid gap-12 lg:grid-cols-2 lg:items-center">
           <Reveal className="relative">
             <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-brand-50">
-              <Image src={`${IMG}/2026/04/about1.png`} alt="About PropITZ" fill className="object-cover" sizes="(max-width:1024px) 100vw, 50vw" />
+              <Image src={`${IMG}/about1.png`} alt="About PropITZ" fill className="object-cover" sizes="(max-width:1024px) 100vw, 50vw" />
             </div>
           </Reveal>
           <div>
