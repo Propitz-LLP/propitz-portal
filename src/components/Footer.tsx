@@ -28,7 +28,7 @@ export default function Footer() {
               className="inline-flex items-center gap-2.5 text-white transition-colors hover:text-accent"
             >
               <IconWhatsApp size={16} />
-              WhatsApp {site.whatsappDisplay}
+              Chat on WhatsApp
             </a>
             <a
               href={`mailto:${site.email}`}

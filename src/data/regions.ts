@@ -1,3 +1,5 @@
+import { site } from "./site";
+
 /* ------------------------------------------------------------------ */
 /*  Service regions.                                                   */
 /*                                                                     */
@@ -19,6 +21,8 @@ export type Region = {
   lon: number;
   /** Walk-in address, where we have one. */
   address?: string;
+  /** Google Maps link for that address, when it resolves to a known place. */
+  mapsUrl?: string;
   /** Areas this centre serves, matched against typed input. */
   localities: string[];
   /** Inclusive pincode ranges routed to this centre. */
@@ -33,6 +37,7 @@ export const regions: Region[] = [
     lon: 80.2707,
     address:
       "Villa No 4, Sri Harsha, 30, Church Main Rd, Perungudi, Chennai, Tamil Nadu 600096",
+    mapsUrl: site.office.mapsUrl,
     localities: [
       "Chennai", "Adyar", "Anna Nagar", "Alwarpet", "Besant Nagar", "Egmore",
       "Guindy", "Kilpauk", "Kodambakkam", "Mylapore", "Nungambakkam", "Perungudi",

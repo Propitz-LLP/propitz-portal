@@ -175,7 +175,7 @@ export default function AboutPage() {
                   rel="noopener noreferrer"
                   className="underline-offset-4 hover:text-brand hover:underline"
                 >
-                  WhatsApp {site.whatsappDisplay}
+                  Chat on WhatsApp
                 </a>
                 <br />
                 {site.email}

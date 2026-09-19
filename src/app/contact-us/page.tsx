@@ -14,11 +14,11 @@ export const metadata: Metadata = pageMetadata({
   path: "/contact-us",
 });
 
-/** The number is WhatsApp only; it is never shown as a call line. */
+/** WhatsApp is offered as a link only; the number itself is never displayed. */
 const details = [
   {
     label: "WhatsApp",
-    value: site.whatsappDisplay,
+    value: "Chat with us on WhatsApp",
     href: whatsappHref("Hi PropITZ, I need help with a property."),
     external: true,
     icon: (
@@ -37,7 +37,7 @@ const details = [
   {
     label: "Office",
     value: site.address,
-    href: "https://maps.google.com/?q=Perungudi+Chennai",
+    href: site.office.mapsUrl,
     external: true,
     icon: (
       <>
@@ -114,14 +114,34 @@ export default async function ContactPage({
             title="Find us in Chennai"
             subtitle="Walk in at our Perungudi office, or reach us by WhatsApp or email."
           />
-          <div className="mt-10 overflow-hidden rounded-3xl ring-1 ring-line">
+          <div className="relative mt-10 overflow-hidden rounded-3xl ring-1 ring-line">
             <iframe
               title="PropITZ office location"
-              src="https://www.google.com/maps?q=Perungudi,+Chennai,+Tamil+Nadu+600096&output=embed"
+              src={site.office.embedUrl}
               className="h-[420px] w-full border-0"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />
+            {/* Google only draws its place card for named places; the office is
+                a plain pin, so this card provides "open in Maps". No separate
+                directions link: Google snaps a directions destination here to
+                the neighbouring business's listing and shows its name. */}
+            <div className="absolute left-3 top-3 right-3 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl bg-white p-3.5 shadow-[0_2px_10px_rgba(20,28,39,0.18)] sm:right-auto sm:max-w-sm">
+              <div className="min-w-0 grow">
+                <p className="text-sm font-semibold text-ink">PropITZ office</p>
+                <p className="text-xs leading-snug text-muted">Villa No 4, Sri Harsha, 30, Church Main Rd, Perungudi</p>
+              </div>
+              <div className="flex gap-2">
+                <a
+                  href={site.office.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-brand px-3.5 py-2 text-xs font-semibold text-white transition-colors hover:bg-brand-dark"
+                >
+                  Open in Google Maps
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>

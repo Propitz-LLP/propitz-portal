@@ -13,7 +13,7 @@ import {
   PRICING_NOTE,
   TIMELINE_NOTE,
 } from "@/data/services";
-import { site, whatsappHref } from "@/data/site";
+import { whatsappHref } from "@/data/site";
 import { requestHref, type RequirementKey } from "@/data/leads";
 import VendorPanelNotice from "@/components/VendorPanelNotice";
 
@@ -271,7 +271,7 @@ export default async function ServiceDetailPage({
                 className="btn-outline mt-3 w-full gap-2 py-3.5 text-[15px]"
               >
                 <IconWhatsApp size={17} />
-                WhatsApp {site.whatsappDisplay}
+                Chat on WhatsApp
               </a>
               <Link
                 href="/contact-us"

@@ -15,15 +15,26 @@ export const site = {
   logo: `${IMG}/logo.png`,
   tagline: "One-Point Property Facilitation Platform",
   /**
-   * WhatsApp only. This number is not published as a voice line; calls are
-   * arranged as callbacks from a Start a Request or Sell enquiry.
+   * WhatsApp only, and never displayed on the site: every mention is a
+   * "Chat on WhatsApp" link (see whatsappHref). Calls are arranged as
+   * callbacks from a Start a Request or Sell enquiry.
    */
   whatsapp: "918925876765",
-  whatsappDisplay: "+91 89258 76765",
   email: "enquire@propitz.com",
   /** The operating company behind PropITZ. */
   legalEntity: "Peri Gold Developers Pvt Ltd",
   /** Registered office, and today the only office open to visitors. */
+  /**
+   * The office pin: the coordinates of the existing Google Maps pin at this
+   * building (it belongs to another business, Fresh Minds Services), used as
+   * plain coordinates so no other business name appears. 19 September 2026.
+   */
+  office: {
+    lat: 12.9624605,
+    lng: 80.2436568,
+    mapsUrl: "https://maps.google.com/?q=12.9624605,80.2436568",
+    embedUrl: "https://www.google.com/maps?q=12.9624605,80.2436568&z=17&output=embed",
+  },
   address:
     "Villa No 4, Sri Harsha, 30, Church Main Rd, Perungudi, Chennai, Tamil Nadu 600096",
   description:

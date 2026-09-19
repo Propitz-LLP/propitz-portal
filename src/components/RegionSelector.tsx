@@ -105,7 +105,7 @@ export default function RegionSelector({ showLabel = true }: { showLabel?: boole
             <p>
               Walk in: {centre.address}{" "}
               <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(centre.address)}`}
+                href={centre.mapsUrl ?? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(centre.address)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-semibold text-brand"
