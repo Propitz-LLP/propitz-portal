@@ -34,19 +34,42 @@ export default async function MarketplaceTeaser() {
       <BuySellSwitch className="mb-5" />
 
       <div className="mb-6 flex flex-wrap items-center gap-2.5">
-        <div className="flex min-h-[52px] min-w-[280px] grow items-center gap-2.5 rounded-full border border-line-strong bg-surface px-5 text-faint sm:grow-0">
-          <IconSearch size={16} />
-          <span className="text-sm">Locality, corridor or survey number</span>
-        </div>
+        {/* A plain GET form, so the search works before any JavaScript loads:
+            it opens the marketplace with ?q= applied. */}
+        <form
+          action="/property-marketplace"
+          method="get"
+          role="search"
+          className="flex min-h-[52px] min-w-[280px] grow items-center gap-2.5 rounded-full border border-line-strong bg-surface pl-5 pr-1.5 focus-within:border-brand sm:grow-0"
+        >
+          <IconSearch size={16} className="shrink-0 text-faint" />
+          <input
+            type="search"
+            name="q"
+            aria-label="Search listings"
+            placeholder="Locality, corridor or property type"
+            className="min-w-0 grow bg-transparent text-sm text-ink placeholder:text-faint focus:outline-none"
+          />
+          <button type="submit" className="shrink-0 rounded-full bg-brand px-4 py-2 text-[13px] font-semibold text-white">
+            Search
+          </button>
+        </form>
         {propertyTypes.map((t) => (
-          <span key={t.key} className={t.key === "all" ? "chip-filter-on" : "chip-filter"}>
+          <Link
+            key={t.key}
+            href={t.key === "all" ? "/property-marketplace" : `/property-marketplace?type=${t.key}`}
+            className={t.key === "all" ? "chip-filter-on" : "chip-filter"}
+          >
             {t.label}
-          </span>
+          </Link>
         ))}
-        <span className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-ok bg-ok-50 px-4 text-[13px] font-semibold text-ok">
+        <Link
+          href="/property-marketplace?check=verified"
+          className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-ok bg-ok-50 px-4 text-[13px] font-semibold text-ok"
+        >
           <IconCheck size={14} />
           Verified only
-        </span>
+        </Link>
         {/*
           Map view (disabled), matching the marketplace page. There is no map
           yet, so the button only reloaded the listings.

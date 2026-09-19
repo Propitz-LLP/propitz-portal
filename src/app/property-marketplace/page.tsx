@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 import ListingBrowser from "@/components/marketplace/ListingBrowser";
 import SpecialistBrowser from "@/components/marketplace/SpecialistBrowser";
+import MarketplaceViews from "@/components/marketplace/MarketplaceViews";
 import SectionHeading from "@/components/SectionHeading";
 import Reveal from "@/components/Reveal";
 import CTASection from "@/components/CTASection";
@@ -10,6 +11,11 @@ import { requestHref } from "@/data/leads";
 import { specialistCaveat } from "@/data/marketplace";
 import { fetchPublicListings } from "@/lib/listings";
 import { fetchPublishedProfessionals } from "@/lib/professionals";
+
+const TITLES = {
+  property: "Property Listings in Chennai with Documents Reviewed",
+  specialists: "Property Professionals: Advocates, Engineers, Architects & More",
+};
 
 export async function generateMetadata({
   searchParams,
@@ -21,13 +27,13 @@ export async function generateMetadata({
   // Both tabs share one route, so each gets its own search listing.
   return view === "specialists"
     ? pageMetadata({
-        title: "Property Professionals: Advocates, Engineers, Architects & More",
+        title: TITLES.specialists,
         description:
           "Get introduced to independent advocates, engineers, architects, tax consultants, documentation specialists and civil contractors for your property in Tamil Nadu.",
         path: "/property-marketplace?view=specialists",
       })
     : pageMetadata({
-        title: "Property Listings in Chennai with Documents Reviewed",
+        title: TITLES.property,
         description:
           "Buy or sell property in Chennai, Chengalpattu and Tiruvallur. Every listing shows which documents have been reviewed before it goes live.",
         path: "/property-marketplace",
@@ -65,69 +71,68 @@ const feeModel = [
   { t: "Professional access", d: "Introductions to relevant independent professionals." },
 ];
 
-export default async function MarketplacePage({
-  searchParams,
-}: {
-  // `searchParams` is a promise in this Next.js version.
-  searchParams: Promise<{ view?: string }>;
-}) {
-  const { view } = await searchParams;
-  const specialists = view === "specialists";
-  const listings = specialists ? [] : await fetchPublicListings();
-  const professionals = specialists ? await fetchPublishedProfessionals() : [];
+/**
+ * Both halves are fetched together (in parallel, so no slower than one)
+ * and rendered on the server; MarketplaceViews shows the one named by
+ * ?view=. Switching tabs then happens in the browser with no request.
+ */
+export default async function MarketplacePage() {
+  const [listings, professionals] = await Promise.all([
+    fetchPublicListings(),
+    fetchPublishedProfessionals(),
+  ]);
+
 
   // The sections below the browser are specific to the half being shown —
   // the buy/sell workflow and fee model say nothing about an introduction.
-  if (specialists) {
-    return (
-      <>
-        <SpecialistBrowser professionals={professionals} />
+  const specialistView = (
+    <>
+      <SpecialistBrowser professionals={professionals} />
 
-        <section className="section bg-surface">
-          <div className="container-px">
-            <SectionHeading
-              eyebrow="How It Works"
-              title="How an introduction works"
-              subtitle="Three steps from a question to the right professional."
-            />
-            <div className="mt-14 grid gap-6 sm:grid-cols-3">
-              {introduction.map((s, i) => (
-                <Reveal key={s.t} delay={i * 90}>
-                  <div className="card relative h-full p-6">
-                    <span className="font-display text-3xl font-extrabold text-brand/20">
-                      0{i + 1}
-                    </span>
-                    <h3 className="mt-2 text-base text-ink">{s.t}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-body">{s.d}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-            <p className="mt-8 max-w-[80ch] text-sm italic leading-relaxed text-body">
-              {specialistCaveat}
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a href={requestHref("professional")} className="btn-primary">
-                Request an introduction
-              </a>
-              <a
-                href={whatsappHref("Hi PropITZ, I am looking for a property professional.")}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-dark"
-              >
-                WhatsApp
-              </a>
-            </div>
+      <section className="section bg-surface">
+        <div className="container-px">
+          <SectionHeading
+            eyebrow="How It Works"
+            title="How an introduction works"
+            subtitle="Three steps from a question to the right professional."
+          />
+          <div className="mt-14 grid gap-6 sm:grid-cols-3">
+            {introduction.map((s, i) => (
+              <Reveal key={s.t} delay={i * 90}>
+                <div className="card relative h-full p-6">
+                  <span className="font-display text-3xl font-extrabold text-brand/20">
+                    0{i + 1}
+                  </span>
+                  <h3 className="mt-2 text-base text-ink">{s.t}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-body">{s.d}</p>
+                </div>
+              </Reveal>
+            ))}
           </div>
-        </section>
+          <p className="mt-8 max-w-[80ch] text-sm italic leading-relaxed text-body">
+            {specialistCaveat}
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a href={requestHref("professional")} className="btn-primary">
+              Request an introduction
+            </a>
+            <a
+              href={whatsappHref("Hi PropITZ, I am looking for a property professional.")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-dark"
+            >
+              WhatsApp
+            </a>
+          </div>
+        </div>
+      </section>
 
-        <CTASection />
-      </>
-    );
-  }
+      <CTASection />
+    </>
+  );
 
-  return (
+  const propertyView = (
     <>
       <ListingBrowser listings={listings} />
 
@@ -219,5 +224,16 @@ export default async function MarketplacePage({
 
       <CTASection />
     </>
+  );
+
+  return (
+    <MarketplaceViews
+      property={propertyView}
+      specialists={specialistView}
+      titles={{
+        property: `${TITLES.property} — PropITZ`,
+        specialists: `${TITLES.specialists} — PropITZ`,
+      }}
+    />
   );
 }

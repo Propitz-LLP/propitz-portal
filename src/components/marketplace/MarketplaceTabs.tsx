@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import type { MouseEvent } from "react";
 import { IconBuy, IconPerson } from "@/components/Icon";
 
 /**
@@ -14,6 +18,9 @@ import { IconBuy, IconPerson } from "@/components/Icon";
  *
  * The active tab lives in the URL (?view=specialists) rather than in state,
  * so either half can be linked to directly and the page stays server-rendered.
+ * On the marketplace itself both halves are already loaded (see
+ * MarketplaceViews), so a click only pushes the new URL: instant, and Back
+ * still steps between tabs. Elsewhere (the homepage) they are plain links.
  */
 export const MARKETPLACE_TABS = [
   {
@@ -39,6 +46,16 @@ export default function MarketplaceTabs({
   active: MarketplaceTab;
   className?: string;
 }) {
+  const pathname = usePathname();
+  const onMarketplace = pathname === "/property-marketplace";
+
+  const select = (e: MouseEvent<HTMLAnchorElement>, href: string, on: boolean) => {
+    // Leave new-tab / new-window clicks to the browser.
+    if (!onMarketplace || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    if (!on) window.history.pushState(null, "", href);
+  };
+
   return (
     <nav
       aria-label="Marketplace sections"
@@ -50,6 +67,7 @@ export default function MarketplaceTabs({
           <Link
             key={t.key}
             href={t.href}
+            onClick={(e) => select(e, t.href, on)}
             aria-current={on ? "page" : undefined}
             className={`-mb-px flex items-center gap-2 border-b-2 px-4 py-3 text-[15px] transition-colors sm:px-5 ${
               on

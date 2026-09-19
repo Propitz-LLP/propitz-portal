@@ -168,7 +168,7 @@ export default function Header() {
                       .map((t) => (
                         <Link
                           key={t.key}
-                          href="/property-marketplace"
+                          href={`/property-marketplace?type=${t.key}`}
                           onClick={() => setMegaFor(null)}
                           className="rounded-[10px] px-2.5 py-2 text-[13.5px] text-body transition-colors hover:bg-bg-alt hover:text-brand"
                         >
@@ -176,7 +176,7 @@ export default function Header() {
                         </Link>
                       ))}
                     <Link
-                      href="/property-marketplace"
+                      href="/property-marketplace?check=verified"
                       onClick={() => setMegaFor(null)}
                       className="flex items-center gap-1.5 rounded-[10px] px-2.5 py-2 text-[13.5px] font-semibold text-ok"
                     >
@@ -272,7 +272,7 @@ export default function Header() {
                 .map((t) => (
                   <Link
                     key={t.key}
-                    href="/property-marketplace"
+                    href={`/property-marketplace?type=${t.key}`}
                     onClick={() => setDrawerFor(null)}
                     className="chip-filter"
                   >

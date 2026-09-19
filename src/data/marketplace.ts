@@ -33,13 +33,53 @@ export const propertyTypes = [
   { key: "agri", label: "Agricultural" },
 ];
 
-export const corridors = ["OMR", "GST Road", "ECR", "Chennai city"];
+/**
+ * Corridors, matched against a listing's locality text: the corridor's own
+ * name or a locality along it. "Chennai city" is a Chennai locality (see
+ * regions.ts) that is on none of the corridors.
+ */
+export const corridors = [
+  {
+    key: "omr",
+    label: "OMR",
+    match: ["omr", "old mahabalipuram", "rajiv gandhi salai", "perungudi", "thoraipakkam", "karapakkam", "sholinganallur", "navalur", "siruseri", "padur", "kelambakkam"],
+  },
+  {
+    key: "gst",
+    label: "GST Road",
+    match: ["gst", "tambaram", "chromepet", "pallavaram", "perungalathur", "vandalur", "urapakkam", "guduvancheri", "potheri", "maraimalai nagar", "singaperumal koil", "chengalpattu", "chengalpet"],
+  },
+  {
+    key: "ecr",
+    label: "ECR",
+    match: ["ecr", "east coast", "neelankarai", "injambakkam", "akkarai", "uthandi", "kovalam", "muttukadu", "mamallapuram"],
+  },
+  { key: "city", label: "Chennai city", match: [] as string[] },
+];
 
+/** Budget steps for the min / max selects, in rupees. */
+export const budgetSteps = [
+  { value: 2_000_000, label: "₹20 L" },
+  { value: 3_000_000, label: "₹30 L" },
+  { value: 5_000_000, label: "₹50 L" },
+  { value: 7_500_000, label: "₹75 L" },
+  { value: 10_000_000, label: "₹1 Cr" },
+  { value: 15_000_000, label: "₹1.5 Cr" },
+  { value: 20_000_000, label: "₹2 Cr" },
+  { value: 30_000_000, label: "₹3 Cr" },
+  { value: 50_000_000, label: "₹5 Cr" },
+];
+
+/**
+ * Verification filters. "verified" is the listing status; the rest match a
+ * green (ok) badge with a word starting with `badge` (case-insensitive), so
+ * "EC reviewed" counts but "EC pending" (amber) does not.
+ */
 export const verificationFilters = [
-  "Verified only",
-  "EC reviewed",
-  "Patta cross-checked",
-  "Approval reviewed",
+  { key: "verified", label: "Verified only", badge: null },
+  { key: "ec", label: "EC reviewed", badge: "ec" },
+  { key: "patta", label: "Patta cross-checked", badge: "patta" },
+  { key: "approval", label: "Approval reviewed", badge: "approv" },
 ];
 
 /**
@@ -233,11 +273,14 @@ export const specialists: Specialist[] = [
   },
 ];
 
-/** Filter rail for the specialist tab. Presentational, like the property filters. */
+/**
+ * Stage filter for the specialist tab. Each stage lists the trades whose
+ * "when" line above places them at that point in the journey.
+ */
 export const specialistStages = [
-  "Before you buy",
-  "After registration",
-  "Before you build",
+  { key: "buy", label: "Before you buy", trades: ["advocates", "engineers"] },
+  { key: "registered", label: "After registration", trades: ["tax", "documentation"] },
+  { key: "build", label: "Before you build", trades: ["engineers", "architects", "contractors"] },
 ];
 
 export const specialistCaveat =
