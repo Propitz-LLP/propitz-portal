@@ -137,11 +137,26 @@ export default function RegisterForm({
             <Link href="/terms-of-use" target="_blank" className="font-semibold text-brand underline-offset-4 hover:underline">
               Terms of Use
             </Link>{" "}
-            and have read the{" "}
+            and acknowledge the{" "}
             <Link href="/privacy-policy" target="_blank" className="font-semibold text-brand underline-offset-4 hover:underline">
               Privacy Policy
             </Link>
             .
+          </span>
+        </label>
+
+        {/* Optional and unticked: kept separate from the account consent above. */}
+        <label className="mt-3 flex items-start gap-3 text-sm leading-relaxed text-body">
+          <input
+            type="checkbox"
+            name="marketingOptIn"
+            value="yes"
+            className="mt-1 h-4 w-4 shrink-0 accent-[var(--color-brand)]"
+          />
+          <span>
+            I would like to receive property updates, offers and promotional
+            communications from PropITZ. I can opt out at any time.{" "}
+            <span className="text-muted">(Optional)</span>
           </span>
         </label>
 

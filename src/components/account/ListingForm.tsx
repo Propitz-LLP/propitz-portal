@@ -11,17 +11,17 @@ const initial: FormState = {};
 
 /** The vocabulary already in use, offered as suggestions rather than a fixed list. */
 const BADGE_SUGGESTIONS = [
-  "EC clear",
+  "EC reviewed",
   "EC pending",
-  "Patta verified",
+  "Patta cross-checked",
   "Patta transfer pending",
   "Patta N/A",
-  "CMDA approved",
-  "DTCP approved",
-  "RERA registered",
-  "Adangal verified",
+  "CMDA approval reviewed",
+  "DTCP approval reviewed",
+  "RERA registration reviewed",
+  "Adangal cross-checked",
   "Conversion pending",
-  "Tax current",
+  "Tax receipt reviewed",
 ];
 
 const label = "mb-1.5 block text-sm font-medium text-ink";
@@ -31,7 +31,7 @@ const label = "mb-1.5 block text-sm font-medium text-ink";
  *
  * Badges are typed rather than picked from a fixed list, because the
  * wording carries meaning a checkbox would flatten: "EC pending" and
- * "EC clear" are the same document at two very different stages.
+ * "EC reviewed" are the same document at two very different stages.
  */
 export default function ListingForm({ listing }: { listing?: ManagedListing }) {
   const [state, action, pending] = useActionState(saveListing, initial);
@@ -137,7 +137,7 @@ export default function ListingForm({ listing }: { listing?: ManagedListing }) {
                 list="badge-suggestions"
                 defaultValue={badges[i]?.label ?? ""}
                 className={`${field} min-w-0 grow`}
-                placeholder={i === 0 ? "EC clear" : "Add another badge"}
+                placeholder={i === 0 ? "EC reviewed" : "Add another badge"}
               />
               <select
                 name={`badgeTone${i}`}
@@ -165,6 +165,39 @@ export default function ListingForm({ listing }: { listing?: ManagedListing }) {
           Uncheck to keep the listing here without it appearing publicly.
         </span>
       </label>
+
+      {/* Seller / listing declarations (legal pack, Part III). Required on every save. */}
+      <fieldset className="mt-5 space-y-3 rounded-2xl bg-bg-alt p-4">
+        <legend className="sr-only">Declarations</legend>
+        <label className="flex items-start gap-3 text-sm leading-relaxed text-body">
+          <input
+            type="checkbox"
+            name="declareAuthority"
+            value="yes"
+            required
+            className="mt-1 h-4 w-4 shrink-0 accent-[color:var(--color-brand,#0f766e)]"
+          />
+          <span>
+            I confirm that I am the owner or am authorised to list this property
+            and communicate with prospective buyers.
+          </span>
+        </label>
+        <label className="flex items-start gap-3 text-sm leading-relaxed text-body">
+          <input
+            type="checkbox"
+            name="declareAccuracy"
+            value="yes"
+            required
+            className="mt-1 h-4 w-4 shrink-0 accent-[color:var(--color-brand,#0f766e)]"
+          />
+          <span>
+            I confirm that the property and regulatory information I have provided
+            is accurate to the best of my knowledge and that applicable
+            project/promoter/agent registration details have been provided where
+            required by law.
+          </span>
+        </label>
+      </fieldset>
 
       {state.error && (
         <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">

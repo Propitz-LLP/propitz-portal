@@ -15,6 +15,7 @@ import {
 } from "@/data/services";
 import { site, whatsappHref } from "@/data/site";
 import { requestHref, type RequirementKey } from "@/data/leads";
+import VendorPanelNotice from "@/components/VendorPanelNotice";
 
 /** Opens Start a Request with the matching requirement already chosen. */
 const need: Record<string, RequirementKey> = {
@@ -244,6 +245,10 @@ export default async function ServiceDetailPage({
                 {service.responsibility}
               </p>
             </div>
+
+            {service.slug === "professional-network-access" && (
+              <VendorPanelNotice className="mt-6" />
+            )}
           </div>
 
           {/* Sidebar */}

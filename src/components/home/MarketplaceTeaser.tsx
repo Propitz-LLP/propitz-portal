@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { propertyTypes } from "@/data/marketplace";
+import { propertyTypes, verificationDisclaimer } from "@/data/marketplace";
 import { fetchHomeListings } from "@/lib/listings";
 import ListingCard from "@/components/ListingCard";
 import BuySellSwitch from "@/components/BuySellSwitch";
@@ -65,6 +65,8 @@ export default async function MarketplaceTeaser() {
           <ListingCard key={l.id} listing={l} />
         ))}
       </div>
+
+      <p className="mt-4 text-[13px] leading-[1.55] text-muted">{verificationDisclaimer}</p>
 
       <div className="mt-8 text-center">
         <Link href="/property-marketplace" className="btn-primary gap-3 py-3.5 text-[15px]">

@@ -75,6 +75,10 @@ export async function signUp(
         // Which version of the terms was accepted, and when.
         terms_version: LEGAL_VERSION,
         terms_accepted_at: new Date().toISOString(),
+        // Promotional consent is optional and recorded separately.
+        marketing_opt_in: formData.get("marketingOptIn") === "yes",
+        marketing_opt_in_at:
+          formData.get("marketingOptIn") === "yes" ? new Date().toISOString() : null,
       },
       emailRedirectTo: origin
         ? `${origin}/auth/confirm?next=${next}`

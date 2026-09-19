@@ -60,6 +60,8 @@ export async function saveListing(
   if (!values.locality) return { error: "Please enter a locality." };
   if (!KINDS.includes(values.kind))
     return { error: "Please choose a property type." };
+  if (formData.get("declareAuthority") !== "yes" || formData.get("declareAccuracy") !== "yes")
+    return { error: "Please confirm both declarations before saving the listing." };
 
   const supabase = await createClient();
 

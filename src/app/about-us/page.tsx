@@ -74,9 +74,12 @@ export default function AboutPage() {
               subtitle="PropITZ brings the steps of a property task into one place: what has to happen, which documents apply, and which independent professional carries out each part."
             />
             <p className="mt-6 leading-relaxed text-body">
-              We are not a broker or an agent. We coordinate the process, organise
-              your paperwork and connect you with independent professionals, so you
-              can make decisions with the facts in front of you.
+              PropITZ is a property-services and facilitation platform. We help
+              customers organise property processes, coordinate documentation and
+              professional inputs, access property-related services and navigate
+              transactions. Certain activities may be subject to specific regulatory
+              requirements depending on the property and transaction, and are
+              undertaken only in accordance with applicable law.
             </p>
           </div>
         </div>

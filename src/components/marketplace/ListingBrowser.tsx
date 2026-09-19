@@ -4,6 +4,7 @@ import {
   badgeMeanings,
   corridors,
   propertyTypes,
+  verificationDisclaimer,
   verificationFilters,
   type Listing,
 } from "@/data/marketplace";
@@ -51,6 +52,16 @@ export default function ListingBrowser({ listings }: { listings: Listing[] }) {
             Every listing carries a verification status showing exactly which
             documents have been examined. Nothing is marked verified unless an
             advocate has read the chain.
+          </p>
+          {/* Regulatory note (legal pack, Part III). Neutral until a TNRERA
+              registration is granted and its number can be displayed. */}
+          <p className="mt-3 max-w-[80ch] text-[13px] leading-[1.55] text-muted">
+            Property listings, seller onboarding, buyer coordination and
+            transaction support are provided subject to applicable law and any
+            registration requirements relevant to the property or transaction.
+            PropITZ does not represent that it holds any particular statutory
+            registration unless that registration and number are expressly
+            displayed on the Platform.
           </p>
         </div>
         {/*
@@ -176,7 +187,7 @@ export default function ListingBrowser({ listings }: { listings: Listing[] }) {
               ))}
             </div>
             <p className="mt-3 border-t border-ok/25 pt-3 text-[12.5px] leading-[1.5] text-ok">
-              {badgeCaveat}
+              {badgeCaveat} {verificationDisclaimer}
             </p>
           </div>
         </div>

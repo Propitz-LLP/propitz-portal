@@ -37,9 +37,9 @@ export const corridors = ["OMR", "GST Road", "ECR", "Chennai city"];
 
 export const verificationFilters = [
   "Verified only",
-  "EC clear",
-  "Patta verified",
-  "Layout approved",
+  "EC reviewed",
+  "Patta cross-checked",
+  "Approval reviewed",
 ];
 
 /**
@@ -48,9 +48,9 @@ export const verificationFilters = [
  * never read as "the paperwork is fine".
  */
 export const badgeMeanings = [
-  { label: "EC clear", text: "Encumbrance certificate read for the statutory period." },
-  { label: "Patta verified", text: "Patta and survey number cross-checked." },
-  { label: "Approved", text: "Layout approval confirmed with CMDA or DTCP." },
+  { label: "EC reviewed", text: "Encumbrance Certificate read for the period searched." },
+  { label: "Patta cross-checked", text: "Patta and survey number cross-checked." },
+  { label: "Approval reviewed", text: "Layout approval checked with CMDA or DTCP." },
 ];
 
 /** How many badge rows the listing form offers. */
@@ -58,6 +58,10 @@ export const BADGE_SLOTS = 4;
 
 export const badgeCaveat =
   "An amber badge means a document is still being read. It is never a claim that the paperwork is fine.";
+
+/** Shown wherever badges are (legal pack, Part III: "Verification badges"). */
+export const verificationDisclaimer =
+  "Verification applies only to the checks shown and records available on the review date; it is not a guarantee of title or absence of dispute.";
 
 export const listings: Listing[] = [
   {
@@ -69,9 +73,9 @@ export const listings: Listing[] = [
     title: "Residential plot, approved layout",
     locality: "Sholinganallur, OMR",
     badges: [
-      { label: "EC clear", tone: "ok" },
-      { label: "Patta verified", tone: "ok" },
-      { label: "CMDA approved", tone: "ok" },
+      { label: "EC reviewed", tone: "ok" },
+      { label: "Patta cross-checked", tone: "ok" },
+      { label: "CMDA approval reviewed", tone: "ok" },
     ],
   },
   {
@@ -83,9 +87,9 @@ export const listings: Listing[] = [
     title: "Independent house, two floors",
     locality: "Anna Nagar West, Chennai",
     badges: [
-      { label: "EC clear", tone: "ok" },
-      { label: "Patta verified", tone: "ok" },
-      { label: "Tax current", tone: "ok" },
+      { label: "EC reviewed", tone: "ok" },
+      { label: "Patta cross-checked", tone: "ok" },
+      { label: "Tax receipt reviewed", tone: "ok" },
     ],
   },
   {
@@ -97,7 +101,7 @@ export const listings: Listing[] = [
     title: "2 BHK apartment, gated",
     locality: "Perungudi, OMR",
     badges: [
-      { label: "RERA registered", tone: "ok" },
+      { label: "RERA registration reviewed", tone: "ok" },
       { label: "EC pending", tone: "warn" },
       { label: "Patta N/A", tone: "none" },
     ],
@@ -111,8 +115,8 @@ export const listings: Listing[] = [
     title: "Agricultural land, wet",
     locality: "Near Maraimalai Nagar",
     badges: [
-      { label: "Adangal verified", tone: "ok" },
-      { label: "EC clear", tone: "ok" },
+      { label: "Adangal cross-checked", tone: "ok" },
+      { label: "EC reviewed", tone: "ok" },
       { label: "Conversion pending", tone: "warn" },
     ],
   },
@@ -125,9 +129,9 @@ export const listings: Listing[] = [
     title: "Corner plot, DTCP layout",
     locality: "Guduvancheri, GST Road",
     badges: [
-      { label: "EC clear", tone: "ok" },
-      { label: "Patta verified", tone: "ok" },
-      { label: "DTCP approved", tone: "ok" },
+      { label: "EC reviewed", tone: "ok" },
+      { label: "Patta cross-checked", tone: "ok" },
+      { label: "DTCP approval reviewed", tone: "ok" },
     ],
   },
   {
@@ -139,9 +143,9 @@ export const listings: Listing[] = [
     title: "Row house, gated community",
     locality: "Tambaram West",
     badges: [
-      { label: "EC clear", tone: "ok" },
+      { label: "EC reviewed", tone: "ok" },
       { label: "Patta transfer pending", tone: "warn" },
-      { label: "Tax current", tone: "ok" },
+      { label: "Tax receipt reviewed", tone: "ok" },
     ],
   },
 ];

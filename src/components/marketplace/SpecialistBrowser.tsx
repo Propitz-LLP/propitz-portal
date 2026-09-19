@@ -7,6 +7,7 @@ import ProfessionalCard from "@/components/marketplace/ProfessionalCard";
 import { tradeLabel, type PublicProfessional } from "@/data/professionals";
 import MarketplaceTabs from "@/components/marketplace/MarketplaceTabs";
 import { IconChevron, IconPerson, IconSearch } from "@/components/Icon";
+import VendorPanelNotice from "@/components/VendorPanelNotice";
 
 /**
  * The other half of the marketplace: the professional network, browsable
@@ -135,6 +136,8 @@ export default function SpecialistBrowser({
               {specialistCaveat}
             </p>
           </div>
+
+          <VendorPanelNotice className="mt-4" />
         </div>
 
         {/* results */}

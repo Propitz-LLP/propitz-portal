@@ -479,11 +479,11 @@ export const services: Service[] = [
       "Property documents shared so far",
     ],
     responsibility:
-      "PropITZ does not act as your agent, broker or legal representative, and does not guarantee a particular transaction price or outcome. Final commercial terms are agreed between the parties.",
+      "PropITZ does not guarantee a particular transaction price or outcome. Final commercial terms are agreed between the parties.",
     faqs: [
       {
         q: "Will PropITZ negotiate the price for me?",
-        a: "No. PropITZ does not negotiate on your behalf or act as your agent or legal representative. Depending on the engagement, PropITZ helps you prepare on price, terms and milestones so you can negotiate from an informed position.",
+        a: "The level of negotiation support depends on the engagement. PropITZ helps you prepare on price, terms and milestones so you can negotiate from an informed position.",
       },
       {
         q: "Can you guarantee a particular purchase or sale price?",

@@ -5,7 +5,7 @@ import PageHero from "@/components/PageHero";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { signOut } from "@/app/auth/actions";
-import { IMG } from "@/data/site";
+import { IMG, site } from "@/data/site";
 import { splitE164 } from "@/lib/phone";
 import ProfileForm from "@/components/ProfileForm";
 import { getViewer } from "@/lib/roles";
@@ -94,6 +94,26 @@ export default async function AccountPage() {
                   </div>
                 </div>
               )}
+
+              {/* Privacy & account requests (legal pack, Part III). There is no
+                  self-serve deletion yet, so this points to Privacy Policy s.18. */}
+              <div className="mt-8 border-t border-line pt-6">
+                <p className="text-[10.5px] font-bold uppercase tracking-[0.09em] text-faint">
+                  Privacy &amp; account requests
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-body">
+                  To access, correct or delete your data, or to close your
+                  account, email{" "}
+                  <a href={`mailto:${site.email}?subject=Privacy%20or%20account%20request`} className="font-semibold text-brand underline-offset-4 hover:underline">
+                    {site.email}
+                  </a>{" "}
+                  from the address you signed up with. See the{" "}
+                  <Link href="/privacy-policy" className="font-semibold text-brand underline-offset-4 hover:underline">
+                    Privacy Policy
+                  </Link>
+                  .
+                </p>
+              </div>
 
               <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
                 <p className="text-sm text-body">

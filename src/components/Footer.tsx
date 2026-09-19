@@ -4,6 +4,7 @@ import { site, nav, whatsappHref } from "@/data/site";
 import { services } from "@/data/services";
 import { IconWhatsApp } from "@/components/Icon";
 import NewsletterForm from "@/components/NewsletterForm";
+import { VENDOR_PANEL_PATH } from "@/data/vendorPanel";
 
 export default function Footer() {
   return (
@@ -80,16 +81,24 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-px flex flex-col items-center gap-3 py-6 text-center text-sm text-slate-400 sm:flex-row sm:justify-between sm:text-left">
+        {/* Clears the fixed WhatsApp / back-to-top buttons (FloatingButtons):
+            below them on phones, beside them from sm up. */}
+        <div className="container-px flex flex-col items-center gap-3 pt-6 pb-32 text-center text-sm text-slate-400 sm:flex-row sm:justify-between sm:pb-6 sm:pr-24 sm:text-left">
           <p>© 2026 PropITZ, operated by {site.legalEntity}. All rights reserved.</p>
-          <div className="flex gap-5">
-            <Link href="/terms-of-use" className="-my-2 inline-block py-2 transition-colors hover:text-accent">
-              Terms of Use
-            </Link>
-            <Link href="/privacy-policy" className="-my-2 inline-block py-2 transition-colors hover:text-accent">
-              Privacy Policy
-            </Link>
-          </div>
+          {/* Legal and transparency links (legal pack, Part III). Add
+              "Cancellation & Refund Policy" when paid online services launch. */}
+          <nav aria-label="Legal" className="flex flex-wrap justify-center gap-x-5 gap-y-1 sm:justify-end">
+            {[
+              { href: "/terms-of-use", label: "Terms of Use" },
+              { href: "/privacy-policy", label: "Privacy Policy" },
+              { href: "/contact-us", label: "Grievance / Contact" },
+              { href: VENDOR_PANEL_PATH, label: "Vendor Panel & Ranking Disclosure" },
+            ].map((l) => (
+              <Link key={l.href} href={l.href} className="-my-2 inline-block py-2 transition-colors hover:text-accent">
+                {l.label}
+              </Link>
+            ))}
+          </nav>
         </div>
       </div>
     </footer>

@@ -5,6 +5,7 @@ import { submitLead } from "@/app/leads/actions";
 import type { LeadState } from "@/data/leads";
 import { whatsappHref } from "@/data/site";
 import { IconWhatsApp } from "@/components/Icon";
+import FormPrivacyNotice from "@/components/FormPrivacyNotice";
 
 const field =
   "w-full rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink placeholder:text-slate-400 focus:border-brand focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand/20 transition";
@@ -111,10 +112,12 @@ export default function SellerForm() {
         <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{state.error}</p>
       )}
 
+      <FormPrivacyNotice className="mt-5" />
+
       <button
         type="submit"
         disabled={pending}
-        className="btn-primary mt-6 w-full justify-center disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+        className="btn-primary mt-4 w-full justify-center disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
         {pending ? "Sending…" : "Request a callback"}
       </button>

@@ -1,7 +1,9 @@
 import type { PublicProfessional } from "@/data/professionals";
 import { tradeLabel } from "@/data/professionals";
 import { requestHref } from "@/data/leads";
+import Link from "next/link";
 import { IconArrow, IconCheck, IconPin } from "@/components/Icon";
+import { vendorPanelBadge, VENDOR_PANEL_PATH } from "@/data/vendorPanel";
 
 /**
  * One professional working with PropITZ, as a visitor sees them.
@@ -44,6 +46,15 @@ export default function ProfessionalCard({
           </span>
         )}
       </div>
+
+      {/* Never a bare "Recommended": the label always carries what it means. */}
+      <p className="mt-3.5 text-[12.5px] leading-[1.5] text-muted">
+        <span className="font-semibold text-ok">{vendorPanelBadge.label}.</span>{" "}
+        {vendorPanelBadge.note}{" "}
+        <Link href={VENDOR_PANEL_PATH} className="font-semibold text-brand underline-offset-4 hover:underline">
+          {vendorPanelBadge.link}
+        </Link>
+      </p>
 
       {p.publicNote && (
         <p className="mt-3.5 text-[14px] leading-[1.55] text-body">{p.publicNote}</p>

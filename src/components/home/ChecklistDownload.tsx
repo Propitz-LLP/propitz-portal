@@ -5,6 +5,7 @@ import { submitLead } from "@/app/leads/actions";
 import type { LeadState } from "@/data/leads";
 import { whatsappHref } from "@/data/site";
 import { IconWhatsApp } from "@/components/Icon";
+import FormPrivacyNotice from "@/components/FormPrivacyNotice";
 
 export const CHECKLIST_PDF = "/checklists/propitz-property-purchase-registration-checklist.pdf";
 
@@ -83,6 +84,7 @@ export default function ChecklistDownload() {
         <input name="phone" type="tel" required autoComplete="tel" placeholder="Mobile number" className={field} />
       </label>
       {state.error && <p className="text-[12.5px] text-red-700">{state.error}</p>}
+      <FormPrivacyNotice />
       <button
         type="submit"
         disabled={pending}
