@@ -13,6 +13,24 @@ import { safeRedirect } from "@/lib/redirectTo";
  * to guard the /account area.
  */
 export async function proxy(request: NextRequest) {
+  // Legacy spam URLs indexed under this domain (/?i=123456789). The `i`
+  // parameter has no use on this site, so answer 410 Gone: search engines
+  // drop a 410 far faster than a soft 404 that renders the homepage.
+  const legacySpamId = request.nextUrl.searchParams.get("i");
+  if (legacySpamId && /^\d+$/.test(legacySpamId)) {
+    return new NextResponse(
+      "<!doctype html><title>410 Gone</title><h1>Gone</h1><p>This page no longer exists.</p>",
+      {
+        status: 410,
+        headers: {
+          "content-type": "text/html; charset=utf-8",
+          "x-robots-tag": "noindex",
+          "cache-control": "public, max-age=3600",
+        },
+      }
+    );
+  }
+
   // If Supabase isn't configured yet, don't touch the request at all.
   if (!isSupabaseConfigured) return NextResponse.next({ request });
 

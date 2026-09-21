@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CANONICAL_URL } from "@/lib/siteUrl";
 import { Newsreader, Plus_Jakarta_Sans, Anek_Tamil, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
@@ -39,7 +40,7 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.propitz.com"),
+  metadataBase: new URL(CANONICAL_URL),
   title: {
     default: "PropITZ — Property Registration, Verification & Documents in Tamil Nadu",
     template: "%s — PropITZ",
