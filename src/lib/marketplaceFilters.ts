@@ -16,6 +16,7 @@ import {
   type Specialist,
 } from "@/data/marketplace";
 import { regions } from "@/data/regions";
+import { formatPrice, formatRateAndArea } from "@/lib/money";
 import { tradeLabel, type PublicProfessional } from "@/data/professionals";
 
 const norm = (s: string) => s.toLowerCase().normalize("NFKD");
@@ -31,23 +32,6 @@ function matchesQuery(query: string, ...fields: string[]) {
 /** Comma-separated param → known keys only. */
 function keysFrom(value: string | null, allowed: readonly string[]) {
   return (value ?? "").split(",").filter((k) => allowed.includes(k));
-}
-
-/* ------------------------------ prices ----------------------------- */
-
-/**
- * "₹48.5 L", "₹1.35 Cr", "92 lakh", "₹48,50,000" → rupees. Null when the
- * text has no usable number (e.g. "Price on request").
- */
-export function parsePrice(text: string): number | null {
-  const t = norm(text).replace(/,/g, "");
-  const m = t.match(/(\d+(?:\.\d+)?)\s*(crores?|cr|lakhs?|lacs?|l)?(?![a-z])/);
-  if (!m) return null;
-  const n = parseFloat(m[1]);
-  const unit = m[2] ?? "";
-  if (unit.startsWith("cr")) return n * 10_000_000;
-  if (unit.startsWith("l")) return n * 100_000;
-  return n;
 }
 
 /* ----------------------------- listings ---------------------------- */
@@ -144,24 +128,29 @@ export function filterListings(listings: Listing[], f: ListingFilters): Listing[
       if (!c || !f.corridors.includes(c)) return false;
     }
     if (f.min || f.max) {
-      const p = parsePrice(l.price);
-      // A listing without a readable price can't be placed in a budget.
-      if (p === null) return false;
-      if (f.min && p < f.min) return false;
-      if (f.max && p > f.max) return false;
+      // A listing without a price can't be placed in a budget.
+      if (!l.price) return false;
+      if (f.min && l.price < f.min) return false;
+      if (f.max && l.price > f.max) return false;
     }
     const typeLabel = propertyTypes.find((t) => t.key === l.kind)?.label ?? "";
-    return matchesQuery(f.q, l.title, l.locality, l.unit, typeLabel, ...l.badges.map((b) => b.label));
+    return matchesQuery(
+      f.q,
+      l.title,
+      l.locality,
+      formatPrice(l.price),
+      formatRateAndArea(l.rate, l.area, l.areaUnit),
+      typeLabel,
+      ...l.badges.map((b) => b.label)
+    );
   });
 
   if (f.sort === "newest") return kept; // already newest first from the database
   const dir = f.sort === "price-asc" ? 1 : -1;
   return [...kept].sort((a, b) => {
-    const pa = parsePrice(a.price);
-    const pb = parsePrice(b.price);
-    if (pa === null) return 1; // unpriced last, whichever direction
-    if (pb === null) return -1;
-    return (pa - pb) * dir;
+    if (!a.price) return 1; // unpriced last, whichever direction
+    if (!b.price) return -1;
+    return (a.price - b.price) * dir;
   });
 }
 

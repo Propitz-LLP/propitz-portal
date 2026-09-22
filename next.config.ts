@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "vkrlvjnsunciemrxtlfs.supabase.co",
-        pathname: "/storage/v1/object/public/assets/**",
+        pathname: "/storage/v1/object/public/**",
       },
       { protocol: "https", hostname: "cdn-icons-png.flaticon.com" },
     ],

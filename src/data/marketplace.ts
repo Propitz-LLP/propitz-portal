@@ -6,6 +6,8 @@
 /*  listings before launch; the counts below are sample values too.     */
 /* ------------------------------------------------------------------ */
 
+import type { AreaUnit } from "@/lib/money";
+
 export type ListingStatus = "verified" | "review";
 
 export type Badge = {
@@ -18,8 +20,15 @@ export type Listing = {
   id: string;
   kind: "plot" | "house" | "apt" | "agri";
   status: ListingStatus;
-  price: string;
-  unit: string;
+  /** Asking price in rupees. Formatted for display by lib/money.ts. */
+  price: number;
+  /** Plot or built-up size in `areaUnit`, when quoted. */
+  area: number | null;
+  areaUnit: AreaUnit | null;
+  /** Price per `areaUnit` in rupees, when quoted. */
+  rate: number | null;
+  /** Storage paths in the listing-images bucket, cover first. */
+  images: string[];
   title: string;
   locality: string;
   badges: Badge[];
@@ -108,8 +117,11 @@ export const listings: Listing[] = [
     id: "sholinganallur-plot",
     kind: "plot",
     status: "verified",
-    price: "₹48.5 L",
-    unit: "₹2,634 / sq.ft · 1,842 sq.ft",
+    price: 4850000,
+    area: 1842.0,
+    areaUnit: "sqft",
+    rate: 2634,
+    images: [],
     title: "Residential plot, approved layout",
     locality: "Sholinganallur, OMR",
     badges: [
@@ -122,8 +134,11 @@ export const listings: Listing[] = [
     id: "anna-nagar-house",
     kind: "house",
     status: "verified",
-    price: "₹1.35 Cr",
-    unit: "2,400 sq.ft built · 3 BHK",
+    price: 13500000,
+    area: 2400.0,
+    areaUnit: "sqft",
+    rate: null,
+    images: [],
     title: "Independent house, two floors",
     locality: "Anna Nagar West, Chennai",
     badges: [
@@ -136,8 +151,11 @@ export const listings: Listing[] = [
     id: "perungudi-apt",
     kind: "apt",
     status: "review",
-    price: "₹92 L",
-    unit: "₹8,050 / sq.ft · 1,142 sq.ft",
+    price: 9200000,
+    area: 1142.0,
+    areaUnit: "sqft",
+    rate: 8050,
+    images: [],
     title: "2 BHK apartment, gated",
     locality: "Perungudi, OMR",
     badges: [
@@ -150,8 +168,11 @@ export const listings: Listing[] = [
     id: "maraimalai-agri",
     kind: "agri",
     status: "verified",
-    price: "₹22 L",
-    unit: "₹5.5 L per acre · 4 acres",
+    price: 2200000,
+    area: 4.0,
+    areaUnit: "acres",
+    rate: 550000,
+    images: [],
     title: "Agricultural land, wet",
     locality: "Near Maraimalai Nagar",
     badges: [
@@ -164,8 +185,11 @@ export const listings: Listing[] = [
     id: "guduvancheri-plot",
     kind: "plot",
     status: "verified",
-    price: "₹31 L",
-    unit: "₹2,067 / sq.ft · 1,500 sq.ft",
+    price: 3100000,
+    area: 1500.0,
+    areaUnit: "sqft",
+    rate: 2067,
+    images: [],
     title: "Corner plot, DTCP layout",
     locality: "Guduvancheri, GST Road",
     badges: [
@@ -178,8 +202,11 @@ export const listings: Listing[] = [
     id: "tambaram-row",
     kind: "house",
     status: "review",
-    price: "₹68 L",
-    unit: "1,250 sq.ft built · 2 BHK",
+    price: 6800000,
+    area: 1250.0,
+    areaUnit: "sqft",
+    rate: null,
+    images: [],
     title: "Row house, gated community",
     locality: "Tambaram West",
     badges: [

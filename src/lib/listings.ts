@@ -21,6 +21,7 @@ import {
   type Listing,
   type ListingStatus,
 } from "@/data/marketplace";
+import { isAreaUnit, type AreaUnit } from "@/lib/money";
 
 /** A listing as the team sees it, with the fields the public page ignores. */
 export type ManagedListing = Listing & {
@@ -34,18 +35,31 @@ const TONES = ["ok", "warn", "none"] as const;
 
 type Row = Record<string, unknown>;
 
-/** Badges arrive as free-form JSON, so check the shape before trusting it. */
+/**
+ * Badges arrive as free-form JSON, so check the shape before trusting it.
+ * The same label twice says nothing twice, so only the first is kept.
+ */
 function toBadges(value: unknown): Badge[] {
   if (!Array.isArray(value)) return [];
+  const seen = new Set<string>();
   return value.flatMap((b) => {
     if (!b || typeof b !== "object") return [];
     const { label, tone } = b as { label?: unknown; tone?: unknown };
     if (typeof label !== "string" || !label.trim()) return [];
+    const key = label.trim().toLowerCase();
+    if (seen.has(key)) return [];
+    seen.add(key);
     const safeTone = TONES.includes(tone as Badge["tone"])
       ? (tone as Badge["tone"])
       : "none";
-    return [{ label, tone: safeTone }];
+    return [{ label: label.trim(), tone: safeTone }];
   });
+}
+
+/** Postgres numerics arrive as strings; anything unusable becomes null. */
+function toNumber(value: unknown): number | null {
+  const n = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(n) && n > 0 ? n : null;
 }
 
 function toListing(row: Row): Listing {
@@ -53,12 +67,17 @@ function toListing(row: Row): Listing {
     ? (row.kind as Listing["kind"])
     : "plot";
 
+  const area = toNumber(row.area_value);
+
   return {
     id: String(row.id),
     kind,
     status: (row.status === "verified" ? "verified" : "review") as ListingStatus,
-    price: String(row.price ?? ""),
-    unit: String(row.unit ?? ""),
+    price: toNumber(row.price_inr) ?? 0,
+    area,
+    areaUnit: area && isAreaUnit(row.area_unit) ? (row.area_unit as AreaUnit) : null,
+    rate: toNumber(row.rate_inr),
+    images: Array.isArray(row.images) ? row.images.map(String) : [],
     title: String(row.title ?? ""),
     locality: String(row.locality ?? ""),
     badges: toBadges(row.badges),

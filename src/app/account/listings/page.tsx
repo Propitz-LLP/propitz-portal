@@ -5,6 +5,7 @@ import { requireContributor } from "@/lib/roles";
 import { fetchManagedListings } from "@/lib/listings";
 import { deleteListing, togglePublished } from "./actions";
 import { IMG } from "@/data/site";
+import { formatPrice, formatRate } from "@/lib/money";
 
 export const metadata: Metadata = { title: "Manage property listings" };
 
@@ -70,7 +71,8 @@ export default async function ManageListingsPage() {
                         )}
                       </div>
                       <p className="mt-0.5 text-[13px] text-muted">
-                        {l.price} · {l.locality}
+                        {formatPrice(l.price) || (l.rate ? formatRate(l.rate, l.areaUnit ?? "sqft") : "No price")} · {l.locality}
+                        {l.images.length > 0 && ` · ${l.images.length} photo${l.images.length === 1 ? "" : "s"}`}
                       </p>
                     </div>
 
