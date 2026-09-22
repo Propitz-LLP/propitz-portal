@@ -156,9 +156,10 @@ export function filterListings(listings: Listing[], f: ListingFilters): Listing[
 
 /* --------------------------- professionals -------------------------- */
 
+/** Professionals are grouped by profession, so sorting applies within one. */
 export const PROFESSIONAL_SORTS = [
-  { key: "profession", label: "By profession" },
   { key: "name", label: "Name (A–Z)" },
+  { key: "experience", label: "Most experienced" },
 ] as const;
 
 export type ProfessionalFilters = {
@@ -177,7 +178,7 @@ export function readProfessionalFilters(
   tradeKeys: readonly string[]
 ): ProfessionalFilters {
   const trade = params.get("trade") ?? "all";
-  const sort = params.get("sort") ?? "profession";
+  const sort = params.get("sort") ?? "name";
   return {
     q: params.get("q") ?? "",
     trade: tradeKeys.includes(trade) ? trade : "all",
@@ -185,7 +186,7 @@ export function readProfessionalFilters(
     stages: keysFrom(params.get("stage"), STAGE_KEYS),
     sort: PROFESSIONAL_SORTS.some((s) => s.key === sort)
       ? (sort as ProfessionalFilters["sort"])
-      : "profession",
+      : "name",
   };
 }
 
@@ -195,7 +196,7 @@ export function writeProfessionalFilters(f: ProfessionalFilters): Record<string,
   if (f.trade !== "all") out.trade = f.trade;
   if (f.regions.length) out.region = f.regions.join(",");
   if (f.stages.length) out.stage = f.stages.join(",");
-  if (f.sort !== "profession") out.sort = f.sort;
+  if (f.sort !== "name") out.sort = f.sort;
   return out;
 }
 
@@ -230,9 +231,11 @@ export function filterProfessionals(
     if (f.regions.length && !f.regions.some((r) => servesRegion(p, r))) return false;
     return matchesQuery(f.q, p.name, p.firm, p.areas, p.registration, p.publicNote, tradeLabel(p.trade));
   });
-  // "profession" keeps the database order (trade, then name).
-  if (f.sort === "name") return [...kept].sort((a, b) => a.name.localeCompare(b.name));
-  return kept;
+  if (f.sort === "experience") {
+    // Most years first; anyone without a number listed goes last.
+    return [...kept].sort((a, b) => (b.experienceYears ?? -1) - (a.experienceYears ?? -1));
+  }
+  return [...kept].sort((a, b) => a.name.localeCompare(b.name));
 }
 
 /**

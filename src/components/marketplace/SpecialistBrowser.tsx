@@ -6,8 +6,7 @@ import { specialistCaveat, specialistStages, specialists } from "@/data/marketpl
 import { regions } from "@/data/regions";
 import { requestHref } from "@/data/leads";
 import SpecialistCard from "@/components/SpecialistCard";
-import ProfessionalCard from "@/components/marketplace/ProfessionalCard";
-import { tradeLabel, TRADES, type PublicProfessional } from "@/data/professionals";
+import { TRADES, type PublicProfessional } from "@/data/professionals";
 import MarketplaceTabs from "@/components/marketplace/MarketplaceTabs";
 import { IconClose, IconPerson } from "@/components/Icon";
 import VendorPanelNotice from "@/components/VendorPanelNotice";
@@ -21,14 +20,11 @@ import {
   type ProfessionalFilters,
 } from "@/lib/marketplaceFilters";
 import { useQueryState } from "./useQueryState";
-import { CheckRow, FilterHeading, FilterToggle, SearchBar, ShowMore, SortSelect, usePaged } from "./FilterControls";
+import { CheckRow, FilterHeading, FilterToggle, SearchBar, SortSelect } from "./FilterControls";
 
 const TRADE_KEYS = TRADES.map((t) => t.key);
 
-/** Professional cards drawn at a time; "Show more" adds another page. */
-const PAGE_SIZE = 24;
-
-const EMPTY: ProfessionalFilters = { q: "", trade: "all", regions: [], stages: [], sort: "profession" };
+const EMPTY: ProfessionalFilters = { q: "", trade: "all", regions: [], stages: [], sort: "name" };
 
 const toggle = (list: string[], key: string) =>
   list.includes(key) ? list.filter((k) => k !== key) : [...list, key];
@@ -50,7 +46,8 @@ const toggle = (list: string[], key: string) =>
  * lib/marketplaceFilters.ts). Profession, stage and search narrow both the
  * listed professionals and the profession cards; "where you are" narrows
  * only the professionals, since every profession is available everywhere
- * we serve.
+ * we serve. Sorting applies within each profession, because that is how
+ * the people are grouped.
  */
 export default function SpecialistBrowser({
   professionals = [],
@@ -66,10 +63,17 @@ export default function SpecialistBrowser({
   const update = (patch: Partial<ProfessionalFilters>) => setF({ ...f, ...patch });
 
   const shownPros = filterProfessionals(professionals, f);
-  const page = usePaged(shownPros, JSON.stringify(writeProfessionalFilters(f)), PAGE_SIZE);
-  const shownCards = filterSpecialists(specialists, f);
-  const trades = [...new Set(shownPros.map((p) => p.trade))];
   const active = countProfessionalFilters(f);
+
+  // Professionals live inside their profession's card, so the six cards stay
+  // the frame however many people are listed.
+  const byTrade = new Map<string, PublicProfessional[]>();
+  for (const p of shownPros) byTrade.set(p.trade, [...(byTrade.get(p.trade) ?? []), p]);
+
+  // A card is shown when it matches the filters itself, or when somebody in
+  // it does — a search for a name should not hide the person it found.
+  const matching = new Set(filterSpecialists(specialists, f).map((s) => s.key));
+  const shownCards = specialists.filter((s) => matching.has(s.key) || byTrade.has(s.key));
   const clear = () => setF({ ...EMPTY, sort: f.sort });
 
   return (
@@ -198,8 +202,9 @@ export default function SpecialistBrowser({
                 <>
                   <b className="font-bold text-ink">{shownPros.length}</b>{" "}
                   {shownPros.length === 1 ? "professional" : "professionals"}
-                  {shownPros.length !== professionals.length && <> of {professionals.length}</>}
-                  {trades.length > 0 && <> across {trades.map(tradeLabel).join(", ")}</>}
+                  {shownPros.length !== professionals.length && <> of {professionals.length}</>}{" "}
+                  across {shownCards.length}{" "}
+                  {shownCards.length === 1 ? "profession" : "professions"}
                 </>
               ) : (
                 <>
@@ -218,44 +223,16 @@ export default function SpecialistBrowser({
             )}
           </div>
 
-          {shownPros.length > 0 && (
-            <div className="mb-10">
-              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                {page.visible.map((p) => (
-                  <ProfessionalCard key={p.id} professional={p} />
-                ))}
-              </div>
-              <ShowMore
-                shown={page.visible.length}
-                total={shownPros.length}
-                remaining={page.remaining}
-                pageSize={PAGE_SIZE}
-                noun="professionals"
-                onClick={page.showMore}
-              />
-            </div>
-          )}
-
-          {professionals.length > 0 && shownPros.length === 0 && (
-            <p className="mb-8 rounded-[18px] border border-line bg-surface p-5 text-[14.5px] leading-[1.55] text-body">
-              No listed professional matches these filters yet. We can still
-              introduce you to one: start a request below.
-            </p>
-          )}
-
           {shownCards.length > 0 ? (
-            <>
-              {professionals.length > 0 && (
-                <p className="mb-3.5 text-[13px] font-bold uppercase tracking-[0.06em] text-faint">
-                  Every profession we can introduce
-                </p>
-              )}
-              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                {shownCards.map((s) => (
-                  <SpecialistCard key={s.key} specialist={s} />
-                ))}
-              </div>
-            </>
+            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              {shownCards.map((s) => (
+                <SpecialistCard
+                  key={s.key}
+                  specialist={s}
+                  professionals={byTrade.get(s.key) ?? []}
+                />
+              ))}
+            </div>
           ) : (
             <div className="rounded-[22px] border border-line bg-surface p-8 text-center">
               <p className="text-[17px] font-bold text-ink">Nothing matches that search.</p>
