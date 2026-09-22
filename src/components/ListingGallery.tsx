@@ -32,9 +32,17 @@ const subscribeNever = () => () => {};
 export default function ListingGallery({
   images,
   title,
+  /** "cover" crops to fill a card; "contain" shows the whole photo. */
+  fit = "cover",
+  /** Cards reveal the arrows on hover; the popup always shows them. */
+  alwaysShowControls = false,
+  sizes = "(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw",
 }: {
   images: string[];
   title: string;
+  fit?: "cover" | "contain";
+  alwaysShowControls?: boolean;
+  sizes?: string;
 }) {
   const strip = useRef<HTMLDivElement>(null);
   const settle = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -98,6 +106,10 @@ export default function ListingGallery({
     }, 120);
   };
 
+  const arrowVisibility = alwaysShowControls
+    ? "grid"
+    : "hidden sm:grid sm:opacity-0 sm:group-hover/gallery:opacity-100";
+
   /** Step or jump; past either end it wraps, because the copies are there. */
   const go = (to: number) => jumpTo(looped ? to + 1 : Math.max(0, Math.min(images.length - 1, to)), true);
 
@@ -116,8 +128,8 @@ export default function ListingGallery({
               src={listingImageUrl(path)}
               alt={i === offset ? title : `${title} — photo ${((i - offset + images.length) % images.length) + 1}`}
               fill
-              className="object-cover"
-              sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+              className={fit === "contain" ? "object-contain" : "object-cover"}
+              sizes={sizes}
             />
           </div>
         ))}
@@ -130,7 +142,7 @@ export default function ListingGallery({
             type="button"
             aria-label="Previous photo"
             onClick={() => go(index - 1)}
-            className="absolute left-2 top-1/2 hidden h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-ink shadow-sm transition-opacity hover:bg-white sm:grid sm:opacity-0 sm:group-hover/gallery:opacity-100"
+            className={`absolute left-2 top-1/2 h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-ink shadow-sm transition-opacity hover:bg-white ${arrowVisibility}`}
           >
             <IconChevron size={12} className="rotate-90" />
           </button>
@@ -138,7 +150,7 @@ export default function ListingGallery({
             type="button"
             aria-label="Next photo"
             onClick={() => go(index + 1)}
-            className="absolute right-2 top-1/2 hidden h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-ink shadow-sm transition-opacity hover:bg-white sm:grid sm:opacity-0 sm:group-hover/gallery:opacity-100"
+            className={`absolute right-2 top-1/2 h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-ink shadow-sm transition-opacity hover:bg-white ${arrowVisibility}`}
           >
             <IconChevron size={12} className="-rotate-90" />
           </button>
