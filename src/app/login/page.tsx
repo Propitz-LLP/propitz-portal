@@ -7,6 +7,9 @@ import { IMG } from "@/data/site";
 export const metadata: Metadata = {
   title: "Log In",
   description: "Log in to your PropITZ account.",
+  // Crawlable, but never a search result. Kept out of robots.txt on
+  // purpose: a crawler has to be allowed to fetch the page to read this.
+  robots: { index: false },
 };
 
 export default async function LoginPage({

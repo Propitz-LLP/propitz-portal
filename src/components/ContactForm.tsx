@@ -5,7 +5,9 @@ import { submitLead } from "@/app/leads/actions";
 import { CHANNELS, REQUIREMENTS, type LeadState, type RequirementKey } from "@/data/leads";
 import { whatsappHref } from "@/data/site";
 import { IconWhatsApp } from "@/components/Icon";
+import MobileField from "@/components/MobileField";
 import FormPrivacyNotice from "@/components/FormPrivacyNotice";
+import TurnstileField, { TURNSTILE_ENABLED } from "@/components/Turnstile";
 
 const field =
   "w-full rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink placeholder:text-slate-400 focus:border-brand focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand/20 transition";
@@ -24,6 +26,8 @@ const initial: LeadState = {};
 export default function ContactForm({ need }: { need?: RequirementKey }) {
   const [state, action, pending] = useActionState(submitLead, initial);
   const [channel, setChannel] = useState<(typeof CHANNELS)[number]>("WhatsApp");
+  const [badMobile, setBadMobile] = useState(false);
+  const [human, setHuman] = useState(!TURNSTILE_ENABLED);
   const preselected = REQUIREMENTS.find((r) => r.key === need)?.label ?? "";
 
   if (state.ok) {
@@ -61,10 +65,8 @@ export default function ContactForm({ need }: { need?: RequirementKey }) {
           <label className={label} htmlFor="req-name">Full name</label>
           <input id="req-name" name="name" required autoComplete="name" className={field} placeholder="Your name" />
         </div>
-        <div>
-          <label className={label} htmlFor="req-phone">Mobile number</label>
-          <input id="req-phone" name="phone" required type="tel" autoComplete="tel" className={field} placeholder="Your mobile number" />
-        </div>
+        {/* Country + number, validated per country (see lib/phone.ts). */}
+        <MobileField onInvalidChange={setBadMobile} />
         <div>
           <label className={label} htmlFor="req-need">What do you need help with?</label>
           <select id="req-need" name="requirement" required defaultValue={preselected} className={field}>
@@ -138,11 +140,13 @@ export default function ContactForm({ need }: { need?: RequirementKey }) {
         <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{state.error}</p>
       )}
 
+      <TurnstileField pending={pending} onVerifiedChange={setHuman} action="request" />
+
       <FormPrivacyNotice className="mt-5" />
 
       <button
         type="submit"
-        disabled={pending}
+        disabled={pending || badMobile || !human}
         className="btn-primary mt-4 w-full justify-center disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
         {pending ? "Sending…" : "Send request"}

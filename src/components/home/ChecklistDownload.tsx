@@ -6,6 +6,8 @@ import type { LeadState } from "@/data/leads";
 import { whatsappHref } from "@/data/site";
 import { IconWhatsApp } from "@/components/Icon";
 import FormPrivacyNotice from "@/components/FormPrivacyNotice";
+import MobileField from "@/components/MobileField";
+import TurnstileField, { TURNSTILE_ENABLED } from "@/components/Turnstile";
 
 export const CHECKLIST_PDF = "/checklists/propitz-property-purchase-registration-checklist.pdf";
 
@@ -22,6 +24,8 @@ const field =
 export default function ChecklistDownload() {
   const [open, setOpen] = useState(false);
   const [state, action, pending] = useActionState(submitLead, initial);
+  const [badMobile, setBadMobile] = useState(false);
+  const [human, setHuman] = useState(!TURNSTILE_ENABLED);
   const link = useRef<HTMLAnchorElement>(null);
 
   // Start the download as soon as the lead is saved.
@@ -79,15 +83,13 @@ export default function ChecklistDownload() {
         <span className="sr-only">Your name</span>
         <input name="name" required autoComplete="name" placeholder="Your name" className={field} />
       </label>
-      <label className="block">
-        <span className="sr-only">Mobile number</span>
-        <input name="phone" type="tel" required autoComplete="tel" placeholder="Mobile number" className={field} />
-      </label>
+      <MobileField labelHidden onInvalidChange={setBadMobile} />
       {state.error && <p className="text-[12.5px] text-red-700">{state.error}</p>}
+      <TurnstileField pending={pending} onVerifiedChange={setHuman} action="checklist" />
       <FormPrivacyNotice />
       <button
         type="submit"
-        disabled={pending}
+        disabled={pending || badMobile || !human}
         className="btn-dark w-full justify-center gap-2 py-3 text-[13.5px] disabled:opacity-60"
       >
         {pending ? "Preparing…" : "Download the PDF"}

@@ -4,12 +4,19 @@ import { CANONICAL_URL } from "@/lib/siteUrl";
 /**
  * What crawlers should and should not fetch.
  *
- * The account area and the auth screens are private or personal.
+ * The account area is private, and /auth and /api are endpoints rather
+ * than pages — nothing there is worth fetching.
  *
- * The legacy `?i=<number>` spam URLs are deliberately NOT disallowed here:
- * proxy.ts answers them with 410 Gone, and a crawler has to be allowed to
- * fetch a URL to see that it is gone. Blocking them in robots.txt would
- * leave them indexed with their old titles.
+ * The sign-in screens are a different case and are NOT listed here. They
+ * carry a `noindex` tag instead, which is the stronger signal: a blocked
+ * URL can still be indexed on the strength of a link alone, and a crawler
+ * that is not allowed to fetch the page can never read the tag telling it
+ * to stay away.
+ *
+ * The legacy spam URLs are left crawlable for the same reason: proxy.ts
+ * answers them with 410 Gone, and a crawler has to be allowed to fetch a
+ * URL to see that it is gone. Blocking them in robots.txt would leave
+ * hundreds of thousands of them indexed under their old titles.
  */
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -17,14 +24,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: [
-          "/account/",
-          "/login",
-          "/register",
-          "/forgot-password",
-          "/auth/",
-          "/api/",
-        ],
+        disallow: ["/account/", "/auth/", "/api/"],
       },
     ],
     sitemap: `${CANONICAL_URL}/sitemap.xml`,

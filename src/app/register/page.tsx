@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   title: "Create Account",
   description:
     "Create a PropITZ account to keep your contact details on file for your property enquiries.",
+  // See the note in login/page.tsx.
+  robots: { index: false },
 };
 
 export default async function RegisterPage({

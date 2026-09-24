@@ -72,6 +72,12 @@ export default async function AccountPage() {
                   </p>
                   <div className="mt-4 flex flex-wrap gap-2.5">
                     <Link
+                      href="/account/enquiries"
+                      className="rounded-full border border-line-strong px-4 py-2.5 text-[13.5px] font-semibold text-body transition-colors hover:border-brand hover:text-brand"
+                    >
+                      Enquiries
+                    </Link>
+                    <Link
                       href="/account/listings"
                       className="rounded-full border border-line-strong px-4 py-2.5 text-[13.5px] font-semibold text-body transition-colors hover:border-brand hover:text-brand"
                     >

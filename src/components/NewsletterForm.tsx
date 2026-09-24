@@ -1,14 +1,16 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { submitLead } from "@/app/leads/actions";
 import type { LeadState } from "@/data/leads";
+import TurnstileField, { TURNSTILE_ENABLED } from "@/components/Turnstile";
 
 const initial: LeadState = {};
 
 /** Footer newsletter sign-up, stored as a lead. */
 export default function NewsletterForm() {
   const [state, action, pending] = useActionState(submitLead, initial);
+  const [human, setHuman] = useState(!TURNSTILE_ENABLED);
 
   if (state.ok) {
     return (
@@ -36,7 +38,7 @@ export default function NewsletterForm() {
         />
         <button
           type="submit"
-          disabled={pending}
+          disabled={pending || !human}
           aria-label="Subscribe"
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent text-ink transition-transform hover:scale-105 disabled:opacity-60"
         >
@@ -45,6 +47,12 @@ export default function NewsletterForm() {
           </svg>
         </button>
       </div>
+      <TurnstileField
+        pending={pending}
+        onVerifiedChange={setHuman}
+        action="newsletter"
+        theme="dark"
+      />
       {state.error && <p className="mt-2 text-sm text-red-300">{state.error}</p>}
     </form>
   );

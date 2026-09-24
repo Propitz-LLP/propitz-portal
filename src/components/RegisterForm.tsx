@@ -6,6 +6,7 @@ import { signUp, type AuthState } from "@/app/auth/actions";
 import { HOME } from "@/lib/redirectTo";
 import MobileField from "./MobileField";
 import { field, fieldError } from "./fieldClass";
+import TurnstileField, { TURNSTILE_ENABLED } from "./Turnstile";
 
 // --- Google login (disabled) -------------------------------------------
 // Kept commented rather than deleted so it can be switched back on. To
@@ -33,6 +34,7 @@ export default function RegisterForm({
   // MobileField owns its own validation; we only track the result so the
   // submit button stays disabled while the number is malformed.
   const [badMobile, setBadMobile] = useState(false);
+  const [human, setHuman] = useState(!TURNSTILE_ENABLED);
 
   // Mirror the check into native form validity so the browser also blocks
   // submission (including via the Enter key), not just the disabled button.
@@ -171,9 +173,11 @@ export default function RegisterForm({
           </p>
         )}
 
+        <TurnstileField pending={pending} onVerifiedChange={setHuman} action="register" />
+
         <button
           type="submit"
-          disabled={pending || mismatch || badMobile}
+          disabled={pending || mismatch || badMobile || !human}
           className="btn-primary mt-6 w-full justify-center disabled:cursor-not-allowed disabled:opacity-60"
         >
           {pending ? "Creating account…" : "Create account"}

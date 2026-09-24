@@ -47,6 +47,16 @@ export function whatsappHref(message?: string) {
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
 
+/**
+ * A WhatsApp link to someone else's number — used by the team to follow up
+ * on an enquiry. Accepts whatever is stored (+91…) and strips it to digits.
+ */
+export function whatsappHrefFor(phone: string, message?: string) {
+  const digits = phone.replace(/\D/g, "");
+  const base = `https://wa.me/${digits}`;
+  return message ? `${base}?text=${encodeURIComponent(message)}` : base;
+}
+
 export type NavItem = {
   label: string;
   href: string;
@@ -59,6 +69,7 @@ export const nav: NavItem[] = [
   { label: "Property Marketplace", href: "/property-marketplace" },
   { label: "Sell a Property", href: "/sell" },
   { label: "Insights", href: "/blog" },
+  { label: "Work with Us", href: "/work-with-us" },
   { label: "Contact Us", href: "/contact-us" },
 ];
 

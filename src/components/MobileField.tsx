@@ -21,10 +21,13 @@ export default function MobileField({
   defaultCountry = DEFAULT_COUNTRY,
   defaultValue = "",
   onInvalidChange,
+  /** Hide the visible label where the surrounding card is tight. */
+  labelHidden = false,
 }: {
   defaultCountry?: string;
   defaultValue?: string;
   onInvalidChange?: (invalid: boolean) => void;
+  labelHidden?: boolean;
 }) {
   const [country, setCountry] = useState(defaultCountry);
   const [mobile, setMobile] = useState(defaultValue);
@@ -71,7 +74,7 @@ export default function MobileField({
 
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-medium text-ink">
+      <label className={labelHidden ? "sr-only" : "mb-1.5 block text-sm font-medium text-ink"}>
         Mobile Number
       </label>
       <div className="flex items-stretch">

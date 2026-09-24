@@ -8,6 +8,8 @@ import { isValidMobile, toE164, mobileError, DEFAULT_COUNTRY } from "@/lib/phone
 import { safeRedirect, HOME } from "@/lib/redirectTo";
 import { siteOrigin } from "@/lib/siteUrl";
 import { LEGAL_VERSION } from "@/data/legal";
+import { HUMAN_CHECK_FAILED, isHuman } from "@/lib/turnstile";
+import { RATE_LIMITED, withinRateLimit } from "@/lib/rateLimit";
 
 export type AuthState = { error?: string; message?: string };
 
@@ -56,6 +58,10 @@ export async function signUp(
     return { error: "Passwords do not match." };
   if (formData.get("acceptTerms") !== "yes")
     return { error: "Please accept the Terms of Use and Privacy Policy to create an account." };
+
+  // Sign-up sends a confirmation email, which makes it worth abusing.
+  if (!(await withinRateLimit("register"))) return { error: RATE_LIMITED };
+  if (!(await isHuman(formData, "register"))) return { error: HUMAN_CHECK_FAILED };
 
   const supabase = await createClient();
   const origin = await siteOrigin();
@@ -239,6 +245,10 @@ export async function requestPasswordReset(
 
   const { email } = readCredentials(formData);
   if (!email) return { error: "Please enter your email address." };
+
+  // Otherwise this form is a way to send someone else mail, repeatedly.
+  if (!(await withinRateLimit("password-reset"))) return { error: RATE_LIMITED };
+  if (!(await isHuman(formData, "password-reset"))) return { error: HUMAN_CHECK_FAILED };
 
   const supabase = await createClient();
   const origin = await siteOrigin();

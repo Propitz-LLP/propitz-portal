@@ -1,15 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { requestPasswordReset, type AuthState } from "@/app/auth/actions";
 import { field } from "./fieldClass";
 import { RESET_EMAIL_KEY } from "./LoginForm";
+import TurnstileField, { TURNSTILE_ENABLED } from "./Turnstile";
 
 const initial: AuthState = {};
 
 export default function ForgotPasswordForm({ notice }: { notice?: string }) {
   const [state, action, pending] = useActionState(requestPasswordReset, initial);
+  const [human, setHuman] = useState(!TURNSTILE_ENABLED);
   const emailRef = useRef<HTMLInputElement>(null);
 
   // Prefill with the email typed on the login page, if any.
@@ -56,9 +58,11 @@ export default function ForgotPasswordForm({ notice }: { notice?: string }) {
             </p>
           )}
 
+          <TurnstileField pending={pending} onVerifiedChange={setHuman} action="password-reset" />
+
           <button
             type="submit"
-            disabled={pending}
+            disabled={pending || !human}
             className="btn-primary mt-6 w-full justify-center disabled:cursor-not-allowed disabled:opacity-60"
           >
             {pending ? "Sending…" : "Send reset link"}

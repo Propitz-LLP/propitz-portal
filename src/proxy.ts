@@ -8,16 +8,63 @@ import {
 import { safeRedirect } from "@/lib/redirectTo";
 
 /**
+ * Query parameters the homepage may legitimately carry. Everything else on
+ * `/` is a leftover from the compromised WordPress site.
+ *
+ * Ad clicks must keep working, so the marketing parameters stay. Anything
+ * starting with an underscore is Next's own (`_rsc` on every client-side
+ * navigation and prefetch — answering those with a 410 would break
+ * in-app links to the homepage).
+ */
+const HOMEPAGE_PARAMS = new Set([
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_term",
+  "utm_content",
+  "utm_id",
+  "gclid",
+  "gbraid",
+  "wbraid",
+  "fbclid",
+  "msclkid",
+  "ttclid",
+  "igshid",
+  "mc_cid",
+  "mc_eid",
+  "ref",
+  "source",
+]);
+
+/**
+ * True for a URL that only ever existed on the old site.
+ *
+ * Scoped to the homepage on purpose. Other paths carry parameters this app
+ * depends on — the marketplace filters, `redirect` on /login, the token
+ * Supabase appends to a confirmation link — and an over-broad rule here
+ * would break them silently.
+ */
+function isLegacyQueryUrl(url: URL) {
+  if (url.pathname !== "/") return false;
+  for (const key of url.searchParams.keys()) {
+    if (key.startsWith("_")) continue;
+    if (!HOMEPAGE_PARAMS.has(key.toLowerCase())) return true;
+  }
+  return false;
+}
+
+/**
  * Next.js 16 renamed `middleware` to `proxy`. This runs on every matched
  * request to keep the Supabase auth session (stored in cookies) fresh, and
  * to guard the /account area.
  */
 export async function proxy(request: NextRequest) {
-  // Legacy spam URLs indexed under this domain (/?i=123456789). The `i`
-  // parameter has no use on this site, so answer 410 Gone: search engines
-  // drop a 410 far faster than a soft 404 that renders the homepage.
-  const legacySpamId = request.nextUrl.searchParams.get("i");
-  if (legacySpamId && /^\d+$/.test(legacySpamId)) {
+  // Legacy spam URLs indexed under this domain while the old WordPress site
+  // was compromised: /?i=123456789, /?p=4567, /?page_id=2, /?s=… — hundreds
+  // of thousands of them. Every one of those used to render the homepage
+  // with a 200, which Google files as a duplicate and keeps re-crawling
+  // forever. A 410 is dropped far faster. See isLegacyQueryUrl.
+  if (isLegacyQueryUrl(request.nextUrl)) {
     return new NextResponse(
       "<!doctype html><title>410 Gone</title><h1>Gone</h1><p>This page no longer exists.</p>",
       {
