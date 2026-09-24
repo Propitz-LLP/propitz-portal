@@ -12,25 +12,45 @@ export const APPLICATION_KIND = "job";
  */
 export const JOB_ROLES = [
   // Property and field
-  "Property coordinator (registration, SRO, documents)",
-  "Property verification / due diligence",
-  "Field executive / site visits",
-  "Documentation executive",
-  "Sales — property advisory",
-  "Sales — seller onboarding & listings",
-  "Relationship / customer success",
-  "Legal support (advocate, paralegal)",
-  "Survey, valuation or engineering support",
-  "Real estate operations manager",
+  "Property Coordinator (Registration, SRO, Documents)",
+  "Property Verification / Due Diligence",
+  "Field Executive / Site Visits",
+  // "Documentation Executive" was removed: the Operations Executive role
+  // below covers the same documentation work, and three near-identical
+  // options split one opening across three buckets in the dashboard.
+  "Sales — Property Advisory",
+  "Sales — Seller Onboarding & Listings",
+  "Business Development Executive — Real Estate",
+  "Relationship / Customer Success",
+  "Legal Support (Advocate, Paralegal)",
+  "Survey, Valuation or Engineering Support",
+  "Operations Executive — Property Documentation & Registration Services",
+  "Real Estate Operations Manager",
   // The business behind it
-  "Technology / IT (engineering, data, QA)",
-  "Product & design",
-  "Marketing & content",
-  "Finance & accounts",
-  "HR & administration",
-  "Customer support",
-  "Internship / trainee",
+  "Technology / IT (Engineering, Data, QA)",
+  "Product & Design",
+  "Marketing & Content",
+  "Finance & Accounts",
+  "HR & Administration",
+  "Customer Support",
+  "Internship / Trainee",
   "Other",
+];
+
+/**
+ * Roles being hired for right now, called out above the form so applicants
+ * are not left guessing which of the list is actually open.
+ *
+ * Every entry must match a string in JOB_ROLES exactly — the notice is a
+ * shortcut into the dropdown, and a mismatch would name a role the form
+ * cannot select.
+ *
+ * To take the notice down, empty this array:  export const CURRENT_OPENINGS = [];
+ * Nothing else needs touching; the whole block disappears.
+ */
+export const CURRENT_OPENINGS = [
+  "Business Development Executive — Real Estate",
+  "Operations Executive — Property Documentation & Registration Services",
 ];
 
 export const CV_MAX_BYTES = 5 * 1024 * 1024;

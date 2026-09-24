@@ -3,6 +3,7 @@
 import { useActionState, useRef, useState } from "react";
 import { submitApplication } from "@/app/work-with-us/actions";
 import {
+  CURRENT_OPENINGS,
   CV_BUCKET,
   CV_MAX_BYTES,
   CV_TYPES,
@@ -32,6 +33,8 @@ export default function ApplicationForm() {
   const [state, action, pending] = useActionState(submitApplication, initial);
   const [badMobile, setBadMobile] = useState(false);
   const [human, setHuman] = useState(!TURNSTILE_ENABLED);
+  // Controlled so the "we are hiring for" buttons can fill it in.
+  const [role, setRole] = useState("");
   const cv = useUpload();
   const cover = useUpload();
   const uploading = cv.uploading || cover.uploading;
@@ -65,6 +68,36 @@ export default function ApplicationForm() {
       <input type="hidden" name="coverPath" value={cover.file?.path ?? ""} />
       <input type="hidden" name="coverName" value={cover.file?.name ?? ""} />
 
+      {/* Empty CURRENT_OPENINGS in data/applications.ts removes this entirely. */}
+      {CURRENT_OPENINGS.length > 0 && (
+        <div className="mb-6 rounded-2xl border border-brand/30 bg-brand-50/40 p-4">
+          <p className="text-[13px] font-bold uppercase tracking-[0.06em] text-brand">
+            Hiring now
+          </p>
+          <p className="mt-1 text-sm leading-relaxed text-body">
+            We are actively recruiting for these roles. Applications for
+            anything else are still read and kept on file.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {CURRENT_OPENINGS.map((open) => (
+              <button
+                key={open}
+                type="button"
+                onClick={() => setRole(open)}
+                aria-pressed={role === open}
+                className={`rounded-full px-3.5 py-2 text-[13px] font-semibold transition-colors ${
+                  role === open
+                    ? "bg-brand text-white"
+                    : "border border-brand/40 bg-surface text-brand hover:bg-brand hover:text-white"
+                }`}
+              >
+                {open}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className={label} htmlFor="app-name">Full name</label>
@@ -92,7 +125,13 @@ export default function ApplicationForm() {
             Role you are interested in{" "}
             <span className="font-normal text-muted">(Other? Tell us below)</span>
           </label>
-          <select id="app-role" name="role" defaultValue="" className={field}>
+          <select
+            id="app-role"
+            name="role"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            className={field}
+          >
             <option value="" disabled>
               Choose one
             </option>
