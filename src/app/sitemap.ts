@@ -46,7 +46,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...resources.map((r) => page(`/resources/${r.slug}`, "monthly", 0.7)),
     page("/blog", "weekly", 0.7),
     ...publishedPosts.map((p) => page(`/blog/${p.slug}`, "monthly", 0.6, postDate(p.date))),
-    page("/join-propitz", "monthly", 0.6),
+    // A new URL with new content, so it carries its own date rather than
+    // the site's. Bumping SITE_UPDATED instead would claim all 28 pages
+    // changed today, which is how a sitemap's dates get ignored.
+    page("/join-propitz", "monthly", 0.6, new Date("2026-09-25")),
     page("/about-us", "monthly", 0.6),
     page("/contact-us", "monthly", 0.6),
     page("/vendor-panel-ranking-disclosure", "yearly", 0.4),
