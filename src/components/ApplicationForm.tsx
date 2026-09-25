@@ -1,22 +1,19 @@
 "use client";
 
-import { useActionState, useRef, useState } from "react";
-import { submitApplication } from "@/app/work-with-us/actions";
+import { useActionState, useState } from "react";
+import { submitApplication } from "@/app/join-propitz/actions";
 import {
   CURRENT_OPENINGS,
-  CV_BUCKET,
-  CV_MAX_BYTES,
-  CV_TYPES,
   JOB_ROLES,
   type ApplicationState,
 } from "@/data/applications";
-import { createClient } from "@/lib/supabase/client";
 import { whatsappHref } from "@/data/site";
 import { field } from "@/components/fieldClass";
 import FormPrivacyNotice from "@/components/FormPrivacyNotice";
 import MobileField from "@/components/MobileField";
 import TurnstileField, { TURNSTILE_ENABLED } from "@/components/Turnstile";
-import { IconClose, IconWhatsApp } from "@/components/Icon";
+import { IconWhatsApp } from "@/components/Icon";
+import { FileField, useUpload } from "@/components/DocumentUpload";
 
 const label = "mb-1.5 block text-sm font-medium text-ink";
 
@@ -44,7 +41,8 @@ export default function ApplicationForm() {
       <div className="card p-6 sm:p-8">
         <p className="text-xl font-semibold text-ink">Thank you. Your application is in.</p>
         <p className="mt-2 leading-relaxed text-body">
-          A coordinator will read it and get back to you if there is a fit.
+          Our team reviews applications for current and future opportunities,
+          and will contact you if your profile matches a requirement.
         </p>
         <a
           href={whatsappHref("Hi PropITZ, I have just applied to work with you.")}
@@ -78,25 +76,55 @@ export default function ApplicationForm() {
             We are actively recruiting for these roles. Applications for
             anything else are still read and kept on file.
           </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {CURRENT_OPENINGS.map((open) => (
-              <button
-                key={open}
-                type="button"
-                onClick={() => setRole(open)}
-                aria-pressed={role === open}
-                className={`rounded-full px-3.5 py-2 text-[13px] font-semibold transition-colors ${
-                  role === open
-                    ? "bg-brand text-white"
-                    : "border border-brand/40 bg-surface text-brand hover:bg-brand hover:text-white"
-                }`}
-              >
-                {open}
-              </button>
-            ))}
+          <div className="mt-3 space-y-2.5">
+            {CURRENT_OPENINGS.map((opening) => {
+              const picked = role === opening.role;
+              return (
+                <div
+                  key={opening.role}
+                  className={`rounded-xl border p-3.5 transition-colors ${
+                    picked ? "border-brand bg-surface" : "border-brand/25 bg-surface"
+                  }`}
+                >
+                  <p className="text-[14px] font-bold text-ink">{opening.role}</p>
+                  <p className="mt-1 text-[13px] leading-relaxed text-body">
+                    {opening.about}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setRole(opening.role)}
+                    aria-pressed={picked}
+                    className={`mt-2.5 rounded-full px-3.5 py-2 text-[13px] font-semibold transition-colors ${
+                      picked
+                        ? "bg-brand text-white"
+                        : "border border-brand/40 text-brand hover:bg-brand hover:text-white"
+                    }`}
+                  >
+                    {picked ? "Selected — complete the form below" : "View Role / Apply"}
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
+
+      {/* Outside the openings block on purpose: this stays true, and worth
+          saying, even when nothing is being actively recruited for. */}
+      <p className="mb-6 text-sm leading-relaxed text-body">
+        <span className="font-semibold text-ink">Don&rsquo;t see your role?</span>{" "}
+        We are also interested in people across real-estate operations, customer
+        success, technology, product, marketing, finance and other functions as
+        PropITZ grows.{" "}
+        <button
+          type="button"
+          onClick={() => setRole("Other")}
+          className="font-semibold text-brand underline underline-offset-4"
+        >
+          Send Us Your Profile
+        </button>
+        .
+      </p>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
@@ -154,6 +182,19 @@ export default function ApplicationForm() {
           </label>
           <input id="app-areas" name="areas" className={field} placeholder="Chennai, Chengalpattu" />
         </div>
+        <div className="sm:col-span-2">
+          {/* Not `company` — that name belongs to the honeypot above. */}
+          <label className={label} htmlFor="app-employer">
+            Current / previous company{" "}
+            <span className="font-normal text-muted">(optional)</span>
+          </label>
+          <input
+            id="app-employer"
+            name="employer"
+            className={field}
+            placeholder="Where you work, or last worked"
+          />
+        </div>
       </div>
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -192,7 +233,7 @@ export default function ApplicationForm() {
 
       <TurnstileField pending={pending} onVerifiedChange={setHuman} action="application" />
 
-      <FormPrivacyNotice className="mt-5" />
+      <FormPrivacyNotice variant="application" className="mt-5" />
 
       <button
         type="submit"
@@ -202,98 +243,5 @@ export default function ApplicationForm() {
         {pending ? "Sending…" : "Send application"}
       </button>
     </form>
-  );
-}
-
-type Upload = ReturnType<typeof useUpload>;
-
-/** One attachment: validate, upload to the private bucket, hold the path. */
-function useUpload() {
-  const [file, setFile] = useState<{ path: string; name: string } | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const pick = async (chosen: File | undefined) => {
-    if (!chosen) return;
-    setError(null);
-
-    if (chosen.size > CV_MAX_BYTES) {
-      setError("That file is larger than 5 MB. Please attach a smaller one.");
-      return;
-    }
-    if (!CV_TYPES.includes(chosen.type)) {
-      setError("Please attach a PDF or Word document.");
-      return;
-    }
-
-    setUploading(true);
-    const ext = chosen.name.split(".").pop()?.toLowerCase() ?? "pdf";
-    const path = `${crypto.randomUUID()}.${ext}`;
-    const { error: uploadError } = await createClient()
-      .storage.from(CV_BUCKET)
-      .upload(path, chosen, { contentType: chosen.type, upsert: false });
-    setUploading(false);
-
-    if (uploadError) {
-      setError(`Could not attach that file: ${uploadError.message}`);
-      return;
-    }
-    setFile({ path, name: chosen.name });
-  };
-
-  return { file, uploading, error, pick, clear: () => setFile(null) };
-}
-
-function FileField({
-  id,
-  label: text,
-  hint,
-  upload,
-  name,
-}: {
-  id: string;
-  label: string;
-  hint: string;
-  upload: Upload;
-  name: string;
-}) {
-  // The ref lives here, with the input it belongs to.
-  const input = useRef<HTMLInputElement>(null);
-
-  return (
-    <div>
-      <label className={label} htmlFor={id}>
-        {text} <span className="font-normal text-muted">({hint})</span>
-      </label>
-      {upload.file ? (
-        <div className="flex items-center gap-3 rounded-xl bg-bg-alt px-4 py-3 text-sm">
-          <span className="min-w-0 grow truncate font-medium text-ink">{upload.file.name}</span>
-          <button
-            type="button"
-            onClick={() => {
-              upload.clear();
-              if (input.current) input.current.value = "";
-            }}
-            className="flex shrink-0 items-center gap-1.5 text-[13px] font-semibold text-brand"
-          >
-            <IconClose size={13} />
-            Remove
-          </button>
-        </div>
-      ) : (
-        <input
-          ref={input}
-          id={id}
-          type="file"
-          accept={CV_TYPES.join(",")}
-          disabled={upload.uploading}
-          aria-label={`${text} (${name})`}
-          onChange={(e) => upload.pick(e.target.files?.[0])}
-          className="block w-full text-sm text-body file:mr-3 file:rounded-full file:border-0 file:bg-brand file:px-4 file:py-2.5 file:text-sm file:font-semibold file:text-white hover:file:bg-brand-dark disabled:opacity-60"
-        />
-      )}
-      {upload.uploading && <p className="mt-2 text-[13px] text-body">Attaching…</p>}
-      {upload.error && <p className="mt-2 text-[13px] text-red-700">{upload.error}</p>}
-    </div>
   );
 }

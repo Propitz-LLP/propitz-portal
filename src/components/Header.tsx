@@ -31,8 +31,11 @@ import {
 
 const simpleNav = [
   { label: "Marketplace", href: "/property-marketplace" },
-  { label: "Contact", href: "/contact-us" },
   { label: "About", href: "/about-us" },
+  // A plain text link on purpose: recruitment must not compete with
+  // "Start a Request", which is the page's job.
+  { label: "Join PropITZ", href: "/join-propitz" },
+  { label: "Contact", href: "/contact-us" },
 ];
 
 /**

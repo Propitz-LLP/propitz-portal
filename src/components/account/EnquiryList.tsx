@@ -209,9 +209,31 @@ function EnquiryRow({
           <dl className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
             <Detail label="Mobile" value={e.phone} />
             <Detail label="Email" value={e.email} />
-            <Detail label={e.category === "application" ? "Role" : "Needs help with"} value={e.subject} />
-            <Detail label={e.category === "application" ? "Based in" : "Property location"} value={e.location} />
+            <Detail
+              label={
+                e.category === "professional"
+                  ? "Profession"
+                  : e.category === "application"
+                    ? "Role"
+                    : "Needs help with"
+              }
+              value={e.profession ?? e.subject}
+            />
+            <Detail
+              label={
+                e.category === "professional"
+                  ? "Areas covered"
+                  : e.category === "application"
+                    ? "Based in"
+                    : "Property location"
+              }
+              value={e.location}
+            />
             <Detail label="Experience" value={e.experience} />
+            <Detail label="Company" value={e.employer} />
+            <Detail label="Licence / registration" value={e.licence} />
+            <Detail label="Availability" value={e.availability} />
+            <Detail label="Services offered" value={e.services} />
             <Detail label="Preferred contact" value={e.channel} />
             <Detail label="Call at" value={e.callTime} />
             <Detail label="From page" value={e.page} />
@@ -231,7 +253,19 @@ function EnquiryRow({
                 disabled={opening === e.cvPath}
                 className="btn-dark justify-center px-4 py-2.5 text-[13px] disabled:opacity-60"
               >
-                {opening === e.cvPath ? "Opening…" : `Open CV${e.cvName ? ` (${e.cvName})` : ""}`}
+                {opening === e.cvPath
+                  ? "Opening…"
+                  : `Open ${e.category === "professional" ? "profile" : "CV"}${e.cvName ? ` (${e.cvName})` : ""}`}
+              </button>
+            )}
+            {e.credentialsPath && (
+              <button
+                type="button"
+                onClick={() => openFile(e.credentialsPath!)}
+                disabled={opening === e.credentialsPath}
+                className="btn-ghost justify-center px-4 py-2.5 text-[13px] disabled:opacity-60"
+              >
+                {opening === e.credentialsPath ? "Opening…" : "Open credentials"}
               </button>
             )}
             {e.coverPath && (

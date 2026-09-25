@@ -46,7 +46,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...resources.map((r) => page(`/resources/${r.slug}`, "monthly", 0.7)),
     page("/blog", "weekly", 0.7),
     ...publishedPosts.map((p) => page(`/blog/${p.slug}`, "monthly", 0.6, postDate(p.date))),
-    page("/work-with-us", "monthly", 0.6),
+    page("/join-propitz", "monthly", 0.6),
     page("/about-us", "monthly", 0.6),
     page("/contact-us", "monthly", 0.6),
     page("/vendor-panel-ranking-disclosure", "yearly", 0.4),

@@ -49,6 +49,7 @@ export const LIMITS = {
   checklist: { max: 10, window: 15 * 60 },
   newsletter: { max: 10, window: 15 * 60 },
   application: { max: 5, window: 60 * 60 },
+  professional: { max: 5, window: 60 * 60 },
   register: { max: 8, window: 60 * 60 },
   "password-reset": { max: 5, window: 15 * 60 },
 } as const;

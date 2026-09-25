@@ -284,6 +284,29 @@ export default async function ServiceDetailPage({
         </div>
       </section>
 
+      {/* This one service page is read by professionals as often as by
+          customers, so it carries the only recruitment line in the
+          services section. */}
+      {service.slug === "professional-network-access" && (
+        <section className="border-t border-line bg-bg-alt">
+          <div className="container-px flex flex-col items-center justify-center gap-x-3 gap-y-2 py-6 text-center sm:flex-row">
+            <p className="text-[14.5px] leading-relaxed text-body">
+              <span className="font-semibold text-ink">
+                Are you a property professional?
+              </span>{" "}
+              Apply to join the PropITZ Professional Network.
+            </p>
+            <Link
+              href="/join-propitz"
+              className="inline-flex shrink-0 items-center gap-1.5 text-[14.5px] font-semibold text-brand underline-offset-4 hover:underline"
+            >
+              Join the network
+              <span aria-hidden>→</span>
+            </Link>
+          </div>
+        </section>
+      )}
+
       <CTASection />
     </>
   );

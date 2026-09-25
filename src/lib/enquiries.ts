@@ -34,17 +34,24 @@ function toLead(row: Row): Enquiry {
     message: str(row.message),
     page: str(row.page),
     experience: null,
+    employer: null,
+    profession: null,
+    licence: null,
+    services: null,
+    availability: null,
     cvPath: null,
     cvName: null,
     coverPath: null,
     coverName: null,
+    credentialsPath: null,
+    credentialsName: null,
   };
 }
 
 function toApplication(row: Row): Enquiry {
   return {
     id: String(row.id),
-    category: "application",
+    category: row.kind === "professional" ? "professional" : "application",
     createdAt: String(row.created_at ?? ""),
     readAt: str(row.read_at),
     name: str(row.name),
@@ -57,10 +64,17 @@ function toApplication(row: Row): Enquiry {
     message: str(row.message),
     page: str(row.page),
     experience: str(row.experience),
+    employer: str(row.employer),
+    profession: str(row.category),
+    licence: str(row.licence_no),
+    services: str(row.services),
+    availability: str(row.availability),
     cvPath: str(row.cv_path),
     cvName: str(row.cv_name),
     coverPath: str(row.cover_path),
     coverName: str(row.cover_name),
+    credentialsPath: str(row.credentials_path),
+    credentialsName: str(row.credentials_name),
   };
 }
 

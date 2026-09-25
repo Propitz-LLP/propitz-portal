@@ -69,7 +69,7 @@ export const nav: NavItem[] = [
   { label: "Property Marketplace", href: "/property-marketplace" },
   { label: "Sell a Property", href: "/sell" },
   { label: "Insights", href: "/blog" },
-  { label: "Work with Us", href: "/work-with-us" },
+  { label: "Join PropITZ", href: "/join-propitz" },
   { label: "Contact Us", href: "/contact-us" },
 ];
 

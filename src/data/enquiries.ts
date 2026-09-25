@@ -12,7 +12,8 @@ export const ENQUIRY_CATEGORIES = [
   { key: "seller", label: "Sell callbacks", hint: "Sell a Property" },
   { key: "checklist", label: "Checklist downloads", hint: "Homepage checklist" },
   { key: "newsletter", label: "Newsletter", hint: "Property updates" },
-  { key: "application", label: "Applications", hint: "Work with us — CVs" },
+  { key: "application", label: "Applications", hint: "Join PropITZ — careers" },
+  { key: "professional", label: "Network applications", hint: "Join PropITZ — professionals" },
 ] as const;
 
 export type EnquiryCategory = (typeof ENQUIRY_CATEGORIES)[number]["key"];
@@ -34,9 +35,17 @@ export type Enquiry = {
   message: string | null;
   page: string | null;
   experience: string | null;
+  employer: string | null;
+  /** Network applications: discipline, registration and what they offer. */
+  profession: string | null;
+  licence: string | null;
+  services: string | null;
+  availability: string | null;
   /** Applications only: documents in the private cv-uploads bucket. */
   cvPath: string | null;
   cvName: string | null;
   coverPath: string | null;
   coverName: string | null;
+  credentialsPath: string | null;
+  credentialsName: string | null;
 };

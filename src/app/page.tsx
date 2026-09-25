@@ -137,6 +137,25 @@ export default function Home() {
       </section>
 
       <CTASection />
+
+      {/* Recruitment gets one quiet line above the footer, deliberately.
+          A full careers section here would interrupt the customer journey
+          the rest of the page exists to serve. */}
+      <section className="border-t border-line bg-bg-alt">
+        <div className="container-px flex flex-col items-center justify-center gap-x-3 gap-y-2 py-6 text-center sm:flex-row">
+          <p className="text-[14.5px] leading-relaxed text-body">
+            <span className="font-semibold text-ink">Join PropITZ</span> — we are
+            building our team and professional network across Tamil Nadu.
+          </p>
+          <Link
+            href="/join-propitz"
+            className="inline-flex shrink-0 items-center gap-1.5 text-[14.5px] font-semibold text-brand underline-offset-4 hover:underline"
+          >
+            Explore opportunities
+            <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </section>
     </>
   );
 }

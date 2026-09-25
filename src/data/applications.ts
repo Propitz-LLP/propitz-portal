@@ -2,8 +2,31 @@
 /*  Work with PropITZ: what the application form offers.               */
 /* ------------------------------------------------------------------ */
 
-/** Every application from this form is for a role at PropITZ. */
+/** Every application from the careers form is for a role at PropITZ. */
 export const APPLICATION_KIND = "job";
+
+/** …and every one from the network form is from an independent professional. */
+export const PROFESSIONAL_KIND = "professional";
+
+/**
+ * Disciplines the network is built from. Shown on the page so a
+ * professional can find their own at a glance, and offered in the form as
+ * the one field that has to be picked rather than typed — everything
+ * downstream (grouping, matching an enquiry to a specialist) depends on it
+ * being a known value rather than free text.
+ */
+export const PROFESSIONAL_CATEGORIES = [
+  "Advocates and property lawyers",
+  "Licensed surveyors",
+  "Valuers",
+  "Architects",
+  "Engineers",
+  "Chartered Accountants and tax professionals",
+  "Company Secretaries",
+  "Documentation and registration specialists",
+  "Property field specialists",
+  "Contractors and other relevant property-service professionals",
+];
 
 /**
  * Roles PropITZ hires for, property work first: that is the business.
@@ -41,7 +64,7 @@ export const JOB_ROLES = [
  * Roles being hired for right now, called out above the form so applicants
  * are not left guessing which of the list is actually open.
  *
- * Every entry must match a string in JOB_ROLES exactly — the notice is a
+ * Every `role` must match a string in JOB_ROLES exactly — the notice is a
  * shortcut into the dropdown, and a mismatch would name a role the form
  * cannot select.
  *
@@ -49,8 +72,16 @@ export const JOB_ROLES = [
  * Nothing else needs touching; the whole block disappears.
  */
 export const CURRENT_OPENINGS = [
-  "Business Development Executive — Real Estate",
-  "Operations Executive — Property Documentation & Registration Services",
+  {
+    role: "Business Development Executive — Real Estate",
+    about:
+      "Build relationships with property owners, professionals, developers and local market participants while helping expand PropITZ across Chennai and Tamil Nadu.",
+  },
+  {
+    role: "Operations Executive — Property Documentation & Registration Services",
+    about:
+      "Coordinate customer cases across documentation, registration, SRO processes and professional support, and ensure that each case moves from enquiry to completion.",
+  },
 ];
 
 export const CV_MAX_BYTES = 5 * 1024 * 1024;

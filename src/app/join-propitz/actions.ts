@@ -2,7 +2,12 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { APPLICATION_KIND, type ApplicationState } from "@/data/applications";
+import {
+  APPLICATION_KIND,
+  PROFESSIONAL_CATEGORIES,
+  PROFESSIONAL_KIND,
+  type ApplicationState,
+} from "@/data/applications";
 import { LEGAL_VERSION } from "@/data/legal";
 import { isValidMobile, mobileError, toE164, DEFAULT_COUNTRY } from "@/lib/phone";
 import { esc, notificationHtml, row, sendEmail } from "@/lib/email";
@@ -64,12 +69,13 @@ export async function submitApplication(
     role: text(formData, "role", 120) || null,
     experience: text(formData, "experience", 60) || null,
     areas: text(formData, "areas", 200) || null,
+    employer: text(formData, "employer", 160) || null,
     message: text(formData, "message", 2000) || null,
     cv_path: cvPath || null,
     cv_name: text(formData, "cvName", 200) || null,
     cover_path: coverPath || null,
     cover_name: text(formData, "coverName", 200) || null,
-    page: "work-with-us",
+    page: "join-propitz",
     terms_version: LEGAL_VERSION,
   };
 
@@ -141,6 +147,132 @@ async function notifyTeam(application: Record<string, string | null>) {
       row("Based in", application.areas),
       row("Message", application.message),
     ].join("") + cvLine + coverLine,
+    "Sent by the PropITZ website. The full record is in Supabase → applications."
+  );
+
+  await sendEmail({ subject, html, replyTo: application.email ?? undefined });
+}
+
+/* ------------------------------------------------------------------ */
+/*  Professional Network applications.                                 */
+/*                                                                     */
+/*  Same table, same private bucket, same retention as a job           */
+/*  application — only `kind` and the extra fields differ. Joining the  */
+/*  network is not employment, and nothing here implies it is: an       */
+/*  application is a request to be assessed, not an offer.             */
+/* ------------------------------------------------------------------ */
+
+export async function submitProfessional(
+  _prev: ApplicationState,
+  formData: FormData
+): Promise<ApplicationState> {
+  // Bots fill every field; people never see this one.
+  if (text(formData, "company", 100)) return { ok: true };
+
+  const name = text(formData, "name", 160);
+  const mobile = text(formData, "mobile", 30);
+  const country = text(formData, "country", 4) || DEFAULT_COUNTRY;
+  const email = text(formData, "email", 200).toLowerCase();
+  const category = text(formData, "category", 120);
+  const areas = text(formData, "areas", 200);
+  const cvPath = text(formData, "cvPath", 200);
+  const credentialsPath = text(formData, "credentialsPath", 200);
+  const isStoredPath = (p: string) => /^[A-Za-z0-9._-]+$/.test(p);
+
+  if (!name) return { error: "Please enter your name or firm name." };
+  if (!mobile) return { error: "Please enter your mobile number." };
+  if (!isValidMobile(mobile, country)) return { error: mobileError(country) };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))
+    return { error: "Please enter a valid email address." };
+  // The one field that must be a known value: everything downstream
+  // groups by it.
+  if (!PROFESSIONAL_CATEGORIES.includes(category))
+    return { error: "Please choose the profession that describes your work." };
+  if (!areas) return { error: "Please tell us the areas you cover." };
+  if (cvPath && !isStoredPath(cvPath))
+    return { error: "That profile could not be attached. Please try again." };
+  if (credentialsPath && !isStoredPath(credentialsPath))
+    return { error: "Those credentials could not be attached. Please try again." };
+
+  if (!(await withinRateLimit("professional"))) return { error: RATE_LIMITED };
+  if (!(await isHuman(formData, "professional-network")))
+    return { error: HUMAN_CHECK_FAILED };
+
+  const applicationRow = {
+    kind: PROFESSIONAL_KIND,
+    name,
+    phone: toE164(mobile, country),
+    email,
+    category,
+    // `role` mirrors the category so the dashboard and any later matching
+    // can read one column across both kinds of application.
+    role: category,
+    licence_no: text(formData, "licence", 80) || null,
+    services: text(formData, "services", 600) || null,
+    availability: text(formData, "availability", 200) || null,
+    experience: text(formData, "experience", 60) || null,
+    areas,
+    message: text(formData, "message", 2000) || null,
+    cv_path: cvPath || null,
+    cv_name: text(formData, "cvName", 200) || null,
+    credentials_path: credentialsPath || null,
+    credentials_name: text(formData, "credentialsName", 200) || null,
+    page: "join-propitz",
+    terms_version: LEGAL_VERSION,
+  };
+
+  if (!isSupabaseConfigured) {
+    console.error("professionals: Supabase is not configured; not saved");
+    return { error: "We could not send your application just now. Please try again." };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("applications").insert(applicationRow);
+
+  if (error) {
+    // Most likely the 20260928 migration has not been run yet.
+    console.error("professionals: insert failed —", error.message);
+    return {
+      error:
+        "We could not send your application just now. Please try again, or message us on WhatsApp.",
+    };
+  }
+
+  await notifyProfessional(applicationRow);
+
+  return { ok: true };
+}
+
+/** Tell the team a professional applied, with links to what they sent. */
+async function notifyProfessional(application: Record<string, string | null>) {
+  const subject = `Network application: ${application.category ?? "professional"} — ${application.name}`;
+
+  const link = async (label: string, path: string | null, fileName: string | null) => {
+    if (!path) return "";
+    const url = await signedFileUrl(CV_BUCKET, path);
+    return url
+      ? `<p style="margin:8px 0 0"><a href="${url}">Open the ${esc(label)}${fileName ? ` (${esc(fileName)})` : ""}</a> — link expires in 7 days.</p>`
+      : `<p style="margin:8px 0 0">${esc(label)} attached: <strong>${esc(fileName ?? path)}</strong> (open it in Supabase → Storage → cv-uploads).</p>`;
+  };
+
+  const files =
+    (await link("profile", application.cv_path, application.cv_name)) +
+    (await link("credentials", application.credentials_path, application.credentials_name));
+
+  const html = notificationHtml(
+    subject,
+    [
+      row("Name / firm", application.name),
+      row("Profession", application.category),
+      row("Mobile", application.phone),
+      row("Email", application.email),
+      row("Licence / registration", application.licence_no),
+      row("Experience", application.experience),
+      row("Areas covered", application.areas),
+      row("Services offered", application.services),
+      row("Availability", application.availability),
+      row("Introduction", application.message),
+    ].join("") + files,
     "Sent by the PropITZ website. The full record is in Supabase → applications."
   );
 

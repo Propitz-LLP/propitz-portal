@@ -30,6 +30,15 @@ const nextConfig: NextConfig = {
         destination: "/services/professional-network-access",
         statusCode: 301,
       },
+      // The careers page was briefly live at /work-with-us before it was
+      // renamed to Join PropITZ (Sept 2026). Redirected rather than left
+      // to 404: it was in one sitemap, and anyone who bookmarked it or
+      // shared the link should still land on the page.
+      {
+        source: "/work-with-us",
+        destination: "/join-propitz",
+        statusCode: 301,
+      },
     ];
   },
 };
