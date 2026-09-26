@@ -60,7 +60,7 @@ export default function AuthNav({ variant = "desktop" }: { variant?: "desktop" |
 
   if (variant === "mobile") {
     return (
-      <Link href={href} className="block rounded-xl px-4 py-3 text-sm font-semibold text-ink">
+      <Link href={href} className="block rounded-xl px-3 py-3 text-sm font-semibold text-ink">
         {label}
       </Link>
     );

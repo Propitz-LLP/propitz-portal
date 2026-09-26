@@ -32,9 +32,6 @@ import {
 const simpleNav = [
   { label: "Marketplace", href: "/property-marketplace" },
   { label: "About", href: "/about-us" },
-  // A plain text link on purpose: recruitment must not compete with
-  // "Start a Request", which is the page's job.
-  { label: "Join PropITZ", href: "/join-propitz" },
   { label: "Contact", href: "/contact-us" },
 ];
 
@@ -101,7 +98,17 @@ export default function Header() {
               Location pill (disabled). Restore the import above to re-enable.
               <RegionBadge className="hidden sm:block" />
             */}
-            <div className="hidden lg:block">
+            <div className="hidden items-center gap-4 lg:flex">
+              <Link
+                href="/join-propitz"
+                className={`rounded-lg px-3 py-2.5 text-sm transition-colors ${
+                  isActive("/join-propitz")
+                    ? "bg-brand-50 font-semibold text-brand"
+                    : "font-medium text-body hover:bg-bg-alt hover:text-ink"
+                }`}
+              >
+                Join PropITZ
+              </Link>
               <AuthNav />
             </div>
             <Link
@@ -311,7 +318,18 @@ export default function Header() {
                   {n.label}
                 </Link>
               ))}
-              <div className="px-3 py-2">
+              <div className="flex flex-col items-stretch gap-1 py-2">
+                <Link
+                  href="/join-propitz"
+                  onClick={() => setDrawerFor(null)}
+                  className={`w-full rounded-xl px-3 py-3 text-left text-sm font-semibold transition-colors ${
+                    isActive("/join-propitz")
+                      ? "bg-brand-50 text-brand"
+                      : "text-ink hover:bg-bg-alt"
+                  }`}
+                >
+                  Join PropITZ
+                </Link>
                 <AuthNav variant="mobile" />
               </div>
             </div>
