@@ -99,12 +99,16 @@ export default function Header() {
               <RegionBadge className="hidden sm:block" />
             */}
             <div className="hidden items-center gap-4 lg:flex">
+              {/* Sits beside Login now, not in the nav group, so it matches
+                  Login's type rather than the nav's: same 15px, same ink.
+                  The padding stays — it keeps the optical gap to Login
+                  (28px text-to-text) level with Login's to the CTA (30px). */}
               <Link
                 href="/join-propitz"
-                className={`rounded-lg px-3 py-2.5 text-sm transition-colors ${
+                className={`rounded-lg px-3 py-2.5 text-[15px] transition-colors ${
                   isActive("/join-propitz")
                     ? "bg-brand-50 font-semibold text-brand"
-                    : "font-medium text-body hover:bg-bg-alt hover:text-ink"
+                    : "font-medium text-ink hover:bg-bg-alt hover:text-brand"
                 }`}
               >
                 Join PropITZ
