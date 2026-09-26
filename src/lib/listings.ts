@@ -78,6 +78,7 @@ function toListing(row: Row): Listing {
     areaUnit: area && isAreaUnit(row.area_unit) ? (row.area_unit as AreaUnit) : null,
     rate: toNumber(row.rate_inr),
     images: Array.isArray(row.images) ? row.images.map(String) : [],
+    videos: Array.isArray(row.videos) ? row.videos.map(String) : [],
     title: String(row.title ?? ""),
     locality: String(row.locality ?? ""),
     badges: toBadges(row.badges),

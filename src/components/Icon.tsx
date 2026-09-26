@@ -162,6 +162,21 @@ export const IconPin = (p: Props) =>
     p
   );
 
+export const IconHelp = (p: Props) =>
+  svg(
+    <>
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.4" />
+      <path
+        d="M9.6 9.3a2.5 2.5 0 1 1 3.3 2.36c-.6.22-.9.74-.9 1.34v.4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <circle cx="12" cy="16.4" r="0.9" fill="currentColor" />
+    </>,
+    p
+  );
+
 export const IconPlay = (p: Props) =>
   svg(<path d="M7 4.5v15l12.5-7.5L7 4.5Z" fill="currentColor" />, p);
 

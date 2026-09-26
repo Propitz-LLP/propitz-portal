@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import type { Listing } from "@/data/marketplace";
 import { formatArea, formatPrice, formatRate } from "@/lib/money";
 import ListingGallery from "./ListingGallery";
+import { listingVideoUrl } from "@/lib/listingVideos";
+import { listingImageUrl } from "@/lib/listingImages";
 import { IconClose } from "./Icon";
 
 const badgeClass = { ok: "badge-ok", warn: "badge-warn", none: "badge-none" } as const;
@@ -110,6 +112,31 @@ export default function ListingDialog({
                   {b.label}
                 </span>
               ))}
+            </div>
+          )}
+
+          {listing.videos.length > 0 && (
+            <div className="mt-5 border-t border-line pt-5">
+              <p className="text-[10.5px] font-bold uppercase tracking-[0.09em] text-faint">
+                {listing.videos.length === 1 ? "Walkthrough" : "Walkthroughs"}
+              </p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                {listing.videos.map((path, i) => (
+                  <video
+                    key={path}
+                    src={listingVideoUrl(path)}
+                    controls
+                    playsInline
+                    // Nothing is fetched until it is played, and the cover
+                    // photo stands in until then: a buyer who only wants the
+                    // pictures never pays for the video in data or waiting.
+                    preload="none"
+                    poster={listing.images[0] ? listingImageUrl(listing.images[0]) : undefined}
+                    aria-label={`${listing.title} walkthrough ${i + 1}`}
+                    className="aspect-video w-full rounded-xl bg-ink object-cover"
+                  />
+                ))}
+              </div>
             </div>
           )}
 

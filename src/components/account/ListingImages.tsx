@@ -58,7 +58,14 @@ export default function ListingImages({ initial }: { initial: string[] }) {
       const path = `${crypto.randomUUID()}.${ext}`;
       const { error: uploadError } = await supabase.storage
         .from(LISTING_IMAGES_BUCKET)
-        .upload(path, file, { contentType: file.type, upsert: false });
+        .upload(path, file, {
+          contentType: file.type,
+          upsert: false,
+          // UUID name, never overwritten, so it can be cached for a
+          // year. The default is an hour, which makes returning
+          // visitors re-download the whole gallery.
+          cacheControl: "31536000",
+        });
 
       if (uploadError) {
         setError(

@@ -5,7 +5,7 @@ import type { Listing } from "@/data/marketplace";
 import { formatArea, formatPrice, formatRate } from "@/lib/money";
 import ListingGallery from "./ListingGallery";
 import ListingDialog from "./ListingDialog";
-import { IconAlert, IconCheck } from "./Icon";
+import { IconAlert, IconCheck, IconPlay } from "./Icon";
 
 const badgeClass = { ok: "badge-ok", warn: "badge-warn", none: "badge-none" } as const;
 
@@ -53,11 +53,19 @@ export default function ListingCard({ listing }: { listing: Listing }) {
             {verified ? <IconCheck size={12} /> : <IconAlert size={12} />}
             {verified ? "Verified" : "In review"}
           </span>
-          {listing.images.length > 1 && (
-            <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-ink/75 px-2.5 py-1 text-[11.5px] font-semibold text-white">
-              {listing.images.length} photos
-            </span>
-          )}
+          <span className="pointer-events-none absolute right-3 top-3 flex items-center gap-1.5">
+            {listing.videos.length > 0 && (
+              <span className="flex items-center gap-1 rounded-full bg-ink/75 px-2.5 py-1 text-[11.5px] font-semibold text-white">
+                <IconPlay size={10} />
+                Video
+              </span>
+            )}
+            {listing.images.length > 1 && (
+              <span className="rounded-full bg-ink/75 px-2.5 py-1 text-[11.5px] font-semibold text-white">
+                {listing.images.length} photos
+              </span>
+            )}
+          </span>
         </div>
 
         <div className="p-5">

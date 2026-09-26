@@ -7,6 +7,10 @@ import { requireContributor } from "@/lib/roles";
 import { BADGE_SLOTS, type Badge } from "@/data/marketplace";
 import { isAreaUnit } from "@/lib/money";
 import { LISTING_IMAGES_BUCKET, MAX_IMAGES } from "@/lib/listingImages";
+import {
+  LISTING_VIDEOS_BUCKET,
+  MAX_VIDEOS,
+} from "@/lib/listingVideos";
 
 export type FormState = { error?: string; message?: string };
 
@@ -52,6 +56,15 @@ function readImages(formData: FormData): string[] {
     .slice(0, MAX_IMAGES);
 }
 
+/** Uploaded video paths, in the order the form shows them. */
+function readVideos(formData: FormData): string[] {
+  return String(formData.get("videos") ?? "")
+    .split(",")
+    .map((p) => p.trim())
+    .filter((p) => /^[A-Za-z0-9._-]+$/.test(p))
+    .slice(0, MAX_VIDEOS);
+}
+
 function readListing(formData: FormData) {
   const unit = String(formData.get("areaUnit") ?? "sqft");
   const area = readNumber(formData, "area");
@@ -64,6 +77,7 @@ function readListing(formData: FormData) {
     area_unit: area && isAreaUnit(unit) ? unit : null,
     rate_inr: readNumber(formData, "rate"),
     images: readImages(formData),
+    videos: readVideos(formData),
     title: String(formData.get("title") ?? "").trim(),
     locality: String(formData.get("locality") ?? "").trim(),
     published: formData.get("published") === "on",
@@ -149,10 +163,16 @@ export async function deleteListing(formData: FormData) {
 
   const supabase = await createClient();
 
-  // Take the photos with it, so the bucket does not collect orphans.
-  const { data: row } = await supabase.from("listings").select("images").eq("id", id).maybeSingle();
+  // Take the media with it, so the buckets do not collect orphans.
+  const { data: row } = await supabase
+    .from("listings")
+    .select("images, videos")
+    .eq("id", id)
+    .maybeSingle();
   const images: string[] = Array.isArray(row?.images) ? row.images.map(String) : [];
+  const videos: string[] = Array.isArray(row?.videos) ? row.videos.map(String) : [];
   if (images.length) await supabase.storage.from(LISTING_IMAGES_BUCKET).remove(images);
+  if (videos.length) await supabase.storage.from(LISTING_VIDEOS_BUCKET).remove(videos);
 
   await supabase.from("listings").delete().eq("id", id);
 

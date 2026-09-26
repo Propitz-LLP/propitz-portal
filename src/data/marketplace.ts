@@ -29,6 +29,8 @@ export type Listing = {
   rate: number | null;
   /** Storage paths in the listing-images bucket, cover first. */
   images: string[];
+  /** Storage paths in the listing-videos bucket, in display order. */
+  videos: string[];
   title: string;
   locality: string;
   badges: Badge[];
@@ -122,6 +124,7 @@ export const listings: Listing[] = [
     areaUnit: "sqft",
     rate: 2634,
     images: [],
+    videos: [],
     title: "Residential plot, approved layout",
     locality: "Sholinganallur, OMR",
     badges: [
@@ -139,6 +142,7 @@ export const listings: Listing[] = [
     areaUnit: "sqft",
     rate: null,
     images: [],
+    videos: [],
     title: "Independent house, two floors",
     locality: "Anna Nagar West, Chennai",
     badges: [
@@ -156,6 +160,7 @@ export const listings: Listing[] = [
     areaUnit: "sqft",
     rate: 8050,
     images: [],
+    videos: [],
     title: "2 BHK apartment, gated",
     locality: "Perungudi, OMR",
     badges: [
@@ -173,6 +178,7 @@ export const listings: Listing[] = [
     areaUnit: "acres",
     rate: 550000,
     images: [],
+    videos: [],
     title: "Agricultural land, wet",
     locality: "Near Maraimalai Nagar",
     badges: [
@@ -190,6 +196,7 @@ export const listings: Listing[] = [
     areaUnit: "sqft",
     rate: 2067,
     images: [],
+    videos: [],
     title: "Corner plot, DTCP layout",
     locality: "Guduvancheri, GST Road",
     badges: [
@@ -207,6 +214,7 @@ export const listings: Listing[] = [
     areaUnit: "sqft",
     rate: null,
     images: [],
+    videos: [],
     title: "Row house, gated community",
     locality: "Tambaram West",
     badges: [

@@ -7,6 +7,7 @@ import type { ManagedListing } from "@/lib/listings";
 import { BADGE_SLOTS, propertyTypes } from "@/data/marketplace";
 import { field } from "@/components/fieldClass";
 import ListingImages from "@/components/account/ListingImages";
+import ListingVideos from "@/components/account/ListingVideos";
 import { AREA_UNITS, formatPrice, formatRate, type AreaUnit } from "@/lib/money";
 
 const initial: FormState = {};
@@ -180,6 +181,7 @@ export default function ListingForm({ listing }: { listing?: ManagedListing }) {
       </div>
 
       <ListingImages initial={listing?.images ?? []} />
+      <ListingVideos initial={listing?.videos ?? []} />
 
       <fieldset className="mt-6 border-t border-line pt-5">
         <legend className="sr-only">Document badges</legend>
