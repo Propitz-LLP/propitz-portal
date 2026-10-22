@@ -1,0 +1,88 @@
+# End-to-end tests for every Vercel deployment.
+#
+# Vercel's GitHub integration posts a deployment_status event when a
+# deployment (preview or production) finishes building. This runs the
+# Playwright suite against that exact URL.
+#
+#   Preview     full suite, including the @write tests (sign-up, forms,
+#               listings, team). Preview deployments use the separate TEST
+#               Supabase project, so these write freely and clean up after.
+#   Production  everything except @write: the live site is only read.
+#
+# To stop a failing build reaching production, add this job ("e2e") under
+# Vercel -> Project -> Settings -> Deployment Checks.
+#
+# Repository secrets (Settings -> Secrets and variables -> Actions):
+#   VERCEL_AUTOMATION_BYPASS_SECRET  Vercel -> Settings -> Deployment
+#                                    Protection -> Protection Bypass for Automation
+#   E2E_SUPABASE_URL                 the TEST project's URL and secret key —
+#   E2E_SUPABASE_SECRET_KEY          the same project Vercel's Preview env uses.
+#                                    Never the production project: the tests
+#                                    refuse to write to it.
+#   E2E_EMAIL                        optional; mailbox for test accounts
+#                                    (default e2e@propitz.com)
+
+name: e2e
+
+on:
+  deployment_status:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: Deployment URL to test
+        required: true
+      write:
+        description: Run the @write tests (never against production)
+        type: boolean
+        default: false
+
+concurrency:
+  group: e2e-${{ github.event.deployment.sha || github.sha }}-${{ github.event.deployment.environment || 'manual' }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    if: github.event_name == 'workflow_dispatch' || github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CI: "true"
+      BASE_URL: ${{ github.event.deployment_status.environment_url || github.event.deployment_status.target_url || inputs.base_url }}
+      IS_PRODUCTION: ${{ contains(github.event.deployment.environment, 'Production') }}
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+      E2E_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
+      E2E_SUPABASE_SECRET_KEY: ${{ secrets.E2E_SUPABASE_SECRET_KEY }}
+      E2E_EMAIL: ${{ secrets.E2E_EMAIL }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.deployment.sha || github.sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Decide what may write
+        run: |
+          echo "Testing $BASE_URL (production: $IS_PRODUCTION)"
+          if [ "$IS_PRODUCTION" != "true" ] && { [ "${{ github.event_name }}" = "deployment_status" ] || [ "${{ inputs.write }}" = "true" ]; }; then
+            echo "E2E_WRITE=1" >> "$GITHUB_ENV"
+          fi
+
+      - name: Run Playwright
+        run: npx playwright test
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report-${{ github.event.deployment.environment || 'manual' }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
