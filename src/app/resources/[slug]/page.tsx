@@ -9,6 +9,11 @@ import LandConverter from "@/components/LandConverter";
 import RegistrationFeeCalculator from "@/components/RegistrationFeeCalculator";
 import CTASection from "@/components/CTASection";
 import { resources, getResource } from "@/data/resources";
+import { saleDeedRatesOn } from "@/data/registrationRates";
+
+// Re-rendered daily, so a fee change entered ahead of its start date in
+// data/registrationRates.ts goes live on that date without a redeploy.
+export const revalidate = 86400;
 
 export function generateStaticParams() {
   return resources.map((r) => ({ slug: r.slug }));
@@ -53,7 +58,7 @@ export default async function ResourcePage({
           )}
           {resource.slug === "stamp-duty-registration-fee-calculator" && (
             <div className="mb-10">
-              <RegistrationFeeCalculator />
+              <RegistrationFeeCalculator rates={saleDeedRatesOn()} />
             </div>
           )}
           <div className="prose-content max-w-none">
