@@ -4,38 +4,49 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireContributor } from "@/lib/roles";
 import { CV_BUCKET } from "@/data/applications";
-import type { EnquiryCategory } from "@/data/enquiries";
+import { isEnquiryStatus, type EnquiryCategory, type EnquiryStatus } from "@/data/enquiries";
 
-/** Which table a category lives in. */
-const tableFor = (category: EnquiryCategory) =>
-  category === "application" ? "applications" : "leads";
+/** Which table a category lives in, as enquiry_update() names it. */
+const kindFor = (category: EnquiryCategory) =>
+  category === "application" || category === "professional" ? "application" : "lead";
 
 /**
- * Mark one enquiry read or unread.
+ * Change an enquiry's status, add a comment, or both.
  *
- * Row level security only lets a contributor update these rows, and the
- * role is checked here too, so neither alone is the single gate.
+ * Goes through the enquiry_update() function (20261030 migration), which
+ * does both in one transaction and logs the change against the signed-in
+ * person's email. It runs as that person, so row level security — team
+ * only — still applies; the role is checked here as well.
  */
-export async function setRead(
+export async function updateEnquiry(
   id: string,
   category: EnquiryCategory,
-  read: boolean
+  change: { status?: EnquiryStatus; note?: string }
 ): Promise<{ error?: string }> {
-  const viewer = await requireContributor();
-  const supabase = await createClient();
+  await requireContributor();
 
-  const { error } = await supabase
-    .from(tableFor(category))
-    .update(
-      read
-        ? { read_at: new Date().toISOString(), read_by: viewer.email }
-        : { read_at: null, read_by: null }
-    )
-    .eq("id", id);
+  const note = change.note?.trim() ?? "";
+  if (change.status && !isEnquiryStatus(change.status)) return { error: "Unknown status." };
+  if (!change.status && !note) return { error: "Write a comment first." };
+  if (note.length > 4000) return { error: "That comment is too long. Keep it under 4,000 characters." };
+
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("enquiry_update", {
+    p_kind: kindFor(category),
+    p_id: id,
+    p_status: change.status ?? null,
+    p_note: note || null,
+  });
 
   if (error) {
-    console.error("enquiries: could not mark read —", error.message);
-    return { error: "Could not update that just now." };
+    console.error("enquiries: could not update —", error.message);
+    // PGRST202: the function does not exist yet.
+    return {
+      error:
+        error.code === "PGRST202"
+          ? "Statuses and comments need the 20261030 database migration. Ask whoever runs Supabase to apply it."
+          : "Could not save that just now. Please try again.",
+    };
   }
 
   revalidatePath("/account/enquiries");

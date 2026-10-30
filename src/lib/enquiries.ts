@@ -1,6 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import type { Enquiry, EnquiryCategory } from "@/data/enquiries";
+import {
+  isEnquiryStatus,
+  type Enquiry,
+  type EnquiryActivity,
+  type EnquiryCategory,
+  type EnquiryStatus,
+} from "@/data/enquiries";
 
 /* ------------------------------------------------------------------ */
 /*  What the website collected: enquiries and job applications.        */
@@ -15,10 +21,21 @@ type Row = Record<string, unknown>;
 
 const str = (v: unknown) => (v === null || v === undefined ? null : String(v));
 
+const ticket = (v: unknown) => (v === null || v === undefined ? null : Number(v));
+
+/**
+ * The row's status. Before the 20261030 migration the column still holds
+ * the old values ("new" and so on), so fall back to read/unread.
+ */
+const statusOf = (row: Row): EnquiryStatus =>
+  isEnquiryStatus(row.status) ? row.status : row.read_at ? "read" : "unread";
+
 function toLead(row: Row): Enquiry {
   const source = String(row.source ?? "request");
   return {
     id: String(row.id),
+    ticketNo: ticket(row.ticket_no),
+    status: statusOf(row),
     category: (["request", "seller", "checklist", "newsletter"].includes(source)
       ? source
       : "request") as EnquiryCategory,
@@ -45,12 +62,15 @@ function toLead(row: Row): Enquiry {
     coverName: null,
     credentialsPath: null,
     credentialsName: null,
+    activity: [],
   };
 }
 
 function toApplication(row: Row): Enquiry {
   return {
     id: String(row.id),
+    ticketNo: ticket(row.ticket_no),
+    status: statusOf(row),
     category: row.kind === "professional" ? "professional" : "application",
     createdAt: String(row.created_at ?? ""),
     readAt: str(row.read_at),
@@ -75,7 +95,30 @@ function toApplication(row: Row): Enquiry {
     coverName: str(row.cover_name),
     credentialsPath: str(row.credentials_path),
     credentialsName: str(row.credentials_name),
+    activity: [],
   };
+}
+
+/**
+ * The whole comment and status trail, oldest first. Paged, because
+ * Supabase returns at most 1,000 rows per request and the trail outgrows
+ * that long before the enquiries do.
+ */
+async function fetchActivity(supabase: Awaited<ReturnType<typeof createClient>>) {
+  const PAGE = 1000;
+  const rows: Row[] = [];
+  for (let from = 0; from < 50 * PAGE; from += PAGE) {
+    const { data, error } = await supabase
+      .from("enquiry_activity")
+      .select("*")
+      .order("created_at", { ascending: true })
+      .order("id", { ascending: true })
+      .range(from, from + PAGE - 1);
+    if (error) return { data: rows, error };
+    rows.push(...(data ?? []));
+    if (!data || data.length < PAGE) break;
+  }
+  return { data: rows, error: null };
 }
 
 /**
@@ -87,13 +130,14 @@ export async function fetchEnquiries(limit = 500): Promise<Enquiry[]> {
   if (!isSupabaseConfigured) return [];
   const supabase = await createClient();
 
-  const [leads, applications] = await Promise.all([
+  const [leads, applications, activity] = await Promise.all([
     supabase.from("leads").select("*").order("created_at", { ascending: false }).limit(limit),
     supabase
       .from("applications")
       .select("*")
       .order("created_at", { ascending: false })
       .limit(limit),
+    fetchActivity(supabase),
   ]);
 
   // A missing table or a denied read means the migration has not been run;
@@ -101,18 +145,39 @@ export async function fetchEnquiries(limit = 500): Promise<Enquiry[]> {
   if (leads.error) console.warn("enquiries: leads —", leads.error.message);
   if (applications.error)
     console.warn("enquiries: applications —", applications.error.message);
+  if (activity.error) console.warn("enquiries: activity —", activity.error.message);
+
+  // Each enquiry's trail, keyed by the row it belongs to.
+  const trail = new Map<string, EnquiryActivity[]>();
+  for (const row of (activity.data ?? []) as Row[]) {
+    const key = str(row.lead_id) ?? str(row.application_id);
+    if (!key) continue;
+    const list = trail.get(key) ?? [];
+    list.push({
+      id: String(row.id),
+      kind: row.kind === "status" ? "status" : "comment",
+      fromStatus: isEnquiryStatus(row.from_status) ? row.from_status : null,
+      toStatus: isEnquiryStatus(row.to_status) ? row.to_status : null,
+      body: str(row.body),
+      author: String(row.author ?? ""),
+      createdAt: String(row.created_at ?? ""),
+    });
+    trail.set(key, list);
+  }
 
   return [
     ...(leads.data ?? []).map(toLead),
     ...(applications.data ?? []).map(toApplication),
-  ].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  ]
+    .map((e) => ({ ...e, activity: trail.get(e.id) ?? [] }))
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
 /** Unread count per category, for the tabs. */
 export function unreadByCategory(enquiries: Enquiry[]) {
   const counts = new Map<EnquiryCategory, number>();
   for (const e of enquiries) {
-    if (e.readAt) continue;
+    if (e.status !== "unread") continue;
     counts.set(e.category, (counts.get(e.category) ?? 0) + 1);
   }
   return counts;
