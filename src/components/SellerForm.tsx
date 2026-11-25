@@ -7,6 +7,7 @@ import { whatsappHref } from "@/data/site";
 import { IconWhatsApp } from "@/components/Icon";
 import MobileField from "@/components/MobileField";
 import FormPrivacyNotice from "@/components/FormPrivacyNotice";
+import ReferenceBox from "@/components/ReferenceBox";
 import TurnstileField, { TURNSTILE_ENABLED } from "@/components/Turnstile";
 
 const field =
@@ -33,12 +34,17 @@ export default function SellerForm() {
     return (
       <div className="card p-6 sm:p-8">
         <p className="text-xl font-semibold text-ink">Thank you. We will call you back.</p>
+        {state.reference && <ReferenceBox reference={state.reference} />}
         <p className="mt-2 leading-relaxed text-body">
           A coordinator will call at the time you chose to understand the property
           and explain the next steps.
         </p>
         <a
-          href={whatsappHref("Hi PropITZ, I have just asked for a callback about selling my property.")}
+          href={whatsappHref(
+            state.reference
+              ? `Hi PropITZ, about my callback request ${state.reference}.`
+              : "Hi PropITZ, I have just asked for a callback about selling my property."
+          )}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-ghost mt-6 gap-2.5 py-3.5 text-[15px]"

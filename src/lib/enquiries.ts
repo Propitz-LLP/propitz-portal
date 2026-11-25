@@ -1,10 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import {
+  isCallOutcome,
+  isCaseCategory,
+  isClosureReason,
   isEnquiryStatus,
+  type CaseState,
   type Enquiry,
-  type EnquiryActivity,
   type EnquiryCategory,
+  type EnquiryEvent,
   type EnquiryStatus,
 } from "@/data/enquiries";
 
@@ -21,24 +25,34 @@ type Row = Record<string, unknown>;
 
 const str = (v: unknown) => (v === null || v === undefined ? null : String(v));
 
-const ticket = (v: unknown) => (v === null || v === undefined ? null : Number(v));
-
 /**
- * The row's status. Before the 20261030 migration the column still holds
- * the old values ("new" and so on), so fall back to read/unread.
+ * The row's status. Before the 20261125 migration the column holds the
+ * old values ("new" for everything), so fall back to the start of the
+ * lifecycle: New for a case, Open for anything else.
  */
-const statusOf = (row: Row): EnquiryStatus =>
-  isEnquiryStatus(row.status) ? row.status : row.read_at ? "read" : "unread";
+function statusOf(row: Row, category: EnquiryCategory): EnquiryStatus {
+  const s = row.status;
+  if (isCaseCategory(category)) return isEnquiryStatus(s) && s !== "open" ? s : "new";
+  return s === "closed" ? "closed" : "open";
+}
+
+const resumeOf = (v: unknown): CaseState | null =>
+  v === "new" || v === "contacted" || v === "assigned" || v === "in_progress" ? v : null;
 
 function toLead(row: Row): Enquiry {
   const source = String(row.source ?? "request");
+  const category = (["request", "seller", "checklist", "newsletter"].includes(source)
+    ? source
+    : "request") as EnquiryCategory;
   return {
     id: String(row.id),
-    ticketNo: ticket(row.ticket_no),
-    status: statusOf(row),
-    category: (["request", "seller", "checklist", "newsletter"].includes(source)
-      ? source
-      : "request") as EnquiryCategory,
+    category,
+    reference: str(row.reference),
+    status: statusOf(row, category),
+    resumeStatus: resumeOf(row.resume_status),
+    closureReason: isClosureReason(row.closure_reason) ? row.closure_reason : null,
+    closureNote: str(row.closure_note),
+    statusChangedAt: str(row.status_changed_at),
     createdAt: String(row.created_at ?? ""),
     readAt: str(row.read_at),
     name: str(row.name),
@@ -62,16 +76,21 @@ function toLead(row: Row): Enquiry {
     coverName: null,
     credentialsPath: null,
     credentialsName: null,
-    activity: [],
+    events: [],
   };
 }
 
 function toApplication(row: Row): Enquiry {
+  const category: EnquiryCategory = row.kind === "professional" ? "professional" : "application";
   return {
     id: String(row.id),
-    ticketNo: ticket(row.ticket_no),
-    status: statusOf(row),
-    category: row.kind === "professional" ? "professional" : "application",
+    category,
+    reference: null,
+    status: statusOf(row, category),
+    resumeStatus: null,
+    closureReason: null,
+    closureNote: null,
+    statusChangedAt: str(row.status_changed_at),
     createdAt: String(row.created_at ?? ""),
     readAt: str(row.read_at),
     name: str(row.name),
@@ -95,24 +114,40 @@ function toApplication(row: Row): Enquiry {
     coverName: str(row.cover_name),
     credentialsPath: str(row.credentials_path),
     credentialsName: str(row.credentials_name),
-    activity: [],
+    events: [],
+  };
+}
+
+function toEvent(row: Row): EnquiryEvent {
+  const type = String(row.type);
+  return {
+    id: String(row.id),
+    type: type === "call" || type === "data_request" || type === "status_change" ? type : "note",
+    visibility: row.visibility === "customer" ? "customer" : "internal",
+    body: str(row.body),
+    callOutcome: isCallOutcome(row.call_outcome) ? row.call_outcome : null,
+    fromStatus: isEnquiryStatus(row.from_status) ? row.from_status : null,
+    toStatus: isEnquiryStatus(row.to_status) ? row.to_status : null,
+    closureReason: isClosureReason(row.closure_reason) ? row.closure_reason : null,
+    author: String(row.author ?? ""),
+    authorRole: String(row.author_role ?? ""),
+    createdAt: String(row.created_at ?? ""),
   };
 }
 
 /**
- * The whole comment and status trail, oldest first. Paged, because
- * Supabase returns at most 1,000 rows per request and the trail outgrows
- * that long before the enquiries do.
+ * Every timeline entry, in the order written. Paged, because Supabase
+ * returns at most 1,000 rows per request and the timeline outgrows that
+ * long before the enquiries do.
  */
-async function fetchActivity(supabase: Awaited<ReturnType<typeof createClient>>) {
+async function fetchEvents(supabase: Awaited<ReturnType<typeof createClient>>) {
   const PAGE = 1000;
   const rows: Row[] = [];
   for (let from = 0; from < 50 * PAGE; from += PAGE) {
     const { data, error } = await supabase
-      .from("enquiry_activity")
+      .from("enquiry_events")
       .select("*")
-      .order("created_at", { ascending: true })
-      .order("id", { ascending: true })
+      .order("seq", { ascending: true })
       .range(from, from + PAGE - 1);
     if (error) return { data: rows, error };
     rows.push(...(data ?? []));
@@ -130,14 +165,14 @@ export async function fetchEnquiries(limit = 500): Promise<Enquiry[]> {
   if (!isSupabaseConfigured) return [];
   const supabase = await createClient();
 
-  const [leads, applications, activity] = await Promise.all([
+  const [leads, applications, events] = await Promise.all([
     supabase.from("leads").select("*").order("created_at", { ascending: false }).limit(limit),
     supabase
       .from("applications")
       .select("*")
       .order("created_at", { ascending: false })
       .limit(limit),
-    fetchActivity(supabase),
+    fetchEvents(supabase),
   ]);
 
   // A missing table or a denied read means the migration has not been run;
@@ -145,40 +180,22 @@ export async function fetchEnquiries(limit = 500): Promise<Enquiry[]> {
   if (leads.error) console.warn("enquiries: leads —", leads.error.message);
   if (applications.error)
     console.warn("enquiries: applications —", applications.error.message);
-  if (activity.error) console.warn("enquiries: activity —", activity.error.message);
+  if (events.error) console.warn("enquiries: timeline —", events.error.message);
 
-  // Each enquiry's trail, keyed by the row it belongs to.
-  const trail = new Map<string, EnquiryActivity[]>();
-  for (const row of (activity.data ?? []) as Row[]) {
+  // Each enquiry's timeline, keyed by the row it belongs to.
+  const timeline = new Map<string, EnquiryEvent[]>();
+  for (const row of (events.data ?? []) as Row[]) {
     const key = str(row.lead_id) ?? str(row.application_id);
     if (!key) continue;
-    const list = trail.get(key) ?? [];
-    list.push({
-      id: String(row.id),
-      kind: row.kind === "status" ? "status" : "comment",
-      fromStatus: isEnquiryStatus(row.from_status) ? row.from_status : null,
-      toStatus: isEnquiryStatus(row.to_status) ? row.to_status : null,
-      body: str(row.body),
-      author: String(row.author ?? ""),
-      createdAt: String(row.created_at ?? ""),
-    });
-    trail.set(key, list);
+    const list = timeline.get(key) ?? [];
+    list.push(toEvent(row));
+    timeline.set(key, list);
   }
 
   return [
     ...(leads.data ?? []).map(toLead),
     ...(applications.data ?? []).map(toApplication),
   ]
-    .map((e) => ({ ...e, activity: trail.get(e.id) ?? [] }))
+    .map((e) => ({ ...e, events: timeline.get(e.id) ?? [] }))
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-}
-
-/** Unread count per category, for the tabs. */
-export function unreadByCategory(enquiries: Enquiry[]) {
-  const counts = new Map<EnquiryCategory, number>();
-  for (const e of enquiries) {
-    if (e.status !== "unread") continue;
-    counts.set(e.category, (counts.get(e.category) ?? 0) + 1);
-  }
-  return counts;
 }

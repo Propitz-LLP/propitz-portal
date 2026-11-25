@@ -7,7 +7,8 @@
 
 export type LeadSource = "request" | "seller" | "checklist" | "newsletter";
 
-export type LeadState = { ok?: boolean; error?: string };
+/** `reference` is the case reference (PRZ-YYMM-NNNN), for requests and seller callbacks. */
+export type LeadState = { ok?: boolean; error?: string; reference?: string };
 
 /**
  * Requirement categories on the Start a Request form. The key lets any

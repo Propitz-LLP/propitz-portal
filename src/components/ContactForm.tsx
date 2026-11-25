@@ -7,6 +7,7 @@ import { whatsappHref } from "@/data/site";
 import { IconWhatsApp } from "@/components/Icon";
 import MobileField from "@/components/MobileField";
 import FormPrivacyNotice from "@/components/FormPrivacyNotice";
+import ReferenceBox from "@/components/ReferenceBox";
 import TurnstileField, { TURNSTILE_ENABLED } from "@/components/Turnstile";
 
 const field =
@@ -34,12 +35,17 @@ export default function ContactForm({ need }: { need?: RequirementKey }) {
     return (
       <div className="card p-6 sm:p-8">
         <p className="text-xl font-semibold text-ink">Thank you. Your request is in.</p>
+        {state.reference && <ReferenceBox reference={state.reference} />}
         <p className="mt-2 leading-relaxed text-body">
           A coordinator will review it and get back to you the way you asked.
           Initial review normally begins within one business day.
         </p>
         <a
-          href={whatsappHref("Hi PropITZ, I have just sent a request on your website.")}
+          href={whatsappHref(
+            state.reference
+              ? `Hi PropITZ, about my request ${state.reference}.`
+              : "Hi PropITZ, I have just sent a request on your website."
+          )}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-ghost mt-6 gap-2.5 py-3.5 text-[15px]"

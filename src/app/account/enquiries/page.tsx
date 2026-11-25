@@ -14,7 +14,8 @@ export default async function EnquiriesPage() {
   // security is the boundary underneath both.
   await requireContributor();
   const enquiries = await fetchEnquiries();
-  const unread = enquiries.filter((e) => e.status === "unread").length;
+  const unseen = enquiries.filter((e) => !e.readAt).length;
+  const newCases = enquiries.filter((e) => e.status === "new").length;
   const open = enquiries.filter((e) => e.status !== "closed").length;
 
   return (
@@ -23,8 +24,8 @@ export default async function EnquiriesPage() {
         title="Enquiries"
         crumb="Enquiries"
         subtitle={
-          unread > 0
-            ? `${unread} unread, ${open} open, ${enquiries.length} in all. Everything the website has collected.`
+          open > 0
+            ? `${open} not closed, ${newCases} new${unseen ? `, ${unseen} not yet opened` : ""}. Everything the website has collected.`
             : "Everything the website has collected: requests, callbacks, downloads and applications."
         }
         image={`${IMG}/hero-bg-image.jpg`}

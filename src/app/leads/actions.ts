@@ -1,5 +1,6 @@
 "use server";
 
+import { randomUUID } from "node:crypto";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import {
@@ -9,7 +10,7 @@ import {
   type LeadState,
 } from "@/data/leads";
 import { DEFAULT_COUNTRY, isValidMobile, mobileError, toE164 } from "@/lib/phone";
-import { notificationHtml, row, sendEmail } from "@/lib/email";
+import { NOTIFY_EMAIL, esc, notificationHtml, row, sendEmail } from "@/lib/email";
 import { HUMAN_CHECK_FAILED, isHuman } from "@/lib/turnstile";
 import { RATE_LIMITED, withinRateLimit } from "@/lib/rateLimit";
 import { CANONICAL_URL } from "@/lib/siteUrl";
@@ -125,8 +126,11 @@ export async function submitLead(
     return fallback;
   }
 
+  // The id is made here so the case reference can be asked for afterwards:
+  // the public key may insert a lead but never read one back.
+  const id = randomUUID();
   const supabase = await createClient();
-  const { error } = await supabase.from("leads").insert(row);
+  const { error } = await supabase.from("leads").insert({ id, ...row });
 
   if (error) {
     // Most likely the leads table has not been created yet.
@@ -134,12 +138,23 @@ export async function submitLead(
     return fallback;
   }
 
+  // Requests and seller callbacks are cases, with a PRZ reference the
+  // customer sees straight away (Requirements v2.0, FR-QT-02). Missing
+  // only before the 20261125 migration; the thank-you screen copes.
+  let reference: string | undefined;
+  if (source === "request" || source === "seller") {
+    const { data, error: refError } = await supabase.rpc("lead_reference", { p_id: id });
+    if (refError) console.warn("leads: no reference —", refError.message);
+    if (typeof data === "string") reference = data;
+  }
+
   // Saved. Now tell someone, because the site promises a reply within a
   // business day and nobody watches the table. A failure here is logged,
   // never surfaced: the lead is already safe.
-  await notifyTeam(source, row);
+  await notifyTeam(source, row, reference);
+  if (reference && row.email) await confirmToCustomer(reference, row);
 
-  return { ok: true };
+  return { ok: true, reference };
 }
 
 /** Subject lines that read well in an inbox list. */
@@ -150,14 +165,15 @@ const SUBJECTS: Record<LeadSource, string> = {
   newsletter: "New newsletter signup",
 };
 
-async function notifyTeam(source: LeadSource, lead: Record<string, string | null>) {
+async function notifyTeam(source: LeadSource, lead: Record<string, string | null>, reference?: string) {
   const who = lead.name ?? lead.email ?? "Someone";
   const what = lead.requirement ?? lead.property_location ?? "";
-  const subject = `${SUBJECTS[source] ?? "New lead"}: ${who}${what ? ` — ${what}` : ""}`;
+  const subject = `${reference ? `${reference} · ` : ""}${SUBJECTS[source] ?? "New lead"}: ${who}${what ? ` — ${what}` : ""}`;
 
   const html = notificationHtml(
     subject,
     [
+      row("Reference", reference ?? null),
       row("Name", lead.name),
       row("Mobile", lead.phone),
       row("Email", lead.email),
@@ -172,4 +188,34 @@ async function notifyTeam(source: LeadSource, lead: Record<string, string | null
   );
 
   await sendEmail({ subject, html, replyTo: lead.email ?? undefined });
+}
+
+/**
+ * The customer's copy of their reference, by email, when they gave one
+ * (FR-QT-02/03). WhatsApp and SMS follow once those channels exist. No
+ * links or documents, per CON-NT-02; a reply reaches the team.
+ */
+async function confirmToCustomer(reference: string, lead: Record<string, string | null>) {
+  const first = (lead.name ?? "").split(/\s+/)[0] || "there";
+  const channel =
+    lead.preferred_channel === "Call"
+      ? "by phone"
+      : lead.preferred_channel === "Email"
+        ? "by email"
+        : "on WhatsApp";
+
+  const html = notificationHtml(
+    `Your request ${reference}`,
+    `<p style="margin:0 0 10px">Hi ${esc(first)},</p>
+     <p style="margin:0 0 10px">We have your request${lead.requirement ? ` about <strong>${esc(lead.requirement.toLowerCase())}</strong>` : ""}. Your reference is <strong>${esc(reference)}</strong> — please quote it whenever you contact us.</p>
+     <p style="margin:0 0 10px"><strong>What happens next:</strong> a coordinator will review it and contact you ${channel}. Initial review normally begins within one business day.</p>`,
+    "You are receiving this because you submitted a request on propitz.com. Reply to this email if anything needs correcting."
+  );
+
+  await sendEmail({
+    to: lead.email!,
+    subject: `Your PropITZ request ${reference}`,
+    html,
+    replyTo: NOTIFY_EMAIL,
+  });
 }
