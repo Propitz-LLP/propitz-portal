@@ -4,11 +4,18 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireContributor } from "@/lib/roles";
 import { CV_BUCKET } from "@/data/applications";
+import { DEFAULT_COUNTRY, isValidMobile, mobileError, toE164 } from "@/lib/phone";
+import { REQUIREMENTS } from "@/data/leads";
+import { emailCaseUpdate } from "@/lib/caseEmails";
 import {
   isCallOutcome,
   isClosureReason,
   isEnquiryStatus,
+  isOrigin,
+  isPriority,
   type CallOutcome,
+  type Origin,
+  type Priority,
   type ClosureReason,
   type EnquiryCategory,
   type EnquiryStatus,
@@ -57,6 +64,13 @@ export async function transitionEnquiry(
   if (note.length > 4000) return { error: "Keep it under 4,000 characters." };
 
   const supabase = await createClient();
+
+  // For the customer's update email: who they are, and where it moved from.
+  const isCase = category === "request" || category === "seller";
+  const before = isCase
+    ? (await supabase.from("leads").select("status, reference, email, name").eq("id", id).maybeSingle()).data
+    : null;
+
   const { error } = await supabase.rpc("case_transition", {
     p_kind: kindFor(category),
     p_id: id,
@@ -70,22 +84,57 @@ export async function transitionEnquiry(
     console.error("enquiries: transition refused —", error.message);
     return { error: explain(error) };
   }
+
+  // FR-NT-02. Never holds up the move: a failed email is logged and dropped.
+  if (before?.email && before.reference && change.to !== "open") {
+    await emailCaseUpdate({
+      reference: before.reference,
+      email: before.email,
+      name: before.name,
+      from: isEnquiryStatus(before.status) ? before.status : null,
+      to: change.to,
+    }).catch((e) => console.error("enquiries: update email failed —", (e as Error).message));
+  }
+
   revalidatePath("/account/enquiries");
   return {};
 }
 
-/** Add an internal note, or log a call, without changing the state. */
+export type LogType = "note" | "call" | "meeting" | "site_visit" | "callback";
+
+/**
+ * Add to the timeline without changing the state: a note, a call, an
+ * office meeting, a site visit, or a callback to make (FR-MS-01/08).
+ * `scheduledFor` is a datetime-local value, read as Indian time.
+ */
 export async function logEntry(
   id: string,
   category: EnquiryCategory,
-  entry: { type: "note" | "call"; body?: string; outcome?: CallOutcome }
+  entry: {
+    type: LogType;
+    body?: string;
+    outcome?: CallOutcome;
+    durationMinutes?: number | null;
+    nextAction?: string;
+    scheduledFor?: string;
+  }
 ): Promise<Result> {
   await requireContributor();
 
   const body = entry.body?.trim() ?? "";
-  if (entry.type === "note" && !body) return { error: "Write the note first." };
+  if (!["note", "call", "meeting", "site_visit", "callback"].includes(entry.type)) return { error: "Unknown entry." };
+  if ((entry.type === "note" || entry.type === "meeting" || entry.type === "site_visit") && !body)
+    return { error: "Write a summary first." };
   if (entry.type === "call" && !isCallOutcome(entry.outcome)) return { error: "Choose how the call went." };
   if (body.length > 4000) return { error: "Keep it under 4,000 characters." };
+  const duration = entry.durationMinutes ?? null;
+  if (duration !== null && (!Number.isInteger(duration) || duration < 1 || duration > 720))
+    return { error: "Duration must be between 1 and 720 minutes." };
+  let scheduledFor: string | null = null;
+  if (entry.type === "callback") {
+    if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(entry.scheduledFor ?? "")) return { error: "Choose when to call back." };
+    scheduledFor = new Date(`${entry.scheduledFor}:00+05:30`).toISOString();
+  }
 
   const supabase = await createClient();
   const { error } = await supabase.rpc("enquiry_log", {
@@ -94,6 +143,9 @@ export async function logEntry(
     p_type: entry.type,
     p_body: body || null,
     p_outcome: entry.type === "call" ? entry.outcome : null,
+    p_duration: duration,
+    p_next_action: entry.nextAction?.trim().slice(0, 500) || null,
+    p_scheduled_for: scheduledFor,
   });
 
   if (error) {
@@ -123,6 +175,102 @@ export async function markSeen(id: string, category: EnquiryCategory): Promise<R
   }
   revalidatePath("/account/enquiries");
   return {};
+}
+
+/**
+ * Claim a case, or (leads only) assign, reassign or release it. The rules
+ * — agents claim unassigned cases for themselves, leads give a reason on
+ * reassignment — are enforced in case_set_owner() (20261126 migration).
+ */
+export async function setOwner(id: string, owner: string | null, reason?: string): Promise<Result> {
+  await requireContributor();
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("case_set_owner", {
+    p_id: id,
+    p_owner: owner,
+    p_reason: reason?.trim() || null,
+  });
+  if (error) {
+    console.error("enquiries: owner refused —", error.message);
+    return { error: explain(error) };
+  }
+  revalidatePath("/account/enquiries");
+  return {};
+}
+
+export async function setPriority(id: string, priority: Priority, note?: string): Promise<Result> {
+  await requireContributor();
+  if (!isPriority(priority)) return { error: "Unknown priority." };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("case_set_priority", {
+    p_id: id,
+    p_priority: priority,
+    p_note: note?.trim() || null,
+  });
+  if (error) {
+    console.error("enquiries: priority refused —", error.message);
+    return { error: explain(error) };
+  }
+  revalidatePath("/account/enquiries");
+  return {};
+}
+
+export type NewCase = {
+  origin: Origin;
+  name: string;
+  mobile: string;
+  country: string;
+  email: string;
+  requirement: string;
+  location: string;
+  channel: "WhatsApp" | "Call" | "Email" | "";
+  message: string;
+  priority: Priority;
+  claim: boolean;
+};
+
+/**
+ * Open a case for an enquiry that did not come through the website — a
+ * call, a WhatsApp message, a walk-in (FR-QT-07). Validated here like the
+ * public form, then created by case_create(), which issues the reference.
+ */
+export async function createCase(input: NewCase): Promise<Result & { reference?: string }> {
+  await requireContributor();
+
+  if (!isOrigin(input.origin) || input.origin === "web_form")
+    return { error: "Choose where the enquiry came from." };
+  if (!isPriority(input.priority)) return { error: "Unknown priority." };
+  const name = input.name.trim();
+  if (!name) return { error: "Enter the customer's name." };
+  const mobile = input.mobile.trim();
+  const country = input.country || DEFAULT_COUNTRY;
+  if (mobile && !isValidMobile(mobile, country)) return { error: mobileError(country) };
+  const email = input.email.trim().toLowerCase();
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return { error: "That email address does not look right." };
+  if (!mobile && !email) return { error: "Enter a mobile number or an email address." };
+  if (input.requirement && !REQUIREMENTS.some((r) => r.label === input.requirement))
+    return { error: "Choose what they need help with." };
+
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("case_create", {
+    p_origin: input.origin,
+    p_name: name.slice(0, 120),
+    p_phone: mobile ? toE164(mobile, country) : null,
+    p_email: email || null,
+    p_requirement: input.requirement || null,
+    p_location: input.location.trim().slice(0, 200) || null,
+    p_channel: input.channel || null,
+    p_message: input.message.trim().slice(0, 2000) || null,
+    p_priority: input.priority,
+    p_claim: input.claim,
+    p_source: input.requirement === "Selling a property" ? "seller" : "request",
+  });
+  if (error) {
+    console.error("enquiries: create refused —", error.message);
+    return { error: explain(error) };
+  }
+  revalidatePath("/account/enquiries");
+  return { reference: (data as { reference?: string } | null)?.reference };
 }
 
 /**

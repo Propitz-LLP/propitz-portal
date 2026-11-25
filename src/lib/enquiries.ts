@@ -1,15 +1,20 @@
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import {
+  CAMPAIGN_KEYS,
   isCallOutcome,
   isCaseCategory,
   isClosureReason,
   isEnquiryStatus,
+  isOrigin,
+  isPriority,
+  type Campaign,
   type CaseState,
   type Enquiry,
   type EnquiryCategory,
   type EnquiryEvent,
   type EnquiryStatus,
+  type TeamMember,
 } from "@/data/enquiries";
 
 /* ------------------------------------------------------------------ */
@@ -39,6 +44,17 @@ function statusOf(row: Row, category: EnquiryCategory): EnquiryStatus {
 const resumeOf = (v: unknown): CaseState | null =>
   v === "new" || v === "contacted" || v === "assigned" || v === "in_progress" ? v : null;
 
+/** Only the known ad parameters, as strings. */
+function campaignOf(v: unknown): Campaign | null {
+  if (!v || typeof v !== "object") return null;
+  const out: Campaign = {};
+  for (const k of CAMPAIGN_KEYS) {
+    const val = (v as Record<string, unknown>)[k];
+    if (typeof val === "string" && val) out[k] = val;
+  }
+  return Object.keys(out).length ? out : null;
+}
+
 function toLead(row: Row): Enquiry {
   const source = String(row.source ?? "request");
   const category = (["request", "seller", "checklist", "newsletter"].includes(source)
@@ -53,6 +69,13 @@ function toLead(row: Row): Enquiry {
     closureReason: isClosureReason(row.closure_reason) ? row.closure_reason : null,
     closureNote: str(row.closure_note),
     statusChangedAt: str(row.status_changed_at),
+    origin: isCaseCategory(category) ? (isOrigin(row.origin) ? row.origin : "web_form") : null,
+    priority: isCaseCategory(category) ? (isPriority(row.priority) ? row.priority : "normal") : null,
+    ownerEmail: str(row.owner_email),
+    createdBy: str(row.created_by),
+    campaign: campaignOf(row.campaign),
+    lastActivityAt: String(row.created_at ?? ""),
+    callbackDue: null,
     createdAt: String(row.created_at ?? ""),
     readAt: str(row.read_at),
     name: str(row.name),
@@ -91,6 +114,13 @@ function toApplication(row: Row): Enquiry {
     closureReason: null,
     closureNote: null,
     statusChangedAt: str(row.status_changed_at),
+    origin: null,
+    priority: null,
+    ownerEmail: null,
+    createdBy: null,
+    campaign: null,
+    lastActivityAt: String(row.created_at ?? ""),
+    callbackDue: null,
     createdAt: String(row.created_at ?? ""),
     readAt: str(row.read_at),
     name: str(row.name),
@@ -122,13 +152,23 @@ function toEvent(row: Row): EnquiryEvent {
   const type = String(row.type);
   return {
     id: String(row.id),
-    type: type === "call" || type === "data_request" || type === "status_change" ? type : "note",
+    type: ([
+      "call", "meeting", "site_visit", "callback", "data_request",
+      "status_change", "owner_change", "priority_change", "created",
+    ].includes(type)
+      ? type
+      : "note") as EnquiryEvent["type"],
     visibility: row.visibility === "customer" ? "customer" : "internal",
     body: str(row.body),
     callOutcome: isCallOutcome(row.call_outcome) ? row.call_outcome : null,
     fromStatus: isEnquiryStatus(row.from_status) ? row.from_status : null,
     toStatus: isEnquiryStatus(row.to_status) ? row.to_status : null,
     closureReason: isClosureReason(row.closure_reason) ? row.closure_reason : null,
+    durationMinutes: typeof row.duration_minutes === "number" ? row.duration_minutes : null,
+    nextAction: str(row.next_action),
+    scheduledFor: str(row.scheduled_for),
+    fromValue: str(row.from_value),
+    toValue: str(row.to_value),
     author: String(row.author ?? ""),
     authorRole: String(row.author_role ?? ""),
     createdAt: String(row.created_at ?? ""),
@@ -196,6 +236,37 @@ export async function fetchEnquiries(limit = 500): Promise<Enquiry[]> {
     ...(leads.data ?? []).map(toLead),
     ...(applications.data ?? []).map(toApplication),
   ]
-    .map((e) => ({ ...e, events: timeline.get(e.id) ?? [] }))
+    .map((e) => {
+      const events = timeline.get(e.id) ?? [];
+      // FR-CS-03: the most recent thing that happened to it.
+      const lastActivityAt = [e.createdAt, e.statusChangedAt ?? "", ...events.map((v) => v.createdAt)]
+        .reduce((a, b) => (b > a ? b : a), "");
+      // The latest callback still waiting: none logged as a call since.
+      let callbackDue: string | null = null;
+      for (const v of events) {
+        if (v.type === "callback") callbackDue = v.scheduledFor;
+        else if (v.type === "call") callbackDue = null;
+      }
+      if (e.status === "closed") callbackDue = null;
+      return { ...e, events, lastActivityAt, callbackDue };
+    })
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+/**
+ * Who a case can be assigned to. Row level security lets a lead (admin)
+ * read the whole team and anyone else only their own row — which is all
+ * an agent needs, since an agent can only claim for themselves.
+ */
+export async function fetchTeam(): Promise<TeamMember[]> {
+  if (!isSupabaseConfigured) return [];
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("contributors").select("email, role").order("email");
+  if (error) {
+    console.warn("enquiries: team —", error.message);
+    return [];
+  }
+  return (data ?? [])
+    .filter((r) => r.role === "admin" || r.role === "contributor")
+    .map((r) => ({ email: String(r.email), role: r.role as TeamMember["role"] }));
 }

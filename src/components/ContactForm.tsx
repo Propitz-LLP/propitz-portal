@@ -8,6 +8,7 @@ import { IconWhatsApp } from "@/components/Icon";
 import MobileField from "@/components/MobileField";
 import FormPrivacyNotice from "@/components/FormPrivacyNotice";
 import ReferenceBox from "@/components/ReferenceBox";
+import { CampaignField } from "@/components/CampaignCapture";
 import TurnstileField, { TURNSTILE_ENABLED } from "@/components/Turnstile";
 
 const field =
@@ -61,6 +62,7 @@ export default function ContactForm({ need }: { need?: RequirementKey }) {
     <form action={action} className="card p-6 sm:p-8">
       <input type="hidden" name="source" value="request" />
       <input type="hidden" name="page" value="contact-us" />
+      <CampaignField />
       {/* honeypot */}
       <input type="text" name="company" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
 

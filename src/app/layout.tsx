@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import { RegionProvider } from "@/components/RegionProvider";
 import Footer from "@/components/Footer";
 import FloatingButtons from "@/components/FloatingButtons";
+import CampaignCapture from "@/components/CampaignCapture";
 import { site } from "@/data/site";
 
 /* Self-hosted by next/font — no external font requests, no layout shift. */
@@ -80,6 +81,7 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <Footer />
           <FloatingButtons whatsapp={site.whatsapp} />
+          <CampaignCapture />
         </RegionProvider>
       </body>
     </html>

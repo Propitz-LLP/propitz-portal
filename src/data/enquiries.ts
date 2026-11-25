@@ -96,6 +96,51 @@ export const OUTCOME_LABEL = Object.fromEntries(
 export const isCallOutcome = (v: unknown): v is CallOutcome =>
   CALL_OUTCOMES.some((o) => o.key === v);
 
+/* ------------------------- origin and priority ---------------------- */
+
+/** Where a case came from (FR-QT-06). Visitors are always "web_form". */
+export const ORIGINS = [
+  { key: "web_form", label: "Website form" },
+  { key: "phone", label: "Phone" },
+  { key: "whatsapp", label: "WhatsApp" },
+  { key: "email", label: "Email" },
+  { key: "walk_in", label: "Walk-in" },
+  { key: "centre", label: "Centre" },
+  { key: "referral", label: "Referral" },
+] as const;
+
+export type Origin = (typeof ORIGINS)[number]["key"];
+
+export const ORIGIN_LABEL = Object.fromEntries(ORIGINS.map((o) => [o.key, o.label])) as Record<Origin, string>;
+
+export const isOrigin = (v: unknown): v is Origin => ORIGINS.some((o) => o.key === v);
+
+export const PRIORITIES = [
+  { key: "urgent", label: "Urgent" },
+  { key: "high", label: "High" },
+  { key: "normal", label: "Normal" },
+  { key: "low", label: "Low" },
+] as const;
+
+export type Priority = (typeof PRIORITIES)[number]["key"];
+
+export const PRIORITY_LABEL = Object.fromEntries(PRIORITIES.map((p) => [p.key, p.label])) as Record<Priority, string>;
+
+export const isPriority = (v: unknown): v is Priority => PRIORITIES.some((p) => p.key === v);
+
+/** The ad parameters kept with a website enquiry. */
+export const CAMPAIGN_KEYS = [
+  "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "fbclid", "landing",
+] as const;
+
+export type Campaign = Partial<Record<(typeof CAMPAIGN_KEYS)[number], string>>;
+
+/** Someone a case can be assigned to. */
+export type TeamMember = { email: string; role: "admin" | "contributor" };
+
+/** The signed-in person, as the console needs them. */
+export type ConsoleViewer = { email: string; isLead: boolean };
+
 /* ------------------------ permitted transitions --------------------- */
 
 /**
@@ -185,13 +230,31 @@ export function permittedMoves(status: EnquiryStatus, isCase: boolean, resume: C
 /** One timeline entry (FR-MS-01/02). */
 export type EnquiryEvent = {
   id: string;
-  type: "note" | "call" | "data_request" | "status_change";
+  type:
+    | "note"
+    | "call"
+    | "meeting"
+    | "site_visit"
+    | "callback"
+    | "data_request"
+    | "status_change"
+    | "owner_change"
+    | "priority_change"
+    | "created";
   visibility: "internal" | "customer";
   body: string | null;
   callOutcome: CallOutcome | null;
   fromStatus: EnquiryStatus | null;
   toStatus: EnquiryStatus | null;
   closureReason: ClosureReason | null;
+  /** Calls, meetings and site visits. */
+  durationMinutes: number | null;
+  nextAction: string | null;
+  /** Callbacks: when. */
+  scheduledFor: string | null;
+  /** Owner and priority changes: before and after. Created: the origin. */
+  fromValue: string | null;
+  toValue: string | null;
   author: string;
   /** "agent" (contributor) or "lead" (admin). */
   authorRole: string;
@@ -210,6 +273,17 @@ export type Enquiry = {
   closureReason: ClosureReason | null;
   closureNote: string | null;
   statusChangedAt: string | null;
+  /** Cases only; null for everything else. */
+  origin: Origin | null;
+  priority: Priority | null;
+  ownerEmail: string | null;
+  /** Team-created cases: who opened it. */
+  createdBy: string | null;
+  campaign: Campaign | null;
+  /** The latest of creation, any state change and any timeline entry. */
+  lastActivityAt: string;
+  /** A scheduled callback with no call logged since: when it is due. */
+  callbackDue: string | null;
   createdAt: string;
   /** When someone on the team first opened it. */
   readAt: string | null;
@@ -239,4 +313,44 @@ export type Enquiry = {
   credentialsName: string | null;
   /** The timeline, oldest first. */
   events: EnquiryEvent[];
+};
+
+/* -------------------------- customer wording ------------------------- */
+
+/**
+ * How a case state reads to the customer — on the status page and in
+ * update emails. Customer vocabulary only (FR-DA-10): no queue, owner or
+ * assignment language. Tamil versions follow once supplied (FR-DA-06).
+ */
+export const CUSTOMER_STATUS: Record<CaseState, { label: string; message: string }> = {
+  new: {
+    label: "Received",
+    message:
+      "We have your request. A coordinator will review it and contact you. Initial review normally begins within one business day.",
+  },
+  contacted: {
+    label: "Under review",
+    message: "We have been in touch and understood what you need. We will tell you the next step.",
+  },
+  awaiting_data: {
+    label: "Waiting for information from you",
+    message:
+      "We need some information or a document from you to continue. A coordinator has contacted you, or will shortly, with the details.",
+  },
+  assigned: {
+    label: "With a property professional",
+    message: "A qualified professional is now reviewing your request.",
+  },
+  in_progress: {
+    label: "Work in progress",
+    message: "Work on your request is under way.",
+  },
+  completed: {
+    label: "Completed",
+    message: "The work is complete. Please tell us if anything is outstanding; otherwise we will close your request.",
+  },
+  closed: {
+    label: "Closed",
+    message: "Your request is closed. If you need anything more, contact us and quote your reference.",
+  },
 };

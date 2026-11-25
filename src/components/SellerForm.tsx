@@ -8,6 +8,7 @@ import { IconWhatsApp } from "@/components/Icon";
 import MobileField from "@/components/MobileField";
 import FormPrivacyNotice from "@/components/FormPrivacyNotice";
 import ReferenceBox from "@/components/ReferenceBox";
+import { CampaignField } from "@/components/CampaignCapture";
 import TurnstileField, { TURNSTILE_ENABLED } from "@/components/Turnstile";
 
 const field =
@@ -60,6 +61,7 @@ export default function SellerForm() {
     <form action={action} className="card p-6 sm:p-8">
       <input type="hidden" name="source" value="seller" />
       <input type="hidden" name="page" value="sell" />
+      <CampaignField />
       {/* honeypot */}
       <input type="text" name="company" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
 

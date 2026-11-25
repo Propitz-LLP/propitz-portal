@@ -14,6 +14,8 @@ import { NOTIFY_EMAIL, esc, notificationHtml, row, sendEmail } from "@/lib/email
 import { HUMAN_CHECK_FAILED, isHuman } from "@/lib/turnstile";
 import { RATE_LIMITED, withinRateLimit } from "@/lib/rateLimit";
 import { CANONICAL_URL } from "@/lib/siteUrl";
+import { CAMPAIGN_KEYS, type Campaign } from "@/data/enquiries";
+import { STATUS_PAGE } from "@/lib/caseEmails";
 
 const text = (formData: FormData, key: string, max: number) =>
   String(formData.get(key) ?? "").trim().slice(0, max);
@@ -23,6 +25,27 @@ function readMobile(formData: FormData) {
   const mobile = text(formData, "mobile", 30);
   const country = text(formData, "country", 4) || DEFAULT_COUNTRY;
   return { mobile, country, valid: Boolean(mobile) && isValidMobile(mobile, country) };
+}
+
+/**
+ * The campaign the form carried (see CampaignCapture), reduced to the known
+ * ad parameters as short strings. Anything else is dropped: it arrives
+ * from the browser, so it is untrusted.
+ */
+function readCampaign(formData: FormData): Campaign | null {
+  const raw = String(formData.get("campaign") ?? "").slice(0, 2000);
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as Record<string, unknown>;
+    const out: Campaign = {};
+    for (const k of CAMPAIGN_KEYS) {
+      const v = parsed?.[k];
+      if (typeof v === "string" && v.trim()) out[k] = v.trim().slice(0, k === "landing" ? 200 : 150);
+    }
+    return Object.keys(out).length ? out : null;
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -130,7 +153,9 @@ export async function submitLead(
   // the public key may insert a lead but never read one back.
   const id = randomUUID();
   const supabase = await createClient();
-  const { error } = await supabase.from("leads").insert({ id, ...row });
+  // Only cases are worked as a queue, so only they keep the campaign.
+  const campaign = source === "request" || source === "seller" ? readCampaign(formData) : null;
+  const { error } = await supabase.from("leads").insert({ id, ...row, campaign });
 
   if (error) {
     // Most likely the leads table has not been created yet.
@@ -151,7 +176,7 @@ export async function submitLead(
   // Saved. Now tell someone, because the site promises a reply within a
   // business day and nobody watches the table. A failure here is logged,
   // never surfaced: the lead is already safe.
-  await notifyTeam(source, row, reference);
+  await notifyTeam(source, row, reference, campaign);
   if (reference && row.email) await confirmToCustomer(reference, row);
 
   return { ok: true, reference };
@@ -165,7 +190,12 @@ const SUBJECTS: Record<LeadSource, string> = {
   newsletter: "New newsletter signup",
 };
 
-async function notifyTeam(source: LeadSource, lead: Record<string, string | null>, reference?: string) {
+async function notifyTeam(
+  source: LeadSource,
+  lead: Record<string, string | null>,
+  reference?: string,
+  campaign?: Campaign | null
+) {
   const who = lead.name ?? lead.email ?? "Someone";
   const what = lead.requirement ?? lead.property_location ?? "";
   const subject = `${reference ? `${reference} · ` : ""}${SUBJECTS[source] ?? "New lead"}: ${who}${what ? ` — ${what}` : ""}`;
@@ -183,6 +213,13 @@ async function notifyTeam(source: LeadSource, lead: Record<string, string | null
       row("Call at", lead.preferred_call_time),
       row("Message", lead.message),
       row("From page", lead.page ? `${CANONICAL_URL}/${lead.page}` : null),
+      row(
+        "Campaign",
+        campaign
+          ? [campaign.utm_source, campaign.utm_medium, campaign.utm_campaign].filter(Boolean).join(" / ") ||
+              (campaign.gclid ? "Google Ads" : campaign.fbclid ? "Facebook / Instagram" : null)
+          : null
+      ),
     ].join(""),
     "Sent by the PropITZ website. The full record is in Supabase → leads."
   );
@@ -208,7 +245,8 @@ async function confirmToCustomer(reference: string, lead: Record<string, string 
     `Your request ${reference}`,
     `<p style="margin:0 0 10px">Hi ${esc(first)},</p>
      <p style="margin:0 0 10px">We have your request${lead.requirement ? ` about <strong>${esc(lead.requirement.toLowerCase())}</strong>` : ""}. Your reference is <strong>${esc(reference)}</strong> — please quote it whenever you contact us.</p>
-     <p style="margin:0 0 10px"><strong>What happens next:</strong> a coordinator will review it and contact you ${channel}. Initial review normally begins within one business day.</p>`,
+     <p style="margin:0 0 10px"><strong>What happens next:</strong> a coordinator will review it and contact you ${channel}. Initial review normally begins within one business day.</p>
+     <p style="margin:0 0 10px">You can check its status any time at ${esc(STATUS_PAGE)} with your reference and mobile number.</p>`,
     "You are receiving this because you submitted a request on propitz.com. Reply to this email if anything needs correcting."
   );
 

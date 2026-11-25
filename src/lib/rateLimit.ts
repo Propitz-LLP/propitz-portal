@@ -52,6 +52,7 @@ export const LIMITS = {
   professional: { max: 5, window: 60 * 60 },
   register: { max: 8, window: 60 * 60 },
   "password-reset": { max: 5, window: 15 * 60 },
+  "status-lookup": { max: 10, window: 15 * 60 },
 } as const;
 
 export type RateLimitBucket = keyof typeof LIMITS;
